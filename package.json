@@ -1,0 +1,16 @@
+{
+    "name": "cafeShop"
+  , "version": "0.0.1"
+  , "scripts":{"start":"node app.js"}
+  , "dependencies": {
+      "express": "latest"
+    , "ejs": "latest"
+    , "ejs-locals": "latest"
+    , "mongoose": "latest"
+    , "mail": "latest"
+    , "mongoose-types": "latest"
+    , "express-form": "latest"
+    , "connect":"latest"
+    , "connect-mongo": "latest"
+  }
+}
