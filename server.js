@@ -16,7 +16,8 @@ app.use(function (req, res, next) {
 })
 
 app.get('/', function (req, res) { res.redirect('home') })
-app.get('/home', pages.home)
-app.get('/about', pages.about)
+
+var routes = require('./routes.js');
+routes(app);
 
 app.listen(process.env.PORT);
