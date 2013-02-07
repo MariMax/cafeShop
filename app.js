@@ -10,7 +10,7 @@ var express = require('express'),
     fs = require('fs');
 
 //var MongoStore = require('connect-mongo'),
-var    mongo = require('mongoose');
+var mongo = require('mongoose');
 
 
 MemoryStore = require('connect/lib/middleware/session/memory');

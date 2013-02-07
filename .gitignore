@@ -1,5 +1,7 @@
 # modules
 [Nn]ode_modules/
+iisnode/
+web.config
 
 #arquivo de configuração de envio de email e banco
 configLocal.js

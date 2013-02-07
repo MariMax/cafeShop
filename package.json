@@ -3,7 +3,7 @@
   , "version": "0.0.1"
   , "scripts":{"start":"node app.js"}
   , "dependencies": {
-      "express": "latest"
+      "express": "3.1.0"
     , "ejs": "latest"
     , "ejs-locals": "latest"
     , "mongoose": "latest"
