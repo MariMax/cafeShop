@@ -1,10 +1,3 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: root
- * Date: 03.02.13
- * Time: 13:42
- * To change this template use File | Settings | File Templates.
- */
 var mongoose = require('mongoose')
     ,Schema = mongoose.Schema
     ,ObjectId = Schema.ObjectId;
@@ -18,8 +11,8 @@ var menuSchema = new Schema({
     Name:String,
     Description:String,
     Logo:Buffer,
-    DateFrom:{type:Date,validate:[required,'Дата действия меню обязательна'],default:Date.now.getDate() },
-    DateTo:{type:Date,validate:[required,'Дата действия меню обязательна'],default:Date.now.getDate() },
+    DateFrom:{type:Date,validate:[required,'Дата действия меню обязательна'],'default':Date.now.getDate() },
+    DateTo:{type:Date,validate:[required,'Дата действия меню обязательна'],'default':Date.now.getDate() },
     Dishes:[{type:ObjectId,ref:'Dish'}]
 });
 

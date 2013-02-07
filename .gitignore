@@ -1,7 +1,20 @@
-# modules
-[Nn]ode_modules/
 iisnode/
 web.config
 
+<<<<<<< .mine
+# modules
+[Nn]ode_modules/
+=======
+web.config
+iisnode
+>>>>>>> .theirs
+
+<<<<<<< .mine
+
 #arquivo de configuração de envio de email e banco
 configLocal.js
+=======
+web.config
+
+
+>>>>>>> .theirs

@@ -1,19 +1,10 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: root
- * Date: 03.02.13
- * Time: 18:10
- * To change this template use File | Settings | File Templates.
- */
 
+var pagesHelper = require('./controllers/pages.js');
+var usersHelper = require('./controllers/UserController.js')
 
-var UserHelper = require('./controllers/users.js');
+module.exports = function (app) {
 
-module.exports = function(app){
-    app.get('/home', function(req, res){
-        res.render('Users/login', {title:"Start Page",message:"Hello"/*,
-            redir: req.query.redir*/});
-    });
+    pagesHelper.add_routes(app);
+    usersHelper.add_routes(app);
 
-    UserHelper.add_routes(app);
 };

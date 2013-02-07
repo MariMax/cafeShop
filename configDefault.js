@@ -4,7 +4,7 @@ exports.getSiteConfig = function () {
     site_name: 'cafeShop',
     site_email: 'cafeShop@gmail.com',
     db: {
-    	db: 'cafeShop',
+    	db: 'cafeShopFirstTry',
     	host: 'localhost'
     },
     secret: 'cafeShop'

@@ -1,11 +1,3 @@
-/**
- * Created with JetBrains PhpStorm.
- * User: root
- * Date: 03.02.13
- * Time: 13:37
- * To change this template use File | Settings | File Templates.
- */
-
 var mongoose = require('mongoose')
     ,Schema = mongoose.Schema
     ,ObjectId = Schema.ObjectId;

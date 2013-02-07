@@ -1,16 +1,23 @@
 {
-    "name": "cafeShop"
-  , "version": "0.0.1"
-  , "scripts":{"start":"node app.js"}
-  , "dependencies": {
-      "express": "3.1.0"
-    , "ejs": "latest"
-    , "ejs-locals": "latest"
-    , "mongoose": "latest"
-    , "mail": "latest"
-    , "mongoose-types": "latest"
-    , "express-form": "latest"
-    , "connect":"latest"
-    , "connect-mongo": "latest"
-  }
+  "name": "NodeSite",
+  "version": "0.0.1",
+  "author": "",
+  "description": "",
+  "contributors": [],
+  "main": "./server.js",
+  "keywords": [],
+  "dependencies": {"express":"latest",  "ejs":"latest","ejs-locals":"latest",
+  "mongoose": "latest",
+    "mail": "latest",
+    "mongoose-types": "latest",
+    "express-form": "latest",
+    "connect": "latest",
+    "connect-mongo": "latest"
+  },
+  "noAnalyze": true,
+  "engines": {
+    "node": ">=0.6"
+  },  
+  "devDependencies": {},
+  "optionalDependencies": {}
 }

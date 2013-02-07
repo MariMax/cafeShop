@@ -10,7 +10,7 @@ var cafeSchema = new Schema({
     Adderss:String,
     Descroption:String,
     Logo: Buffer,
-    DeliveryMethods:[{type:ObjectId,ref:'DeliveryMethod'}],
+    //DeliveryMethods:[{type:ObjectId,ref:'DeliveryMethod'}],
     Users:[{type:ObjectId,ref:'User'}],
     Dishes:[{type:ObjectId,ref:'Dish'}],
     Menus:[{type:ObjectId,ref:'Menu'}],
