@@ -31,7 +31,7 @@ var UserSchema = new Schema({
         'default': Date.now
     },
     approve:{type:Boolean,'default':false},
-    token: {type:String, 'default':hash(Date.now.toString(),conf.secret)}
+    token: {type:String, 'default':hash(Date.now().toString(),conf.secret)}
 });
 
 UserSchema.path('email').validate(function (v, fn) {
@@ -67,7 +67,7 @@ UserSchema.statics.approve = function (userId, callback) {
 };
 
 UserSchema.statics.generateNewToken = function (userId, callback) {
-    var newToken = hash(Date.now.toString(), conf.secret);
+    var newToken = hash(Date.now().toString(), conf.secret);
     var data = {}
     data.token = newToken;
     this.update({_id: userId}

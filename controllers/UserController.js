@@ -13,16 +13,16 @@ function approveUserMailSend(user,encodedToken)
                             sendMail(user.email, conf.site_email, conf.site_name + ': approve email', approveMessage,
 								function (error, response) {
 								    if (error) {
-								        console.log(Date.now+" "+error);
+								        console.log(Date.now()+" "+error);
 								    } else {
-								        console.log(Date.now+"Message sent: " + response.message);
+								        console.log(Date.now()+"Message sent: " + response.message);
 								    }
 
 								    // if you don't want to use this transport object anymore, uncomment following line
 								    //smtpTransport.close(); // shut down the connection pool, no more messages
 								});
 
-                            console.log(Date.now+'Well done new User Added user email is ' + user.email + 'user id is ' + user._id+' link '+approveLink);
+                            console.log(Date.now()+'Well done new User Added user email is ' + user.email + 'user id is ' + user._id+' link '+approveLink);
 }
 
 exports.add_routes = function (app) {
@@ -32,24 +32,25 @@ exports.add_routes = function (app) {
             console.log("right new User form");
             User.findOne({ email: req.form.email }, function (error, user) {
                 if (user && user.approve) {
-                    console.log(Date.now + "user exists, try to remember password");
-                    //req.render('/home', { message: "user exists, try to remember password" });
+                    console.log(Date.now() + "user exists, try to remember password");
+                    req.redirect('pages/home', { message: "user exists, try to remember password" });
                 }
                 else if (user && !user.approve) {
-                    var token = {};
-                    User.generateNewToken(user._id, function (error, newToken) {
+                    //var token = null;
+                    User.generateNewToken(user._id, function (error, token) {
                         if (error) {
-                            console.log(Date.now + "error in generate new token");
-                            //req.render('/home', { message: "user exists, try to remember password" })
+                            console.log(Date.now() + "error in generate new token");
+                            req.redirect('pages/home', { message: "user exists, try to remember password" })
                         }
-                        if (newToken) {
-                            console.log(Date.now + "new token is " + newToken);
-                            token = newToken;
+                        if (token) {
+                            console.log(Date.now() + "new token is " + token);
+                            //token = newToken;
+                            approveUserMailSend(user, token);
+                            console.log(Date.now() + "PLEASE approve, see your email");
                         }
                     });
-                    token = encodeURIComponent(token);
-                    approveUserMailSend(user, token);
-                    console.log(Date.now + "PLEASE approve, see your email");
+
+
                     //req.render('/home', { message: "PLEASE approve, see your email" });
 
                 }
@@ -66,34 +67,35 @@ exports.add_routes = function (app) {
                             });
                             */
                             var userId = user._id;
-                            var token = {};
-                            User.generateNewToken(userId, function (error, newToken) {
+
+                            User.generateNewToken(userId, function (error, token) {
                                 if (error) {
-                                    console.log(Date.now + "error in generate new token");
-                                    //req.render('/home', { message: "error in generate new token" })
+                                    console.log(Date.now() + "error in generate new token");
+                                    req.redirect('pages/home', { message: "error in generate new token" })
                                 }
-                                if (newToken) {
-                                    console.log(Date.now + "new token is " + newToken);
-                                    token = newToken;
+                                if (token) {
+                                    console.log(Date.now() + "new token is " + token);
+
+                                    approveUserMailSend(user, token);
+                                    console.log(Date.now() + "PLEASE approve, see your email");
                                 }
                             });
-                            token = encodeURIComponent(token);
-                            approveUserMailSend(user, token);
-                            console.log(Date.now + "PLEASE approve, see your email");
+
+
                             //req.render('/home', { message: "PLEASE approve, see your email" });
                         } else {
-                            if (err.errors.email) {
+                           // if (err.errors.email) {
                                 //req.session.errors.push(err.errors.email.type);
-                                console.log(Date.now + 'Error mail type on new User Form');
-                                //req.render('/home', { message: "Error mail type on new User Form" });
-                            }
+                                console.log(Date.now() + 'Cant write email to db');
+                                req.redirect('pages/home', { message: "Cant write email to db" });
+                           // }
                             //res.redirect('/');
                         }
                     });
         }
         else {
-            console.log(Date.now + "wrong new User form");
-            console.log(Date.now + " " + req.form.errors);
+            console.log(Date.now() + "wrong new User form");
+            console.log(Date.now() + " " + req.form.errors);
             //req.render('/home', { message: "wrong new User form" });
             //req.session.errors = _.union(req.session.errors || [],
             //      req.form.errors);
@@ -103,36 +105,43 @@ exports.add_routes = function (app) {
 
     app.get('/users/approve-email', function (req, res, next) {
         var userId = req.query.userId;
-        var token = decodeURIComponent(req.query.verify);
+        var token = req.query.verify;
 
         if (userId && token) {
             User.findOne({ _id: userId }, function (error, user) {
                 if (user && user.token == token) {
+                    User.dropToken(userId, function (error, result) { if (result) console.log(Date.now() + ' token dropped ' + user.email); });
                     User.approve(userId, function (error, result) {
                         if (error) {
                             req.session.errors.push(
     							'Cant approve user');
-                            console.log(Date.now + ' Cant approve user ' + user.email);
-                            res.render('/home');
+                            console.log(Date.now() + ' Cant approve user ' + user.email);
+                            res.render('pages/home');
                         }
                         else {
-                            console.log(Date.now + ' User approved ' + user.email);
-                            res.render('/home', { message: 'User approved ' + user.email });
+                            console.log(Date.now() + ' User approved ' + user.email);
+                            /*после подтверждения пользователя сохраняем его в сессию*/
+                            req.session.regenerate(function () {
+                                req.session.user = user._id;
+                                //res.redirect('/home/');
+                            }); 
+
+                            res.render('pages/home', { message: 'User approved ' + user.email });
                         }
                     });
                 }
                 else {
                     //req.session.errors.push('it is wrong link');
-                    console.log(Date.now + 'wrong link to approve user');
-                    res.render('/home', { message: 'wrong link to approve user' });
+                    console.log(Date.now() + 'wrong link to approve user');
+                    res.render('pages/home', { message: 'wrong link to approve user' });
                 }
             });
         }
         else {
             req.session.errors.push(
     			'wrong link to approve user');
-            console.log(Date.now + 'wrong link to approve user');
-            res.render('/home', { message: 'wrong link to approve user' });
+            console.log(Date.now() + 'wrong link to approve user');
+            res.render('pages/home', { message: 'wrong link to approve user' });
         }
     });
 
@@ -161,21 +170,21 @@ exports.add_routes = function (app) {
 
     		                req.session.messages.push(
 								'Email for user ' + user.email + ' was send');
-    		                console.log(Date.now + 'reset pass Email for user ' + user.email + ' was send');
+    		                console.log(Date.now() + 'reset pass Email for user ' + user.email + ' was send');
     		                //res.render('/home', { message: 'reset pass Email for user ' + user.email + ' was send' });
 
     		            }
     		            else {
     		                req.session.errors.push(
     							"Cant send email");
-    		                console.log(Date.now + 'reset pass Email for user ' + user.email + ' not send');
+    		                console.log(Date.now() + 'reset pass Email for user ' + user.email + ' not send');
     		                //res.render('/home', { message: 'reset pass Email for user ' + user.email + ' not send' });
     		            }
     		        });
     		    }
     		    else {
-    		        console.log(Date.now + 'errors on reset pass form');
-    		        console.log(Date.now+" "+req.form.errors);
+    		        console.log(Date.now() + 'errors on reset pass form');
+    		        console.log(Date.now() + " " + req.form.errors);
 
     		    }
     		});
@@ -192,7 +201,7 @@ exports.add_routes = function (app) {
                             req.session.errors.push(
     							'Cant resetpassword');
                             console.log('Cant reset password');
-                            res.render('/home');
+                            res.render('pages/home');
                         }
                         else {
                             password = result;
@@ -207,7 +216,7 @@ exports.add_routes = function (app) {
                                 // if you don't want to use this transport object anymore, uncomment following line
                                 //smtpTransport.close(); // shut down the connection pool, no more messages
                             });
-                            res.render('/home', { message: "Your new password on your email" });
+                            res.render('pages/home', { message: "Your new password on your email" });
                         }
                     });
                 }
