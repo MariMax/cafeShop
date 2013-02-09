@@ -5,7 +5,7 @@ var mongoose = require('mongoose')
 mongoose.connect('mongodb://localhost/cafeShop');
 
 var cafeSchema = new Schema({
-    _id: ObjectId,
+    //_id: ObjectId,
     Name:String,
     Adderss:String,
     Descroption:String,
@@ -14,7 +14,8 @@ var cafeSchema = new Schema({
     Users:[{type:ObjectId,ref:'User'}],
     Dishes:[{type:ObjectId,ref:'Dish'}],
     Menus:[{type:ObjectId,ref:'Menu'}],
-    Orders:[{type:ObjectId,ref:'Order'}]
+    Orders:[{type:ObjectId,ref:'Order'}],
+    CanWorkInCafeShop:Boolean
 });
 
 module.exports = mongoose.model('Cafe', cafeSchema);

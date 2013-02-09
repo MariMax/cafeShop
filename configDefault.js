@@ -1,8 +1,8 @@
 exports.getSiteConfig = function () {
   configValues =  {
-    url: 'http://localhost:3000',
+    site_url: 'http://localhost:44945',
     site_name: 'cafeShop',
-    site_email: 'cafeShop@gmail.com',
+    site_email: 'cafeShop support <cafeShop@gmail.com>',
     db: {
     	db: 'cafeShopFirstTry',
     	host: 'localhost'
@@ -15,8 +15,8 @@ exports.getSiteConfig = function () {
 
 exports.getMailConfig = function () {
   configValues =  {
-    host: 'smtp.gmail.com',
-    username: 'maxim@ucluster.com',
+    host: 'Gmail',
+    username: 'maxim@ucluster.ru',
     password: '11'
   }
 

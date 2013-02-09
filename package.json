@@ -8,7 +8,7 @@
   "keywords": [],
   "dependencies": {"express":"latest",  "ejs":"latest","ejs-locals":"latest",
   "mongoose": "latest",
-    "mail": "latest",
+    "nodemailer": "latest",
     "mongoose-types": "latest",
     "express-form": "latest",
     "connect": "latest",

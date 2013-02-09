@@ -5,36 +5,23 @@ var form = require("express-form"),
     filter = form.filter,
     validate = form.validate;
 
-var LoginForm = form(
-    filter("email").trim(),
-    validate("email")
-        .required(null, "Введите email")
-        .isEmail("Необходим именно email"),
-
-    filter("password").trim(),
-    validate("password")
-        .required(null, "Введите пароль")
-);
-
 var SignupForm = form(
     filter("email").trim(),
     validate("email")
-        .required(null, "Введите email")
-        .isEmail("Необходим именно email"),
+        .required(null, "please enter email")
+        .isEmail("need some email"),
 
     filter("password").trim(),
     validate("password")
-        .required(null, "Введите пароль")
+        .required(null, "enter password")
 );
 
-var ResetPasswdForm = form(
-    filter("email").trim(),
-    validate("email")
-        .required(null, "Введите email")
-        .isEmail("Необходим именно email")
-);
+var ResetPaswordForm = form(
+filter("email").trim(),
+validate("email").required(null,'please enter email')
+.isEmail('need some email')
+)
 
 
-exports.LoginForm = LoginForm;
 exports.SignupForm = SignupForm;
-exports.ResetPasswdForm = ResetPasswdForm;
+exports.ResetPasswordForm = ResetPaswordForm;
