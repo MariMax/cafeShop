@@ -41,9 +41,10 @@ if (fs.existsSync('./configDefault.js')) {
 else {
     console.log('Не удалось загрузить настройки');
 }
-  
 
-app.use(express.cookieParser()) 
+
+app.use(express.cookieParser());
+app.use(express.bodyParser());
 app.use(express.session({
     secret: conf.secret,
     store: new MongoStore(conf.db),
