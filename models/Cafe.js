@@ -2,7 +2,20 @@ var mongoose = require('mongoose')
     ,Schema = mongoose.Schema
     ,ObjectId = Schema.ObjectId;
 
-mongoose.connect('mongodb://localhost/cafeShop');
+var uristring = 'mongodb://localhost/cafeShop';
+
+// Ensure safe writes
+var mongoOptions = { db: { safe: true} };
+
+
+// Connect
+mongoose.connect(uristring, mongoOptions, function (err, res) {
+    if (err) {
+        console.log('ERROR connecting to: ' + uristring + '. ' + err);
+    } else {
+        console.log('Succeeded connected to: ' + uristring);
+    }
+});
 
 var cafeSchema = new Schema({
     //_id: ObjectId,
@@ -18,4 +31,21 @@ var cafeSchema = new Schema({
     CanWorkInCafeShop:Boolean
 });
 
-module.exports = mongoose.model('Cafe', cafeSchema);
+cafeSchema.statics.newCafe = function (data, cb, err) {
+    var instance = new Cafe();
+    instance.Name = data.Name;
+    instance.save(function (error, data) {
+        if (error) {
+            err(error);
+        }
+        else {
+            cb(data);
+        }
+        mongoose.connection.close()
+    });
+
+
+};
+
+Cafe = mongoose.model('Cafe', cafeSchema);
+module.exports = Cafe;

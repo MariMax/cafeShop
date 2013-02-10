@@ -8,21 +8,33 @@ var Schema = mongoose.Schema
 
 exports.add_routes = function (app) {
 
-    app.post("/dishes", function (req, res) {
-        Dish.newDish(req.body, function (dishId) {
+    app.post("/cafe/:cafeId/dishes", function (req, res) {
+        Dish.newDish(req.params.cafeId, req.body, function (dishId) {
             res.send({ id: dishId }, 201)
         }, function (err) {
             console.log('ERROR : ' + err);
         })
+       
     });
 
-    app.get("/dishes/:id", function (req, res) {
-        var result = Dish.findById(new ObjectId(req.params.id), function (err, obj) {
+    app.get("/cafe/dishes/:id", function (req, res) {
+        var result = Dish.findOne({ _id: req.params.id }, function (err, dish) {
             if (err)
                 res.send(err, 404);
             else
-                res.json(obj, 200);
+                res.json(dish, 200);
         });
+        mongoose.connection.close()
+    });
+
+    app.get("/cafe/:cafeId/dishes/", function (req, res) {
+        var result = Dish.find({ _cafe: req.params.cafeId }, function (err, dish) {
+            if (err)
+                res.send(err, 404);
+            else
+                res.json(dish, 200);
+        });
+        mongoose.connection.close()
     });
 }
 

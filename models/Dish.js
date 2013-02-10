@@ -19,7 +19,7 @@ mongoose.connect(uristring, mongoOptions, function (err, res) {
 });
 
 var dishSchema = new Schema({
-    _cafe: { type: ObjectId, ref: 'Cafe' },
+    _cafe: ObjectId, // { type: ObjectId, ref: 'Cafe' },
     Name: String,
     Description: String,
     Price: Number,
@@ -27,14 +27,14 @@ var dishSchema = new Schema({
 });
 
 
-dishSchema.statics.newDish = function (data, cb, err) {
+dishSchema.statics.newDish = function (cafeId, data, cb, err) {
+
     var instance = new Dish();
-    console.log(data);
+    instance._cafe = cafeId;
     instance.Name = data.Name;
     instance.Description = data.Description;
     instance.Price = data.Price;
     instance.Logo = data.Logo;
-    debugger;
     instance.save(function (error, data) {
         if (error) {
             err(error);
@@ -42,6 +42,7 @@ dishSchema.statics.newDish = function (data, cb, err) {
         else {
             cb(data);
         }
+        mongoose.connection.close()
     });
 
 
