@@ -32,15 +32,15 @@ exports.add_routes = function (app) {
             console.log("right new User form");
             User.findOne({ email: req.form.email }, function (error, user) {
                 if (user && user.approve) {
-                    console.log(Date.now() + "user exists, try to remember password");
-                    req.redirect('pages/home', { message: "user exists, try to remember password" });
+                    console.log(Date.now() + " user exists, try to remember password");
+                    req.redirect('/home');
                 }
                 else if (user && !user.approve) {
                     //var token = null;
                     User.generateNewToken(user._id, function (error, token) {
                         if (error) {
                             console.log(Date.now() + "error in generate new token");
-                            req.redirect('pages/home', { message: "user exists, try to remember password" })
+                            req.redirect('/home')
                         }
                         if (token) {
                             console.log(Date.now() + "new token is " + token);
@@ -71,7 +71,7 @@ exports.add_routes = function (app) {
                             User.generateNewToken(userId, function (error, token) {
                                 if (error) {
                                     console.log(Date.now() + "error in generate new token");
-                                    req.redirect('pages/home', { message: "error in generate new token" })
+                                    req.redirect('/home')
                                 }
                                 if (token) {
                                     console.log(Date.now() + "new token is " + token);
@@ -84,11 +84,11 @@ exports.add_routes = function (app) {
 
                             //req.render('/home', { message: "PLEASE approve, see your email" });
                         } else {
-                           // if (err.errors.email) {
-                                //req.session.errors.push(err.errors.email.type);
-                                console.log(Date.now() + 'Cant write email to db');
-                                req.redirect('pages/home', { message: "Cant write email to db" });
-                           // }
+                            // if (err.errors.email) {
+                            //req.session.errors.push(err.errors.email.type);
+                            console.log(Date.now() + 'Cant write email to db');
+                            req.redirect('/home');
+                            // }
                             //res.redirect('/');
                         }
                     });
@@ -116,7 +116,7 @@ exports.add_routes = function (app) {
                             req.session.errors.push(
     							'Cant approve user');
                             console.log(Date.now() + ' Cant approve user ' + user.email);
-                            res.render('pages/home');
+                            res.render('pages/home',{message:"Cant approveUser some errors in db",title:""});
                         }
                         else {
                             console.log(Date.now() + ' User approved ' + user.email);
@@ -124,16 +124,16 @@ exports.add_routes = function (app) {
                             req.session.regenerate(function () {
                                 req.session.user = user._id;
                                 //res.redirect('/home/');
-                            }); 
+                            });
 
-                            res.render('pages/home', { message: 'User approved ' + user.email });
+                            res.render('pages/home', { message: 'User approved ' + user.email ,title:""});
                         }
                     });
                 }
                 else {
                     //req.session.errors.push('it is wrong link');
                     console.log(Date.now() + 'wrong link to approve user');
-                    res.render('pages/home', { message: 'wrong link to approve user' });
+                    res.render('pages/home', { message: 'wrong link to approve user',title:'' });
                 }
             });
         }
@@ -141,7 +141,7 @@ exports.add_routes = function (app) {
             req.session.errors.push(
     			'wrong link to approve user');
             console.log(Date.now() + 'wrong link to approve user');
-            res.render('pages/home', { message: 'wrong link to approve user' });
+            res.render('pages/home', { message: 'wrong link to approve user',title:'' });
         }
     });
 
@@ -162,21 +162,22 @@ exports.add_routes = function (app) {
 								        console.log(error);
 								    } else {
 								        console.log("Message sent: " + response.message);
+                                        console.log("reset link: " + resetLink);
 								    }
 
 								    // if you don't want to use this transport object anymore, uncomment following line
 								    //smtpTransport.close(); // shut down the connection pool, no more messages
 								});
 
-    		                req.session.messages.push(
-								'Email for user ' + user.email + ' was send');
-    		                console.log(Date.now() + 'reset pass Email for user ' + user.email + ' was send');
+    		  //              req.session.messages.push(
+								//'Email for user ' + user.email + ' was send');
+    		                console.log(Date.now() + ' reset pass Email for user ' + user.email + ' was send');
     		                //res.render('/home', { message: 'reset pass Email for user ' + user.email + ' was send' });
 
     		            }
     		            else {
-    		                req.session.errors.push(
-    							"Cant send email");
+    		     //           req.session.errors.push(
+    							//"Cant send email");
     		                console.log(Date.now() + 'reset pass Email for user ' + user.email + ' not send');
     		                //res.render('/home', { message: 'reset pass Email for user ' + user.email + ' not send' });
     		            }
@@ -201,7 +202,7 @@ exports.add_routes = function (app) {
                             req.session.errors.push(
     							'Cant resetpassword');
                             console.log('Cant reset password');
-                            res.render('pages/home');
+                            res.render('pages/home', {title:"",message:"Cant reset password"});
                         }
                         else {
                             password = result;
@@ -216,7 +217,7 @@ exports.add_routes = function (app) {
                                 // if you don't want to use this transport object anymore, uncomment following line
                                 //smtpTransport.close(); // shut down the connection pool, no more messages
                             });
-                            res.render('pages/home', { message: "Your new password on your email" });
+                            res.render('pages/home', { message: "Your new password on your email "+password, title:"" });
                         }
                     });
                 }
@@ -224,15 +225,55 @@ exports.add_routes = function (app) {
                     req.session.errors.push(
     					'it is wrong link');
                     console.log('wrong link to reset password');
-                    res.render('users/reset-password');
+                    res.render('pages/home',{message:'wrong link to reset password',title:''});
                 }
             });
         }
         else {
-            req.session.errors.push(
-    			'Este link expirou, a senha não pode ser resetada');
-            res.render('users/reset-password');
+       //     req.session.errors.push(
+    			//'Este link expirou, a senha não pode ser resetada');
+            res.render('pages/home',{message:'wrong link to reset password',title:''});
         }
     });
 
+    app.get('users/logout', function (req, res) {
+        req.session.destroy(function () {
+            res.redirect('/home');
+        });
+    });
+
+    app.post(
+        'users/login', forms.SignupForm,
+        function (req, res) {
+            if (req.form.isValid) {
+                console.log(Date.now() + ' valid login form');
+                User.authenticate(
+                    req.form.email, req.form.password,
+                    function (err, user) {
+                        if (user) {
+                            console.log(Date.now() + ' user id '+user._id);
+                            req.session.regenerate(function () {
+                                req.session.user = user._id;
+                                res.redirect(req.body.redir || 'users/home/');
+                            });
+                        } else {
+                            console.log(Date.now() + ' cant find user or he does not approve');
+                            if (!req.session.errors)
+                                req.session.errors = [];
+
+                            //req.session.errors.push(
+                            //    'Autenticação falhou, verifique seu usuário e senha');
+                            res.redirect('/home');
+                        }
+                    });
+            } else {
+                 console.log(Date.now() + ' INvalid login form');
+                //req.session.errors = _.union(
+                //    req.session.errors || [],
+                //    req.form.errors);
+
+                 res.redirect('/home');
+            }
+
+        }); 
 }
