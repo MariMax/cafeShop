@@ -13,6 +13,5 @@ exports.add_routes = function (app) {
         }, function (err) {
             console.log('ERROR : ' + err);
         })
-
     });
 };
