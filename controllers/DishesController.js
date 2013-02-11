@@ -18,16 +18,19 @@ exports.add_routes = function (app) {
     });
 
     app.put("/cafe/dishes/:id", function (req, res) {
-        Dish.findOne({ _id: req.params.id }, function (err, dish) {
+        var data = req.body;
+        var query = { _id: req.params.id };
+        Dish.findOne(query, function (err, dish) {
             if (err)
                 res.send(err, 404);
             else {
-                var data = req.body;
-                Dish.Name = data.Name;
-                Dish.Description = data.Description;
-                Dish.Price = data.Price;
-                Dish.Logo = data.Logo;
-                Dish.save();
+                dish.Name = data.Name;
+                Dish.save(function (err) {
+                    if (err)
+                        res.send(err, 404);
+                    else
+                        res.json(dish, 200);
+                });
                 res.json(dish, 200);
             }
         });
@@ -48,6 +51,15 @@ exports.add_routes = function (app) {
                 res.send(err, 404);
             else
                 res.json(dish, 200);
+        });
+    });
+
+    app.delete("/cafe/dishes/:id", function (req, res) {
+        Dish.remove({ _id: req.params.id }, function (err, numberOfDeleted) {
+             if (err)
+                res.send(err, 404);
+            else
+                res.json(data, 200);
         });
     });
 }
