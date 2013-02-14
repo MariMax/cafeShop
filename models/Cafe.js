@@ -39,9 +39,9 @@ cafeSchema.statics.newCafe = function (data, cb, err) {
             err(error);
         }
         else {
-            cb(data);
+            cb(instance);
         }
-        mongoose.connection.close()
+        //mongoose.connection.close()
     });
 
 

@@ -31,7 +31,8 @@ var UserSchema = new Schema({
         'default': Date.now
     },
     approve:{type:Boolean,'default':false},
-    token: {type:String, 'default':hash(Date.now().toString(),conf.secret)}
+    token: {type:String, 'default':hash(Date.now().toString(),conf.secret)},
+    approveInCurrentCafe:{type:Boolean,'default':false}
 });
 
 UserSchema.path('email').validate(function (v, fn) {
@@ -42,15 +43,51 @@ UserSchema.path('email').validate(function (v, fn) {
 }, 'Такой email уже существует!');
 
 UserSchema.statics.authenticate = function (email, password, fn) {
-    this.findOne({email: email, approve:true}, function (err, user) {
-        if (!user) return fn(new Error('Такой пользователь не существует или email не подтвержден'));
+    this.findOne({email: email}, function (err, user) {
+        if (!user) return fn(new Error('Такой пользователь не существует'));
+        if (!user.approve) return fn(new Error('email не подтвержден'));
+        //if (!user.approveInCurrentCafe) return fn(new Error('Пользователь не является сотрудником ни одного кафе'));
         if (user.password == hash(password, conf.secret)) return fn(null, user);
         // Otherwise password is invalid
         fn(new Error('Неверный пароль'));
     });
 };
 
-UserSchema.statics.approve = function (userId, callback) {
+UserSchema.statics.assignWithCafe=function(cafeID,userID,callback){
+     var data = {}
+    data._cafe = cafeID;
+    this.update({_id: userID}
+        , {$set: data}
+        , {multi:false,safe:true}
+        , function( error, docs ) {
+            if (error) {
+                callback(error);
+            }
+            else {
+                callback(null, true);
+            }
+        });
+};
+
+UserSchema.statics.approveInCafe= function(cafeID, userID, callback) {
+     var data = {}
+    data.approveInCurrentCafe = true;
+    this.update({_id: userID}
+        , {$set: data}
+        , {multi:false,safe:true}
+        , function( error, docs ) {
+            if (error) {
+                callback(error);
+            }
+            else {
+                callback(null, true);
+            }
+        });
+};
+
+UserSchema.statics.approveEmail = function (userId, callback) {
+
+
     var data = {}
     data.approve = true;
     this.update({_id: userId}
@@ -100,16 +137,16 @@ UserSchema.statics.dropToken = function (userId, callback) {
         });
 };
 
-UserSchema.statics.newUser = function (email, password, fn) {
+UserSchema.statics.newUser = function (email, password, userName, fn) {
     var instance = new User();
     instance.email = email;
     instance.password = hash(password, conf.secret);
     instance.approve = false;
+    instance.UserName = userName;
 
 
     instance.save(function (err) {
         fn(err, instance);
-        /*Необходимо отправить проверку email в callback*/
     });
 };
 
