@@ -1,6 +1,6 @@
 exports.getSiteConfig = function () {
   configValues =  {
-    site_url: 'http://localhost:28528',
+    site_url: 'http://localhost:'+process.env.PORT.toString(),
     site_name: 'cafeShop',
     site_email: 'cafeShop support <cafeShop@gmail.com>',
     db: {

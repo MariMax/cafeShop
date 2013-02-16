@@ -24,7 +24,7 @@ var cafeSchema = new Schema({
     Descroption:String,
     Logo: Buffer,
     //DeliveryMethods:[{type:ObjectId,ref:'DeliveryMethod'}],
-    Users:[{type:ObjectId,ref:'User'}],
+    //Users:[{type:ObjectId,ref:'User'}],
     Dishes:[{type:ObjectId,ref:'Dish'}],
     Menus:[{type:ObjectId,ref:'Menu'}],
     Orders:[{type:ObjectId,ref:'Order'}],

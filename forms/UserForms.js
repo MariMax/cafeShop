@@ -39,7 +39,16 @@ validate("email").required(null,'please enter email')
 .isEmail('need some email')
 )
 
+var AssignWithCafeForm = form(
+filter("userId").trim(),
+validate("userId").required(null,'please enter userId'),
+
+filter("cafeId").trim(),
+validate("cafeId").required(null,'please enter cafeId')
+)
 
 exports.SignupForm = SignupForm;
 exports.LoginForm = LoginForm;
+
 exports.ResetPasswordForm = ResetPaswordForm;
+exports.AssignWithCafeForm = AssignWithCafeForm;
