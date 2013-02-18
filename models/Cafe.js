@@ -31,15 +31,16 @@ var cafeSchema = new Schema({
     CanWorkInCafeShop:Boolean
 });
 
-cafeSchema.statics.newCafe = function (data, cb, err) {
+cafeSchema.statics.newCafe = function (data, cb) {
+    console.log("newCafe");
     var instance = new Cafe();
     instance.Name = data.Name;
     instance.save(function (error, data) {
         if (error) {
-            err(error);
+            cb(error);
         }
         else {
-            cb(instance);
+            cb(null, instance);
         }
         //mongoose.connection.close()
     });
