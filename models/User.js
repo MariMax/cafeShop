@@ -17,11 +17,7 @@ var Schema = mongoose.Schema
 var UserSchema = new Schema({
     _cafe:{type:ObjectId,ref:'Cafe'},
     UserName:String,
-    email: {
-        type: mongoose.SchemaTypes.Email,
-        validate: [required, 'Введите Email'],
-        index: { unique: true }
-    },
+    email: mongoose.SchemaTypes.Email,
     password: {
         type: String,
         validate: [required, 'Введите пароль']
@@ -33,11 +29,7 @@ var UserSchema = new Schema({
     approve:{type:Boolean,'default':false},
     token: {type:String, 'default':hash(Date.now().toString(),conf.secret)},
     approveInCurrentCafe:{type:Boolean,'default':false},
-    tempemail: {
-        type: mongoose.SchemaTypes.Email
-        
-        
-    }
+    tempemail: mongoose.SchemaTypes.Email
 });
 
 UserSchema.path('email').validate(function (v, fn) {
@@ -124,7 +116,7 @@ UserSchema.statics.approveEmail = function (userId, email, callback) {
             callback(error);
         }
         else {
-            this.findOne({ email: email }, callback)
+            User.findOne({ email: email }, callback)
             
         }
     })
@@ -146,7 +138,7 @@ UserSchema.statics.approveEmail = function (userId, email, callback) {
 
 UserSchema.statics.UpdateEmail = function (userId, newEmail, callback) {
     var data = {}
-    data.tmpemail = newEmail;
+    data.tempemail = newEmail;
     this.update({_id: userId}
         , {$set: data}
         , {multi:false,safe:true}
@@ -178,20 +170,32 @@ UserSchema.statics.generateNewToken = function (userId, callback) {
 };
 
 UserSchema.statics.dropToken = function (userId, callback) {
-   
-    var data = {}
+
+    this.findByIdAndUpdate(userId, { $set: { token: null, tempemail: ''} }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            callback(error);
+        }
+        else {
+            User.findOne({ _id: userId }, function (error, user) {
+                if (error) callback(error); else
+                    if (!user.approve) User.findByIdAndRemove(userId, callback); else callback(null, user);
+            })
+
+        }
+    })
+    /* var data = {}
     data.token = null;
     this.update({_id: userId}
-        , {$set: data}
-        , {multi:false,safe:true}
-        , function( error, docs ) {
-            if (error) {
-                callback(error);
-            }
-            else {
-                callback(null, true);
-            }
-        });
+    , {$set: data}
+    , {multi:false,safe:true}
+    , function( error, docs ) {
+    if (error) {
+    callback(error);
+    }
+    else {
+    callback(null, true);
+    }
+    });*/
 };
 
 UserSchema.statics.newUser = function (email, password, userName, fn) {

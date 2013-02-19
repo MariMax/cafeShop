@@ -14,15 +14,17 @@ function approveUserMailSend(user, encodedToken, email) {
 								function (error, response) {
 								    if (error) {
 								        console.log(Date.now() + " " + error);
+                                        console.log(Date.now() + 'Well done new User Added user email is ' + user.email + ' approve link ' + approveLink);
 								    } else {
 								        console.log(Date.now() + "Message sent: " + response.message);
+                                        console.log(Date.now() + 'Well done new User Added user email is ' + user.email + 'user id is ' + user._id + ' link ' + approveLink);
 								    }
 
 								    // if you don't want to use this transport object anymore, uncomment following line
 								    //smtpTransport.close(); // shut down the connection pool, no more messages
 								});
 
-    console.log(Date.now() + 'Well done new User Added user email is ' + user.email + 'user id is ' + user._id + ' link ' + approveLink);
+    
 }
 
 function assignUserandCafe(userId,cafeId, callback)
@@ -67,6 +69,37 @@ function approveuserInCafe(userId,cafeId, callback)
     })
 }
 
+function newUser(email,password,username, callback)
+{
+                                    /*Если не выполнились первые 2 случая, создаем нового пользователя*/
+    User.newUser(email, password, username, function (err, user) {
+        if ((user) && (!err)) {
+
+            var userId = user._id;
+
+            User.generateNewToken(userId, function (error, token) {
+                if (error) {
+                    callback(error)
+                } else
+                    if (token) {
+                        approveUserMailSend(user, token, email);
+                        callback(null, user)
+                    }
+            });
+
+
+
+        } else {
+
+            logError(Date.now() + 'Cant write email to db');
+            if (err)
+                logError(err);
+            callback("Error on server User with this email exists, please try to remember password");
+
+        }
+    });
+}
+
 function logError(error) {
     if (error) {
         console.log(error);
@@ -75,8 +108,9 @@ function logError(error) {
 function ShowError(response, error) {
     if (error) {
         logError(error);
+        }
         response.json({ message: error });
-    }
+    
 }
 
 exports.add_routes = function (app) {
@@ -89,60 +123,38 @@ exports.add_routes = function (app) {
             User.findOne({ email: req.form.email }, function (error, user) {
                 if (user && user.approve) {
                     //logError(Date.now() + " user exists, try to remember password");
-                    res.json({ errMsg: "User Exists try to remember password" });
+                    ShowError(res, "User Exists try to remember password");
                 }
                 else {
                     /*Проверяем существует ли пользователь который начал регистрацию*/
-                    User.findOne({ tempemail: req.form.email }, function (error, user) {
-                        if (user && !user.approve) {
+                    User.findOne({ tempemail: req.form.email }, function (error, userT) {
+                        if (userT && !userT.approve) {
                             //var token = null;
-                            User.generateNewToken(user._id, function (error, token) {
+                            User.generateNewToken(userT._id, function (error, token) {
                                 if (error) {
-                                    res.json({ errMsg: "Error on server can't generate new token for approve email address" })
-                                }
-                                if (token) {
-                                    approveUserMailSend(user, token, req.form.email);
-                                    res.json({ Msg: "User Exists but email does not confirm, please confirm it, we just send congirmation link, thanks" });
-                                }
+                                    ShowError(res, "Error on server can't generate new token for approve email address")
+                                } else
+                                    if (token) {
+                                        approveUserMailSend(userT, token, req.form.email);
+                                        ShowError(res, "User Exists but email does not confirm, please confirm it, we just send congirmation link, thanks");
+                                    }
                             });
                         } else {
-
-                            /*Если не выполнились первые 2 случая, создаем нового пользователя*/
-                            User.newUser(
-                    req.form.email, req.form.password, req.form.UserName,
-                            /*то что вызывается когда пользователь записан в БД*/
-                    function (err, user) {
-                        if ((user) && (!err)) {
-                            /* req.session.regenerate(function () {
-                            req.session.user = user._id;
-                            //res.redirect('/home/');
-                                
-                            });
-                            */
-                            var userId = user._id;
-
-                            User.generateNewToken(userId, function (error, token) {
-                                if (error) {
-                                    res.json({ errMsg: "Error on server can't generate new token for approve email address" })
-                                }
-                                if (token) {
-                                    approveUserMailSend(user, token, req.form.email);
-                                    res.json({ Msg: "Please confirm email, we just send congirmation link, thanks" });
-                                }
-                            });
-
-
-                            //req.render('/home', { message: "PLEASE approve, see your email" });
-                        } else {
-                            // if (err.errors.email) {
-                            //req.session.errors.push(err.errors.email.type);
-                            logError(Date.now() + 'Cant write email to db');
-                            res.json({ errMsg: "Error on server User with this email exists, please try to remember password" })
-
-                            // }
-                            //res.redirect('/');
-                        }
-                    });
+                            if (userT && userT.approve) {
+                                User.dropToken(userT._id, function (error, dropTokenUser) {
+                                    if (error) ShowError(res, error); else
+                                        newUser(req.form.email, req.form.password, req.form.UserName, function (error, user) {
+                                            if (error) ShowError(res, error); else
+                                                ShowError(res, "Please confirm email");
+                                        })
+                                });
+                            }
+                            else {
+                                newUser(req.form.email, req.form.password, req.form.UserName, function (error, user) {
+                                    if (error) ShowError(res, error); else
+                                        ShowError(res, "Please confirm email");
+                                });
+                            }
                         }
                     });
                 }
@@ -151,11 +163,8 @@ exports.add_routes = function (app) {
         else {
             logError(Date.now() + "wrong new User form");
             logError(Date.now() + " " + req.form.errors);
-            res.json({ errMsg: "Wrong newUser form" })
-            //req.render('/home', { message: "wrong new User form" });
-            //req.session.errors = _.union(req.session.errors || [],
-            //      req.form.errors);
-            //res.redirect('back');
+            ShowError(res, "Wrong newUser form")
+
         }
     });
 
@@ -177,9 +186,10 @@ exports.add_routes = function (app) {
                             /*после подтверждения пользователя сохраняем его в сессию*/
                             req.session.regenerate(function () {
                                 req.session.user = user._id;
+                                ShowError(res, 'User approved ' + result.email);
                             });
 
-                            ShowError(res, 'User approved ' + result.email);
+
                         }
                     });
                 }
@@ -211,7 +221,7 @@ exports.add_routes = function (app) {
 								function (error, response) {
 								    if (error) {
 								        console.log(error);
-								        console.log(resetLink);
+								        console.log("reset link " + resetLink);
 								        ShowError(res, error);
 								    } else {
 								        console.log("Message sent: " + response.message);
@@ -222,7 +232,7 @@ exports.add_routes = function (app) {
 
     		            }
     		            else {
-    		                ShowError(res, Date.now() + 'reset pass Email for user ' + user.email + ' not send');
+    		                ShowError(res, Date.now() + 'cant find user with email ' + req.form.email);
     		            }
     		        });
     		    }
@@ -243,8 +253,6 @@ exports.add_routes = function (app) {
                 if (user && user.password == verify) {
                     User.resetPassword(userId, function (error, result) {
                         if (error) {
-                            req.session.errors.push(
-    							'Cant resetpassword');
                             console.log('Cant reset password');
                             ShowError(res, "Cant reset password");
                         }
@@ -254,18 +262,18 @@ exports.add_routes = function (app) {
                             function (error, response) {
                                 if (error) {
                                     console.log(error);
+                                    console.log("new password " + password);
                                 } else {
-                                    console.log("Message sent: " + response.message);
+                                    //console.log("Message sent: " + response.message);
+                                    ShowError(res, "Message sent: " + response.message)
+                                    //ShowError(res, "Your new password on your email " + password);
                                 }
                             });
-                            ShowError(res, "Your new password on your email " + password);
+
                         }
                     });
                 }
                 else {
-                    req.session.errors.push(
-    					'it is wrong link');
-                    console.log('wrong link to reset password');
                     ShowError(res, 'wrong link to reset password');
                 }
             });
@@ -315,8 +323,8 @@ exports.add_routes = function (app) {
     app.post('/users/assignwithcafe', forms.AssignWithCafeForm, function (req, res) {
         if (req.form.isValid) {
             assignUserandCafe(req.form.userId, req.form.cafeId, function (error, result) {
-                if (error) ShowError(res, error);else
-                ShowError(res, result);
+                if (error) ShowError(res, error); else
+                    ShowError(res, result);
             });
         } else { ShowError(res, "error in assign form"); }
     });
@@ -328,14 +336,14 @@ exports.add_routes = function (app) {
         {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {/*ищем сначала авторизованого юзера*/
-                    if (error) ShowError(res, error);
-                    if (user.approveInCurrentCafe && user._cafe && user._cafe == req.form.cafeId) {/*проеряем его принадлежность к нужному кафе*/
-                        approveuserInCafe(req.form.userId, req.form.cafeId, function (error, result) {
-                            if (error) ShowError(res, error);
-                            ShowError(res, result);
-                        })
-                    } else
-                    { ShowError(res, "authorized user from another cafe") }
+                    if (error) ShowError(res, error); else
+                        if (user.approveInCurrentCafe && user._cafe && user._cafe == req.form.cafeId) {/*проеряем его принадлежность к нужному кафе*/
+                            approveuserInCafe(req.form.userId, req.form.cafeId, function (error, result) {
+                                if (error) ShowError(res, error); else
+                                    ShowError(res, result);
+                            })
+                        } else
+                        { ShowError(res, "authorized user from another cafe") }
                 });
             } else { ShowError(res, "error in approve form"); }
         }
@@ -347,39 +355,41 @@ exports.add_routes = function (app) {
         if (req.session.user) {
             User.findOne({ _id: req.session.user }, function (error, user) {
                 if (error) ShowError(res, error);
+                else {
+                    var data = {};
+                    data.Name = user.UserName;
+                    cafeModel.newCafe(data, function (error, cafe) {
 
-                var data = {};
-                data.Name = user.UserName;
-                cafeModel.newCafe(data, function (error, cafe) {
-
-                    if (error) ShowError(res, error);
-                    console.log(cafe);
-                    assignUserandCafe(user._id, cafe._id, function (error, userAssigned) {
                         if (error) ShowError(res, error); else {
-                            console.log(userAssigned)
-                            approveuserInCafe(userAssigned._id, cafe._id, function (error, val) {
-                                if (error) ShowError(res, error); else
-                                    ShowError(res, val);
+                            console.log(cafe);
+                            assignUserandCafe(user._id, cafe._id, function (error, userAssigned) {
+                                if (error) ShowError(res, error); else {
+                                    console.log(userAssigned)
+                                    approveuserInCafe(userAssigned._id, cafe._id, function (error, val) {
+                                        if (error) ShowError(res, error); else
+                                            ShowError(res, val);
+                                    })
+                                }
                             })
                         }
-                    })
-                });
+                    });
+                }
             });
         } else { res.redirect('users/login'); }
     });
 
     app.get('/users/getcafe/:userId', function (req, res) {
         User.findOne({ _id: req.params.userId }).populate('_cafe').exec(function (error, user) {
-            if (error) { logError(res, error); res.redirect('/'); }else
-            if (user) res.json(user._cafe);else
-            res.json(null);
+            if (error) { ShowError(res, error) } else
+                if (user) ShowError(res, user._cafe); else
+                    ShowError(res, null);
         });
     });
 
     app.get('/users/getuser/:userId', function (req, res) {
         User.findOne({ _id: req.params.userId }, function (error, user) {
-            if (error) ShowError(res, error);
-            res.json(user);
+            if (error) ShowError(res, error); else
+                ShowError(res, user);
         });
     });
 
@@ -390,11 +400,11 @@ exports.add_routes = function (app) {
         {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, error);
-                    User.UpdateName(user._id, req.form.UserName, function (error, newName) {
-                        if (error) ShowError(res, error);
-                        ShowError(res, newName);
-                    });
+                    if (error) ShowError(res, error); else
+                        User.UpdateName(user._id, req.form.UserName, function (error, newName) {
+                            if (error) ShowError(res, error); else
+                                ShowError(res, newName);
+                        });
                 });
             } else { ShowError(res, "Error on updateUserNameFrom"); }
         } else { res.redirect('users/login'); }
@@ -407,44 +417,47 @@ exports.add_routes = function (app) {
         {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, error);
+                    if (error) ShowError(res, error); else
 
-                    User.findOne({ email: req.form.email }, function (error, userE) {
-                        if (userE) ShowError(res, "Email in use"); /*email уже занят*/
-                        User.findOne({ tempemail: req.form.email }, function (error, userTmp) {
-                            if (userTmp) {/*Кто-то уже хотел занять этот email, но еще не занял*/
-                                User.dropToken(userTmp._id, function (error, result) {
-                                    if (error) ShowError(res, error);
-                                    User.UpdateEmail(user._id, req.form.email, function (error, newEmail) {
-                                        if (error) ShowError(res, error);
-                                        var userId = user._id;
+                        User.findOne({ email: req.form.email }, function (error, userE) {
+                            if (userE) ShowError(res, "Email in use"); /*email уже занят*/
+                            else
+                                User.findOne({ tempemail: req.form.email }, function (error, userTmp) {
+                                    if (userTmp) {/*Кто-то уже хотел занять этот email, но еще не занял*/
+                                        User.dropToken(userTmp._id, function (error, result) {
+                                            if (error) ShowError(res, error); else
+                                                User.UpdateEmail(user._id, req.form.email, function (error, newEmail) {
+                                                    if (error) ShowError(res, error); else {
+                                                        var userId = user._id;
 
-                                        User.generateNewToken(userId, function (error, token) {
-                                            if (error) ShowError(res, error);
-                                            if (token) {
-                                                approveUserMailSend(user, token, req.form.email);
-                                                res.json({ Msg: "Please confirm new email, we just send congirmation link, thanks" });
+                                                        User.generateNewToken(userId, function (error, token) {
+                                                            if (error) ShowError(res, error); else
+                                                                if (token) {
+                                                                    approveUserMailSend(user, token, req.form.email);
+                                                                    ShowError(res, "Please confirm new email, we just send congirmation link, thanks");
+                                                                }
+                                                        });
+                                                    }
+                                                });
+                                        });
+                                    }
+                                    else {/*Пока никто не хотел его занять занимаем сами*/
+                                        User.UpdateEmail(user._id, req.form.email, function (error, newEmail) {
+                                            if (error) ShowError(res, error); else {
+                                                var userId = user._id;
+
+                                                User.generateNewToken(userId, function (error, token) {
+                                                    if (error) ShowError(res, error); else
+                                                        if (token) {
+                                                            approveUserMailSend(user, token, req.form.email);
+                                                            ShowError(res, "Please confirm new email, we just send congirmation link, thanks");
+                                                        }
+                                                });
                                             }
                                         });
-                                    });
+                                    }
                                 });
-                            }
-                            else {/*Пока никто не хотел его занять занимаем сами*/
-                                User.UpdateEmail(user._id, req.form.email, function (error, newEmail) {
-                                    if (error) ShowError(res, error);
-                                    var userId = user._id;
-
-                                    User.generateNewToken(userId, function (error, token) {
-                                        if (error) ShowError(res, error);
-                                        if (token) {
-                                            approveUserMailSend(user, token, req.form.email);
-                                            res.json({ Msg: "Please confirm new email, we just send congirmation link, thanks" });
-                                        }
-                                    });
-                                });
-                            }
                         });
-                    });
                 });
             } else { ShowError(res, "Error on updateEmailFrom"); }
         } else { res.redirect('users/login'); }
@@ -457,15 +470,16 @@ exports.add_routes = function (app) {
         {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, error);
-                    console.log(req.form.NewPassword);
-                    console.log(req.form.PasswordConfirmation);
-                    if (req.form.NewPassword == req.form.PasswordConfirmation) {
-                        User.UpdatePassword(req.session.user, req.form.OldPassword, req.form.NewPassword, function (error, resUser) {
-                            if (error) ShowError(res, error);
-                            if (resUser) ShowError(res, resUser);
-                        })
-                    } else { ShowError(res, "Error password not equal password confirm"); }
+                    if (error) ShowError(res, error); else {
+                        console.log(req.form.NewPassword);
+                        console.log(req.form.PasswordConfirmation);
+                        if (req.form.NewPassword == req.form.PasswordConfirmation) {
+                            User.UpdatePassword(req.session.user, req.form.OldPassword, req.form.NewPassword, function (error, resUser) {
+                                if (error) ShowError(res, error); else
+                                    if (resUser) ShowError(res, resUser);
+                            })
+                        } else { ShowError(res, "Error password not equal password confirm"); }
+                    }
                 })
             } else { ShowError(res, "Error on newPasswordForm"); }
         } else { res.redirect('users/login'); }
