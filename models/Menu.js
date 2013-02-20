@@ -10,9 +10,9 @@ var menuSchema = new Schema({
     _cafe:{type:ObjectId, ref:'Cafe'},
     Name:String,
     Description:String,
-    DateFrom:{type:Date,validate:[required,'Дата действия меню обязательна'],'default':Date.now.getDate() },
-    DateTo:{type:Date,validate:[required,'Дата действия меню обязательна'],'default':Date.now.getDate() },
-    Dishes:[{type:ObjectId,ref:'Dish'}]
+    //DateFrom:{type:Date,validate:[required,'Дата действия меню обязательна'],'default':Date.now.getDate() },
+    //DateTo:{type:Date,validate:[required,'Дата действия меню обязательна'],'default':Date.now.getDate() },
+    //Dishes:[{type:ObjectId,ref:'Dish'}]
 });
 
 

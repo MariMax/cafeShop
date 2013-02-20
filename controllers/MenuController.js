@@ -37,7 +37,7 @@ exports.add_routes = function (app) {
     //});
 
     app.post("/cafe/:cafeId/menu", function (req, res) {
-        Menu.newDish(req.params.cafeId, req.body, function (menuId) {
+        Menu.newMenu(req.params.cafeId, req.body, function (menuId) {
             res.send({ id: menuId }, 201)
         }, function (err) {
             console.log('ERROR : ' + err);
@@ -61,15 +61,6 @@ exports.add_routes = function (app) {
             else
                 res.json(data, 200);
         });
-    });
-
-     app.post("/cafe/:cafeId/menu/:menuId/dish", function (req, res) {
-        Menu.newDish(req.params.cafeId, req.body, function (menuId) {
-            res.send({ id: menuId }, 201)
-        }, function (err) {
-            console.log('ERROR : ' + err);
-        })
-
     });
 }
 
