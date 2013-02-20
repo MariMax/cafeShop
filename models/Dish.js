@@ -22,19 +22,16 @@ var dishSchema = new Schema({
     _cafe: ObjectId, // { type: ObjectId, ref: 'Cafe' },
     Name: String,
     Description: String,
-    Price: Number,
-    Logo: String
+    Price: Number
 });
 
 
 dishSchema.statics.newDish = function (cafeId, data, cb, err) {
-
     var instance = new Dish();
     instance._cafe = cafeId;
     instance.Name = data.Name;
     instance.Description = data.Description;
     instance.Price = data.Price;
-    instance.Logo = data.Logo;
     instance.save(function (error, data) {
         if (error) {
             err(error);
@@ -44,8 +41,6 @@ dishSchema.statics.newDish = function (cafeId, data, cb, err) {
         }
         mongoose.connection.close()
     });
-
-
 };
 
 Dish = mongoose.model('Dish', dishSchema);
