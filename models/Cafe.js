@@ -24,24 +24,25 @@ var cafeSchema = new Schema({
     Descroption:String,
     Logo: Buffer,
     //DeliveryMethods:[{type:ObjectId,ref:'DeliveryMethod'}],
-    Users:[{type:ObjectId,ref:'User'}],
+    //Users:[{type:ObjectId,ref:'User'}],
     Dishes:[{type:ObjectId,ref:'Dish'}],
     Menus:[{type:ObjectId,ref:'Menu'}],
     Orders:[{type:ObjectId,ref:'Order'}],
     CanWorkInCafeShop:Boolean
 });
 
-cafeSchema.statics.newCafe = function (data, cb, err) {
+cafeSchema.statics.newCafe = function (data, cb) {
+    console.log("newCafe");
     var instance = new Cafe();
     instance.Name = data.Name;
     instance.save(function (error, data) {
         if (error) {
-            err(error);
+            cb(error);
         }
         else {
-            cb(data);
+            cb(null, instance);
         }
-        mongoose.connection.close()
+        //mongoose.connection.close()
     });
 
 

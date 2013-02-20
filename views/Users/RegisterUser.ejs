@@ -1,5 +1,5 @@
 <% layout('../layout') -%>
- <form method="post" action="/users/login">
+ <form method="post" action="/users/newUser">
       <p>
         <strong>You may have entered an invalid user ID
           or password. To correct the problem, please enter
@@ -10,7 +10,8 @@
       <p>
         <strong>Please enter user ID and password:</strong>
         <br>
-        
+        <strong>User Name</strong>
+        <input type="text" size="20" name="UserName" required>
         <strong>email</strong>
         <input type="email" size="20" name="email" required>
         <strong>Password</strong>

@@ -1,0 +1,17 @@
+<% layout('../layout') -%>
+ <form method="post" action="/users/approveuserincafe">
+      <p>
+        <strong>Please enter user ID and password:</strong>
+        <br>
+        
+        <strong>userId</strong>
+        <input type="text" name="userId" required>
+        <strong>cafeId</strong>
+        <input type="text" name="cafeId" required>
+      </p>
+
+      <p>
+        <strong>And then click this button:</strong>
+        <input type="submit" name="login" value="approve">
+      </p>
+    </form>

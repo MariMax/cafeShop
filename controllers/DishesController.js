@@ -54,7 +54,7 @@ exports.add_routes = function (app) {
         });
     });
 
-    app.delete("/cafe/dishes/:id", function (req, res) {
+    app.get("/cafe/dishes/:id", function (req, res) {
         Dish.remove({ _id: req.params.id }, function (err, numberOfDeleted) {
              if (err)
                 res.send(err, 404);
