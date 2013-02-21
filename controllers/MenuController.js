@@ -1,5 +1,5 @@
-var models = require('../models/Dish.js');
-var Dish = models.Dish;
+var models = require('../models/Menu.js');
+var Menu = models.Menu;
 
 var mongoose = require('mongoose')
     , mongoTypes = require('mongoose-types')
@@ -8,12 +8,12 @@ var Schema = mongoose.Schema
 
 exports.add_routes = function (app) {
 
-    app.get("/dishes/:id", function (req, res) {
-        Dish.findOne({ _id: req.params.id }, function (err, dish) {
+    app.get("/cafe/menu/:id", function (req, res) {
+        Menu.findOne({ _id: req.params.id }, function (err, value) {
             if (err)
                 res.send(err, 404);
             else
-                res.json(dish, 200);
+                res.json(value, 200);
         });
     });
 
@@ -36,26 +36,26 @@ exports.add_routes = function (app) {
     //    });
     //});
 
-    app.post("/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", function (req, res) {
-        Dish.newDish(req.params.cafeId,req.params.menuId,,req.params.categoryId, req.body, function (dishId) {
-            res.send({ id: dishId }, 201)
+    app.post("/cafe/:cafeId/menu", function (req, res) {
+        Menu.newMenu(req.params.cafeId, req.body, function (menuId) {
+            res.send({ id: menuId }, 201)
         }, function (err) {
             console.log('ERROR : ' + err);
         })
 
     });
 
-    app.get("/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", function (req, res) {
-        Dish.find({ _cafe: req.params.cafeId }, function (err, dish) {
+    app.get("/cafe/:cafeId/menu", function (req, res) {
+        Menu.find({ _cafe: req.params.cafeId }, function (err, menu) {
             if (err)
                 res.send(err, 404);
             else
-                res.json(dish, 200);
+                res.json(menu, 200);
         });
     });
 
-    app.delete("/dishes/:id", function (req, res) {
-        Dish.remove({ _id: req.params.id }, function (err, numberOfDeleted) {
+    app.delete("/cafe/menu/:id", function (req, res) {
+        Menu.remove({ _id: req.params.id }, function (err, numberOfDeleted) {
              if (err)
                 res.send(err, 404);
             else
