@@ -1,6 +1,7 @@
 var mongoose = require('mongoose')
-    ,Schema = mongoose.Schema
-    ,ObjectId = Schema.ObjectId;
+    , Schema = mongoose.Schema
+    , ObjectId = Schema.ObjectId
+
 
 var uristring = 'mongodb://localhost/cafeShop';
 
@@ -21,8 +22,18 @@ var cafeSchema = new Schema({
     //_id: ObjectId,
     Name:String,
     Adderss:String,
-    Descroption:String,
+    Description:String,
+    WorkTime:String,
+    ClientPhone:String,
+    CellPhone:String,
+    
+    Latitude:double,
+    Longitude:double,
     Logo: Buffer,
+    
+    CellPhoneApprove:{type:Boolean,'default':false},
+    CellPhoneVerificationCode:{type:String},
+    tempCellPhone:String,
     //DeliveryMethods:[{type:ObjectId,ref:'DeliveryMethod'}],
     //Users:[{type:ObjectId,ref:'User'}],
     Dishes:[{type:ObjectId,ref:'Dish'}],
@@ -35,6 +46,18 @@ cafeSchema.statics.newCafe = function (data, cb) {
     console.log("newCafe");
     var instance = new Cafe();
     instance.Name = data.Name;
+    if (data.Address) instance.Address = data.Address;
+    if (data.Description) instance.Description = data.Description;
+    if (data.WorkTime) instance.WorkTime = data.WorkTime;
+    if (data.ClientPhone) instance.ClientPhone = data.ClientPhone;
+    if (data.CellPhone) instance.tempCellPhone = data.CellPhone;
+    if (data.Latitude) instance.Latitude = data.Latitude;
+    if (data.Longitude) instance.Longitude = data.Longitude;
+    
+    var newPassword = '';
+    newPassword = newPassword.randomNumberString(6);
+    instance.CellPhoneVerificationCode = newPassword;
+
     instance.save(function (error, data) {
         if (error) {
             cb(error);
@@ -44,7 +67,71 @@ cafeSchema.statics.newCafe = function (data, cb) {
         }
         //mongoose.connection.close()
     });
+}
 
+cafeSchema.statics.UpdateCafeValue = function (cafeId,data, cb) {
+    console.log("UpdateValueOfCafe");
+    var newdata = {};
+    if (data.Name&&data.Name!='') newdata.Name=data.Name;
+    if (data.Address&&data.Address!='') newdata.Address=data.Address;
+    if (data.Description&&data.Description!='') newdata.Description=data.Description;
+    if (data.WorkTime&&data.WorkTime!='') newdata.WorkTime=data.WorkTime;
+    if (data.ClientPhone&&data.ClientPhone!='') newdata.ClientPhone=data.ClientPhone;
+    //if (data.CellPhone&&data.CellPhone!='') newdata.CellPhone=data.CellPhone; Отдельная тема
+    if (data.Latitude) newdata.Latitude=data.Latitude;
+    if (data.Longitude) newdata.Longitude=data.Longitude;
+
+    this.findByIdAndUpdate(cafeId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            callback(error);
+        }
+        else {
+            Cafe.findOne({ _id: cafeId }, callback)
+            
+        }
+    })
+
+    
+};
+
+cafeSchema.statics.dropToken = function (cafeId, callback) {
+
+    this.findByIdAndUpdate(cafeId, { $set: { CellPhoneVerificationCode: '', tempCellPhone: ''} }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            callback(error);
+        }
+        else {
+            Cafe.findOne({ _id: cafeId }, callback);
+
+        }
+    })
+
+    cafeSchema.statics.approveCellPhone = function (cafeId, cellPhone, callback) {
+
+    this.findByIdAndUpdate(cafeId, { $set: { CellPhoneApprove: true, CellPhone: cellPhone, tempCellPhone: ''} }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            callback(error);
+        }
+        else {
+            Cafe.findOne({ CellPhone: cellPhone }, callback)
+            
+        }
+    })
+
+};
+
+cafeSchema.statics.UpdateCellPhone = function (cafeId, cellPhone, callback) {
+    var newPassword = '';
+    newPassword = newPassword.randomNumberString(6);
+    console.log('Verify code: '+newPassword);
+    this.findByIdAndUpdate(cafeId, { $set: { tempCellPhone: cellPhone, CellPhoneVerificationCode: newPassword} }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            callback(error);
+        }
+        else {
+            Cafe.findOne({ _id: cafeId }, callback)
+        }
+    })
 
 };
 

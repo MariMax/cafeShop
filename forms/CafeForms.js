@@ -4,8 +4,16 @@ var form = require("express-form"),
     validate = form.validate;
 
 var createCafeForm = form(
-    filter("name").trim(),
-    validate("name")
-        .required(null, "please enter email"));
+    filter("Name").trim(),
+    validate("Name")
+        .required(null, "please enter CafeName"),
+
+
+    filter("CellPhone").trim(),
+    validate("CellPhone")
+        .required(null, "please enter CellPhone")
+        
+        );
+
         
 exports.createCafeForm = createCafeForm;

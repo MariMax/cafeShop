@@ -1,9 +1,17 @@
 var models = require('../models/User.js');
+var cafeModel = require('../models/Cafe.js');
+
 var forms = require('../forms/UserForms.js');
 var User = models.User;
 var common = require('../models/CommonFunctions.js');
 var sendMail = common.sendMail;
-var cafeModel = require('../models/Cafe.js');
+
+var approveuserInCafe = common.approveuserInCafe;
+var assignUserandCafe = common.assignUserandCafe;
+var logError = common.logError;
+var ShowError = common.ShowError;
+
+
 
 
 function approveUserMailSend(user, encodedToken, email) {
@@ -27,47 +35,7 @@ function approveUserMailSend(user, encodedToken, email) {
     
 }
 
-function assignUserandCafe(userId,cafeId, callback)
-{
-    User.findOne({ _id: userId }, function (error, user) {
-        if (error) { callback(error) }
-        else {
-            cafeModel.findOne({ _id: cafeId }, function (error, cafe) {
-                if (error) { return callback(error) } else {
-                    User.assignWithCafe(cafe._id, user._id, function (error, val) {
-                        if (error) { callback(error) } else {
-                            callback(null, val);
-                        }
-                    })
-                }
-            });
-        }
-    });
-}
 
-function approveuserInCafe(userId,cafeId, callback)
-{
-    User.findOne({ _id: userId }, function (error, requestedUser) {/*Ищем подтверждаемого юзера*/
-        if (error) { callback(error) } else {
-            console.log(requestedUser._cafe);
-            console.log(cafeId);
-            cafeModel.findOne({ _id: cafeId }, function (error, cafe) { 
-            if (error) callback("Cafe does not exists"); else
-            {
-              if (requestedUser._cafe.toString()== cafe._id.toString()) {/*проверяем его принадлежность к кафе*/
-                User.approveInCafe(cafe._id, requestedUser._id, function (error, result) {/*если все сошлось подтверждаем юзера*/
-                    if (error) { callback(error) } else
-                        callback(null, result)
-                })
-            } else {
-                callback("confirm user from another cafe");
-            }  
-            }
-            })
-            
-        }
-    })
-}
 
 function newUser(email,password,username, callback)
 {
@@ -98,19 +66,6 @@ function newUser(email,password,username, callback)
 
         }
     });
-}
-
-function logError(error) {
-    if (error) {
-        console.log(error);
-    }
-}
-function ShowError(response, error) {
-    if (error) {
-        logError(error);
-        }
-        response.json({ message: error });
-    
 }
 
 exports.add_routes = function (app) {
@@ -173,29 +128,35 @@ exports.add_routes = function (app) {
         var token = req.query.verify;
         var email = req.query.email;
         if (userId && token && email) {
-            User.findOne({ _id: userId, tempemail: email }, function (error, user) {
-                if (user && user.token == token) {
-                    logError("We find User and token is right");
-                    User.dropToken(userId, function (error, result) { if (result) console.log(Date.now() + ' token dropped ' + user.email); });
-                    User.approveEmail(userId, email, function (error, result) {
-                        if (error) {
-                            ShowError(res, "Cant approveUser some errors in db");
+            /*Все сошлось все круто, но может получиться так что уже кто-то подтвердил такой email на другого пользователя, надо бы проверить*/
+            User.findOne({ email: email }, function (error, approvedUser) {/*если у пользователя написано email то это значит что он подтвержден*/
+                if (!approvedUser) {
+                    User.findOne({ _id: userId, tempemail: email }, function (error, user) {
+                        if (user && user.token == token) {
+                            logError("We find User and token is right");
+
+                            User.approveEmail(userId, email, function (error, result) {
+                                if (error) {
+                                    ShowError(res, "Cant approveUser some errors in db");
+                                }
+                                else {
+                                    User.dropToken(userId, function (error, result) { if (result) console.log(Date.now() + ' token dropped ' + user.email); });
+                                    console.log(Date.now() + ' User approved ' + result.email);
+                                    /*после подтверждения пользователя сохраняем его в сессию*/
+                                    req.session.regenerate(function () {
+                                        req.session.user = user._id;
+                                        ShowError(res, 'User approved ' + result.email);
+                                    });
+
+
+                                }
+                            });
                         }
                         else {
-                            console.log(Date.now() + ' User approved ' + result.email);
-                            /*после подтверждения пользователя сохраняем его в сессию*/
-                            req.session.regenerate(function () {
-                                req.session.user = user._id;
-                                ShowError(res, 'User approved ' + result.email);
-                            });
-
-
+                            ShowError(res, 'wrong link to approve user');
                         }
                     });
-                }
-                else {
-                    ShowError(res, 'wrong link to approve user');
-                }
+                } else { ShowError(res, "Some one took this email faster than you"); }
             });
         }
         else {
@@ -351,33 +312,6 @@ exports.add_routes = function (app) {
     });
 
 
-    app.get('/users/createselfcafe', function (req, res) {
-        if (req.session.user) {
-            User.findOne({ _id: req.session.user }, function (error, user) {
-                if (error) ShowError(res, error);
-                else {
-                    var data = {};
-                    data.Name = user.UserName;
-                    cafeModel.newCafe(data, function (error, cafe) {
-
-                        if (error) ShowError(res, error); else {
-                            console.log(cafe);
-                            assignUserandCafe(user._id, cafe._id, function (error, userAssigned) {
-                                if (error) ShowError(res, error); else {
-                                    console.log(userAssigned)
-                                    approveuserInCafe(userAssigned._id, cafe._id, function (error, val) {
-                                        if (error) ShowError(res, error); else
-                                            ShowError(res, val);
-                                    })
-                                }
-                            })
-                        }
-                    });
-                }
-            });
-        } else { res.redirect('users/login'); }
-    });
-
     app.get('/users/getcafe/:userId', function (req, res) {
         User.findOne({ _id: req.params.userId }).populate('_cafe').exec(function (error, user) {
             if (error) { ShowError(res, error) } else
@@ -421,10 +355,10 @@ exports.add_routes = function (app) {
 
                         User.findOne({ email: req.form.email }, function (error, userE) {
                             if (userE) ShowError(res, "Email in use"); /*email уже занят*/
-                            else
+                            else/*Есть баг, надо искать не первого попавшегося юзера с таким email а всех, их может быть много, и всем сбрасывать*/
                                 User.findOne({ tempemail: req.form.email }, function (error, userTmp) {
                                     if (userTmp) {/*Кто-то уже хотел занять этот email, но еще не занял*/
-                                        User.dropToken(userTmp._id, function (error, result) {
+                                        User.dropToken(userTmp._id, function (error, result) {/*если пользователь не подтверди ни одного email то мы его удалим */
                                             if (error) ShowError(res, error); else
                                                 User.UpdateEmail(user._id, req.form.email, function (error, newEmail) {
                                                     if (error) ShowError(res, error); else {

@@ -39,6 +39,18 @@ UserSchema.path('email').validate(function (v, fn) {
     });
 }, 'Такой email уже существует!');
 
+UserSchema.statics.getAllApprovedUsersInCafe = function (cafeId, callback) {
+    this.find({ _cafe: cafeId, approveInCurrentCafe: true }, callback);
+}
+
+UserSchema.statics.getAllUsersInCafe = function (cafeId, callback) {
+    this.find({ _cafe: cafeId }, callback);
+}
+
+UserSchema.statics.getAllUnApprovedUsersInCafe = function (cafeId, callback) {
+    this.find({ _cafe: cafeId, approveInCurrentCafe: false }, callback);
+}
+
 UserSchema.statics.authenticate = function (email, password, fn) {
     this.findOne({email: email}, function (err, user) {
         if (!user) return fn(new Error('Такой пользователь не существует'));

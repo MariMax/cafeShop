@@ -19,6 +19,14 @@ exports.getMailConfig = function () {
     username: 'maxim@ucluster.ru',
     password: '11'
   }
-
   return configValues;
 }
+
+exports.getSMSConfig = function () {
+    configValues = {
+        accountSid:'Денег пока жалко не выложу в общий доступ',
+        authToken: 'Денег пока жалко не выложу в общий доступ',
+        From:'Денег пока жалко не выложу в общий доступ'
+    }
+}
+

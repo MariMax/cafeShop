@@ -24,6 +24,19 @@ String.prototype.randomString = function (stringLength) {
     return randomString;
 }
 
+String.prototype.randomNumberString = function (stringLength) {
+    var chars = "0123456789";
+    if (!stringLength > 0) {
+        var stringLength = 8;
+    }
+    var randomString = '';
+    for (var i = 0; i < stringLength; i++) {
+        var rnum = Math.floor(Math.random() * chars.length);
+        randomString += chars.substring(rnum, rnum + 1);
+    }
+    return randomString;
+}
+
 if (path.existsSync('./configDefault.js')) {
     var configLocal = require('./configDefault.js');
     var mailSettings = configLocal.getMailConfig();
@@ -37,6 +50,7 @@ if (path.existsSync('./configDefault.js')) {
         
 
     conf = configLocal.getSiteConfig();
+    SMSconf = configLocal.getSMSConfig();
 }
 else {
     console.log('Не удалось загрузить настройки');

@@ -12,7 +12,8 @@
     "mongoose-types": "latest",
     "express-form": "latest",
     "connect": "latest",
-    "connect-mongo": "latest"
+    "connect-mongo": "latest",
+    "restler":"latest"
   },
   "noAnalyze": true,
   "engines": {

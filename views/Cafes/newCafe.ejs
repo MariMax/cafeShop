@@ -1,0 +1,19 @@
+<% layout('../layout') -%>
+ <form method="post" action="/cafes/newCafe">
+
+      <p>
+        <strong>Please enter user ID and password:</strong>
+        <br>
+        <strong>Cafe Name</strong>
+        <input type="text" size="20" name="Name" required>
+        <strong>email</strong>
+        <input type="email" size="20" name="email" required>
+        <strong>CellPhone</strong>
+        <input type="text" size="20" name="CellPhone" required>
+      </p>
+
+      <p>
+        <strong>And then click this button:</strong>
+        <input type="submit" name="login" value="Create">
+      </p>
+    </form>
