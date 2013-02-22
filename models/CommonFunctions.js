@@ -1,7 +1,7 @@
-var crypto = require('crypto')
+var crypto = require('crypto');
 var rest = require('restler');
-var models = require('../models/User.js');
-var cafeModel = require('../models/Cafe.js');
+var models = require('./User.js');
+var cafeModel = require('./Cafe.js').Cafe;
 
 
 var User = models.User;

@@ -37,7 +37,7 @@ exports.add_routes = function (app) {
     //});
 
     app.post("/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", function (req, res) {
-        Dish.newDish(req.params.cafeId,req.params.menuId,,req.params.categoryId, req.body, function (dishId) {
+        Dish.newDish(req.params.cafeId,req.params.menuId,req.params.categoryId, req.body, function (dishId) {
             res.send({ id: dishId }, 201)
         }, function (err) {
             console.log('ERROR : ' + err);

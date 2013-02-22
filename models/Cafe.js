@@ -27,8 +27,8 @@ var cafeSchema = new Schema({
     ClientPhone:String,
     CellPhone:String,
     
-    Latitude:double,
-    Longitude:double,
+    Latitude:Number ,
+    Longitude:Number ,
     Logo: Buffer,
     
     CellPhoneApprove:{type:Boolean,'default':false},
@@ -105,6 +105,7 @@ cafeSchema.statics.dropToken = function (cafeId, callback) {
 
         }
     })
+}
 
     cafeSchema.statics.approveCellPhone = function (cafeId, cellPhone, callback) {
 
@@ -136,4 +137,4 @@ cafeSchema.statics.UpdateCellPhone = function (cafeId, cellPhone, callback) {
 };
 
 Cafe = mongoose.model('Cafe', cafeSchema);
-module.exports = Cafe;
+exports.Cafe = Cafe;
