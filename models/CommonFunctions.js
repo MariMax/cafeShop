@@ -1,10 +1,7 @@
 var crypto = require('crypto');
 var rest = require('restler');
-var models = require('./User.js');
+
 var cafeModel = require('./Cafe.js').Cafe;
-
-
-var User = models.User;
 
 
 exports.hash =  function hash (msg, key) {
@@ -49,19 +46,17 @@ exports.sendMail = function sendMail(mailTo, mailFrom, subject, body, fn) {
 
 
 
-exports.assignUserandCafe = function(userId,cafeId, callback)
-{
-    User.findOne({ _id: userId }, function (error, user) {
+exports.assignUserandCafe = function (userId, cafeId, callback) {
+    cafeModel.findOne({ _id: cafeId }, function (error, cafe) {
         if (error) { callback(error) }
         else {
-            cafeModel.findOne({ _id: cafeId }, function (error, cafe) {
+            User.findOne({ _id: userId }, function (error, user) {
                 if (error) { return callback(error) } else {
-                    User
                     User.assignWithCafe(cafe._id, user._id, function (error, val) {
                         if (error) { callback(error) } else {
                             callback(null, val);
                         }
-                    })
+                    });
                 }
             });
         }
@@ -92,14 +87,17 @@ exports.approveuserInCafe = function(userId,cafeId, callback)
     })
 }
 
-exports.logError = function(error) {
+log = function logError(error) {
     if (error) {
         console.log(error);
     }
 }
+
+exports.logError = log;
+
 exports.ShowError = function(response, error) {
     if (error) {
-        logError(error);
+        log(error);
         }
         response.json({ message: error });
     

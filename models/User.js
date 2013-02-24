@@ -5,11 +5,20 @@ var mongoose = require('mongoose')
     , required = commonFunctions.required;
 
 mongoTypes.loadTypes(mongoose, 'email');
-//mongoose.connect('mongodb://localhost/cafeShop');
 
 
+var uristring = 'mongodb://localhost/cafeShop';
 
-
+// Ensure safe writes
+var mongoOptions = { db: { safe: true} };
+// Connect
+mongoose.connect(uristring, mongoOptions, function (err, res) {
+    if (err) {
+        console.log('ERROR connecting to: ' + uristring + '. ' + err);
+    } else {
+        console.log('Succeeded connected to: ' + uristring);
+    }
+});
 
 var Schema = mongoose.Schema
     , ObjectId = Schema.ObjectId;

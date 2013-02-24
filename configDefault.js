@@ -28,5 +28,6 @@ exports.getSMSConfig = function () {
         authToken: 'Денег пока жалко не выложу в общий доступ',
         From:'Денег пока жалко не выложу в общий доступ'
     }
+     return configValues;
 }
 

@@ -37,11 +37,10 @@ exports.add_routes = function (app) {
     //});
 
     app.post("/cafe/:cafeId/menu", function (req, res) {
-        Menu.newMenu(req.params.cafeId, req.body, function (menuId) {
-            res.send({ id: menuId }, 201)
-        }, function (err) {
-            console.log('ERROR : ' + err);
-        })
+        Menu.newMenu(req.params.cafeId, req.body, function (err,menu) {
+            if (err) res.send('ERROR : ' + err,500); else
+            res.send({ id: Menu._id }, 201)
+        });
 
     });
 
