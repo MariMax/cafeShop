@@ -8,7 +8,7 @@ var Schema = mongoose.Schema
 
 exports.add_routes = function (app) {
 
-    app.get("/dishes", function (req, res) { res.render("dishes/list", { title: "dishes list" }); });
+    app.get("/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", function (req, res) { res.render("dishes/list", { title: "dishes list", cafeId:req.params.cafeId }); });
 
     app.get("/api/dishes/:id", function (req, res) {
         Dish.findOne({ _id: req.params.id }, function (err, dish) {
@@ -47,7 +47,7 @@ exports.add_routes = function (app) {
 
     });
 
-    app.get("/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", function (req, res) {
+    app.get("/api/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", function (req, res) {
         Dish.find({ _cafe: req.params.cafeId }, function (err, dish) {
             if (err)
                 res.send(err, 404);
