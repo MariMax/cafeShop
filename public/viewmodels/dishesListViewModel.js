@@ -4,22 +4,29 @@ function Dish(data) {
     this.Price = ko.observable(data.Price);
 }
 
-function DishesListViewModel() {
+function DishesListViewModel(cafeId, menuId, categoryId) {
     // Data
+    debugger;
     var self = this;
     self.dishes = ko.observableArray([]);
     self.newDishName = ko.observable();
     self.newDishDescription = ko.observable();
     self.newDishPrice = ko.observable();
+    self.cafeId = cafeId;
+    self.menuId = menuId;
+    self.categoryId = categoryId;
+
+
 
     // Operations
     self.addDish = function () {
         self.dishes.push(new Dish({ Name: this.newDishName(), Description: this.newDishDescription(), Price: this.newDishPrice() }));
-        //$.ajax("/api/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", {
-    //        //    data: ko.toJSON({ dishes: self.dishes }),
-    //        //    type: "post", contentType: "application/json",
-    //        //    success: function (result) { alert(result) }
-    //        //});
+        var url = "/api/cafe/" + self.cafeId + "/menu/" + self.menuId + "/category/" + self.categoryId + "/dishes";
+        $.ajax(url, {
+            data: ko.toJSON({ dishes: self.dishes }),
+            type: "post", contentType: "application/json",
+            success: function (result) { alert(result) }
+        });
         self.newDishName("");
         self.newDishDescription("");
         self.newDishPrice("");
@@ -33,4 +40,8 @@ function DishesListViewModel() {
     //});
 }
 
-ko.applyBindings(new DishesListViewModel());
+var cafeId = document.getElementById('cafeId').value;
+var menuId = document.getElementById('menuId').value;
+var categoryId = document.getElementById('categoryId').value;
+
+ko.applyBindings(new DishesListViewModel(cafeId,menuId,categoryId));
