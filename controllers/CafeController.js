@@ -1,6 +1,7 @@
 var models = require('../models/Cafe.js');
 var forms = require('../forms/CafeForms.js');
-var Users = require('../models/User.js');
+var User = require('../models/User.js').User;
+var Menu = require('../models/Menu.js').Menu;
 var common = require('../models/CommonFunctions.js');
 var sendMail = common.sendMail;
 var sendSMS = common.sendSMS;
@@ -10,7 +11,6 @@ var assignUserandCafe = common.assignUserandCafe;
 var logError = common.logError;
 var ShowError = common.ShowError;
 
-var Dish = models.Dish;
 
 var mongoose = require('mongoose')
     , mongoTypes = require('mongoose-types')
@@ -26,7 +26,7 @@ exports.add_routes = function (app) {
     app.post('/cafes/newCafe', forms.createCafeForm, function (req, res) {
         if (req.session.user) {
             if (req.form.isValid) {
-                Users.findOne({ _id: req.session.user }, function (error, user) {
+                User.findOne({ _id: req.session.user }, function (error, user) {
                     if (error) ShowError(res, error);
                     else {
                         Cafe.findOne({ CellPhone: req.form.CellPhone }, function (error, cafeWithApprovedCellPhone) {
@@ -35,12 +35,16 @@ exports.add_routes = function (app) {
 
                                     if (error) ShowError(res, error); else {
                                         console.log(cafe);
+                                        Menu.newMenu(cafe._id, { Name: "NewMenu", Description: "NewDescription" }, function (error, menu) {
+                                            if (error) ShowError(res, error);
+                                        });
                                         assignUserandCafe(user._id, cafe._id, function (error, userAssigned) {
                                             if (error) ShowError(res, error); else {
                                                 console.log(userAssigned)
-                                                approveuserInCafe(userAssigned._id, cafe._id, function (error, val) {
+                                                approveuserInCafe(userAssigned, cafe, function (error, val) {
                                                     if (error) ShowError(res, error); else {
                                                         sendSMS(SMSconf, cafe.tempCellPhone, cafe.CellPhoneVerificationCode, function (data, response) {
+                                                            logError("CellPhoneApprovelink " + conf.site_url + "/cafes/approve-CellPhone?cafeId=" + cafe._id.toString() + "&token=" + cafe.CellPhoneVerificationCode + "&cellPhone=" + encodeURIComponent(cafe.tempCellPhone));
                                                             ShowError(res, "Wait SMS whith verify Code for approve cafe");
                                                         });
                                                     }
@@ -60,49 +64,70 @@ exports.add_routes = function (app) {
     });
 
     app.get("/cafes/getApprovedUsers/:cafeId", function (req, res) {
-        Users.getAllApprovedUsersInCafe(req.params.cafeId, function (error, users) {
+        User.getAllApprovedUsersInCafe(req.params.cafeId, function (error, users) {
             if (error) ShowError(res, error);
             else ShowError(res, users)
         });
     });
 
     app.get("/cafes/getAllUsers/:cafeId", function (req, res) {
-        Users.getAllUsersInCafe(req.params.cafeId, function (error, users) {
+        User.getAllUsersInCafe(req.params.cafeId, function (error, users) {
             if (error) ShowError(res, error);
             else ShowError(res, users)
         });
     });
 
-    app.get("/cafes/updateValue/:cafeId", function (req, res) {
+    app.get("/cafes/updateValues/:cafeId", function (req, res) {
+        Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
+            if (error) ShowError(res, error); else
+                res.render("cafes/UpdateValues", { title: "UpdateCafeValues", cafe: cafe });
+        });
+    });
+
+    app.post("/cafes/updateValues", forms.updateCafeForm, function (req, res) {
         if (req.session.user) {
-
-            Users.findOne({ _id: req.session.user }, function (error, user) {
-                if (error) ShowError(res, error);
-                else {
-                    if (user.approve && user.approveInCurrentCafe && user._cafe && user._cafe.toString() == req.params.cafeId.toString())
-                        Cafe.UpdateValue(req.params.cafeId, req.body, function (error, cafe) {
-                            if (error) ShowError(res, error);
-                            else ShowError(res, cafe);
-                        });
-                }
-            });
-
+            if (req.form.isValid) {
+                User.findOne({ _id: req.session.user }, function (error, user) {
+                    if (error) ShowError(res, error);
+                    else {
+                        logError(user.approve);
+                        logError(user.approveInCurrentCafe);
+                        logError(user._cafe);
+                        logError(req.form.cafeId);
+                        logError(req.form);
+                        if (user.approve && user.approveInCurrentCafe && user._cafe && user._cafe == req.form.cafeId)
+                            Cafe.UpdateCafeValue(req.form.cafeId, req.form, function (error, cafe) {
+                                if (error) ShowError(res, error);
+                                else ShowError(res, cafe);
+                            });
+                        else { ShowError(res, 'User not from this cafe'); }
+                    }
+                });
+            } else { ShowError(res, 'WrongForm'); }
         } else { res.redirect('users/login'); }
     })
 
     app.get("/cafes/updateCellPhone/:cafeId", function (req, res) {
+        Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
+            if (error) ShowError(res, error); else
+                res.render("cafes/UpdateCellPhone", { title: "updateCellPhone", cafe: cafe });
+        });
+    });
+
+    app.post("/cafes/updateCellPhone", forms.UpdateCafeCellPhoneForm, function (req, res) {
         if (req.session.user) {
 
-            Users.findOne({ _id: req.session.user }, function (error, user) {
+            User.findOne({ _id: req.session.user }, function (error, user) {
                 if (error) ShowError(res, error);
                 else {
-                    if (user.approve && user.approveInCurrentCafe && user._cafe && user._cafe.toString() == req.params.cafeId.toString())
-                        Cafe.findOne({ CellPhone: req.params.CellPhone }, function (error, approvedCafe) {
+                    if (user.approve && user.approveInCurrentCafe && user._cafe && user._cafe == req.form.cafeId)
+                        Cafe.findOne({ CellPhone: req.form.CellPhone }, function (error, approvedCafe) {
                             if (!approvedCafe) {
-                                Cafe.UpdateCellPhone(req.params.cafeId, req.params.CellPhone, function (error, cafe) {
+                                Cafe.UpdateCellPhone(req.form.cafeId, req.form.CellPhone, function (error, cafe) {
                                     if (error) ShowError(res, error);
                                     else {
                                         sendSMS(SMSconf, cafe.tempCellPhone, cafe.CellPhoneVerificationCode, function (data, response) {
+                                            logError("CellPhoneApprovelink " + conf.site_url + "/cafes/approve-CellPhone?cafeId=" + cafe._id.toString() + "&token=" + cafe.CellPhoneVerificationCode + "&cellPhone=" + encodeURIComponent(cafe.tempCellPhone));
                                             ShowError(res, "Wait SMS whith verify Code");
                                         })
                                     }
@@ -120,9 +145,9 @@ exports.add_routes = function (app) {
         var token = req.query.token;
         var cellPhone = req.query.cellPhone;
         if (cafeId && token && cellPhone) {
-            cafeId.findOne({ CellPhone: cellPhone }, function (error, cafeApprovedCellPhone) {
+            Cafe.findOne({ CellPhone: cellPhone }, function (error, cafeApprovedCellPhone) {
                 if (!cafeApprovedCellPhone) {
-                    Cafe.findOne({ _id: cafeId, tempCellPhone: cellPhone }, function (error, cafe) {
+                    Cafe.findOne({ _id: cafeId, tempCellPhone: cellPhone.toString(), CellPhoneVerificationCode: token }, function (error, cafe) {
                         if (cafe && cafe.CellPhoneVerificationCode == token) {
                             logError("We find cafe and token is right");
                             Cafe.approveCellPhone(cafeId, cellPhone, function (error, result) {

@@ -1,0 +1,51 @@
+<% layout('../layout') -%>
+ <form method="post" action="/cafes/updateValues">
+  <!--  Name:String,
+    Adderss:String,
+    Description:String,
+    WorkTime:String,
+    ClientPhone:String,
+    CellPhone:String,
+    
+    Latitude:Number ,
+    Longitude:Number ,
+    Logo: Buffer,-->
+      <p>
+        
+        <br>
+        <strong>Cafe ID</strong>
+        <input type="text" size="20" name="cafeId" value="<%= cafe._id %>" required>
+          <br>
+        <strong>Cafe Name</strong>
+        <input type="text" size="20" name="Name" value="<%= cafe.Name %>" required>
+        <br>
+        <strong>Address</strong>
+        <input type="text" size="20" value="<%= cafe.Address %>" name="Address">
+          <br>
+        <strong>Description</strong>
+        <input type="text" size="20" value="<%= cafe.Description %>" name="Description">
+          <br>
+        <strong>WorkTime</strong>
+        <input type="text" size="20" value="<%= cafe.WorkTime %>" name="WorkTime">
+          <br>
+        <strong>ClientPhone</strong>
+        <input type="text" size="20" value="<%= cafe.ClientPhone %>" name="ClientPhone">
+          <br>
+        <strong>CellPhone</strong>
+        <input type="text" size="20" value="<%=  cafe.CellPhone  %>"name="CellPhone" required>
+          <br>
+        <strong>Latitude</strong>
+        <input type="number" size="20" value="<%= cafe.Latitude %>" name="Latitude">
+          <br>
+        <strong>Longitude</strong>
+        <input type="number" size="20" value="<%= cafe.Longitude %>" name="Longitude">
+          <br>
+        <strong>Logo</strong>
+        <input type="image" size="20" value="<%= cafe.Logo %>" name="Logo">
+      </p>
+
+      <p>
+        <strong>And then click this button:</strong>
+        <input type="submit" name="login" value="Update">
+      </p>
+    </form>

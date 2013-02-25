@@ -21,7 +21,7 @@ mongoose.connect(uristring, mongoOptions, function (err, res) {
 var cafeSchema = new Schema({
     //_id: ObjectId,
     Name:String,
-    Adderss:String,
+    Address:String,
     Description:String,
     WorkTime:String,
     ClientPhone:String,
@@ -36,9 +36,9 @@ var cafeSchema = new Schema({
     tempCellPhone:String,
     //DeliveryMethods:[{type:ObjectId,ref:'DeliveryMethod'}],
     //Users:[{type:ObjectId,ref:'User'}],
-    Dishes:[{type:ObjectId,ref:'Dish'}],
-    Menus:[{type:ObjectId,ref:'Menu'}],
-    Orders:[{type:ObjectId,ref:'Order'}],
+    //Dishes:[{type:ObjectId,ref:'Dish'}],
+    //Menus:[{type:ObjectId,ref:'Menu'}],
+    //Orders:[{type:ObjectId,ref:'Order'}],
     CanWorkInCafeShop:Boolean
 });
 
@@ -83,10 +83,10 @@ cafeSchema.statics.UpdateCafeValue = function (cafeId,data, cb) {
 
     this.findByIdAndUpdate(cafeId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
         if (error) {
-            callback(error);
+            cb(error);
         }
         else {
-            Cafe.findOne({ _id: cafeId }, callback)
+            Cafe.findOne({ _id: cafeId }, cb)
             
         }
     })
