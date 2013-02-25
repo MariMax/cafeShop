@@ -1,0 +1,20 @@
+<% layout('../layout') -%>
+ <form method="post" action="/cafes/updateCellPhone">
+
+      <p>
+        
+        <br>
+        <strong>Cafe ID</strong>
+        <input type="text" size="20" name="cafeId" value="<%= cafe._id %>" required>
+          <br>
+       
+        <strong>CellPhone</strong>
+        <input type="text" size="20" value="<%=  cafe.CellPhone  %>"name="CellPhone" required>
+       
+      </p>
+
+      <p>
+        <strong>And then click this button:</strong>
+        <input type="submit" name="login" value="Update">
+      </p>
+    </form>
