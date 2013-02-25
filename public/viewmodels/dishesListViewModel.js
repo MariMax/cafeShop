@@ -4,8 +4,9 @@ function Dish(data) {
     this.Price = ko.observable(data.Price);
 }
 
-function DishesListViewModel() {
+function DishesListViewModel(cafeId) {
     // Data
+    debugger;
     var self = this;
     self.dishes = ko.observableArray([]);
     self.newDishName = ko.observable();
@@ -15,11 +16,11 @@ function DishesListViewModel() {
     // Operations
     self.addDish = function () {
         self.dishes.push(new Dish({ Name: this.newDishName(), Description: this.newDishDescription(), Price: this.newDishPrice() }));
-        //$.ajax("/api/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", {
-    //        //    data: ko.toJSON({ dishes: self.dishes }),
-    //        //    type: "post", contentType: "application/json",
-    //        //    success: function (result) { alert(result) }
-    //        //});
+        $.ajax("/api/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", {
+                //    data: ko.toJSON({ dishes: self.dishes }),
+                //    type: "post", contentType: "application/json",
+                //    success: function (result) { alert(result) }
+                //});
         self.newDishName("");
         self.newDishDescription("");
         self.newDishPrice("");
@@ -27,10 +28,12 @@ function DishesListViewModel() {
     self.removeDish = function (dish) { self.dishes.destroy(dish) };
 
     // // Load initial state from server, convert it to Task instances, then populate self.tasks
-    //$.getJSON("/tasks", function(allData) {
+    //$.getJSON("/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", function(allData) {
     //    var mappedTasks = $.map(allData, function(item) { return new Task(item) });
     //    self.tasks(mappedTasks);
     //});
 }
+
+var cafeId = document.getElementById("cafeId").val;
 
 ko.applyBindings(new DishesListViewModel());
