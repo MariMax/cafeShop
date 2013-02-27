@@ -4,7 +4,7 @@ function Dish(data) {
     this.Price = ko.observable(data.Price);
 }
 
-function DishesListViewModel(cafeId) {
+function DishesListViewModel(cafeId, categoryId) {
     // Data
     debugger;
     var self = this;
@@ -15,12 +15,16 @@ function DishesListViewModel(cafeId) {
 
     // Operations
     self.addDish = function () {
-        self.dishes.push(new Dish({ Name: this.newDishName(), Description: this.newDishDescription(), Price: this.newDishPrice() }));
-        $.ajax("/api/cafe/:cafeId/menu/:menuId/category/:categoryId/dishes", {
-                //    data: ko.toJSON({ dishes: self.dishes }),
-                //    type: "post", contentType: "application/json",
-                //    success: function (result) { alert(result) }
-                //});
+        var dish = new Dish({ Name: this.newDishName(), Description: this.newDishDescription(), Price: this.newDishPrice() });
+        self.dishes.push(dish);
+        var url = "/api/cafe/" + cafeId + "/category/" + categoryId + "/dishes";
+        debugger;
+        var jsonData = ko.toJSON(dish);
+        $.ajax(url, {
+            data: jsonData,
+            type: "post", contentType: "application/json",
+            success: function (result) { alert(result) }
+        });
         self.newDishName("");
         self.newDishDescription("");
         self.newDishPrice("");
@@ -34,6 +38,7 @@ function DishesListViewModel(cafeId) {
     //});
 }
 
-var cafeId = document.getElementById("cafeId").val;
+var cafeId = document.getElementById("cafeId").value;
+var categoryId = document.getElementById("categoryId").value;
 
-ko.applyBindings(new DishesListViewModel());
+ko.applyBindings(new DishesListViewModel(cafeId, categoryId));

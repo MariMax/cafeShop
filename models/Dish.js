@@ -23,16 +23,14 @@ var dishSchema = new Schema({
     Name: String,
     Description: String,
     Price: Number,
-    _menu: ObjectId,
     _category: ObjectId,
     Days: [Number]
 });
 
 
-dishSchema.statics.newDish = function (cafeId, menuId, categoryId, data, cb, err) {
+dishSchema.statics.newDish = function (cafeId, categoryId, data, cb, err) {
     var instance = new Dish();
     instance._cafe = cafeId;
-    instance._menu = menuId;
     instance._category = categoryId;
     instance.Name = data.Name;
     instance.Description = data.Description;

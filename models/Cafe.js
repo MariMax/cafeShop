@@ -26,6 +26,7 @@ var cafeSchema = new Schema({
     WorkTime:String,
     ClientPhone:String,
     CellPhone:String,
+    Slogan:String,
     
     Latitude:Number ,
     Longitude:Number ,
