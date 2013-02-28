@@ -1,25 +1,26 @@
 <% layout('../layout') -%>
- <form method="post" action="/users/newUser">
-      <p>
-        <strong>You may have entered an invalid user ID
-          or password. To correct the problem, please enter
-          your correct user ID and password. If you have
-          forgotten your user ID or password, please contact
-          the server administrator.</strong>
-      </p>
-      <p>
-        <strong>Please enter user ID and password:</strong>
-        <br>
-        <strong>User Name</strong>
-        <input type="text" size="20" name="UserName" required>
-        <strong>email</strong>
-        <input type="email" size="20" name="email" required>
-        <strong>Password</strong>
-        <input type="password" size="20" name="password" required>
-      </p>
-
-      <p>
-        <strong>And then click this button:</strong>
-        <input type="submit" name="login" value="Login">
-      </p>
-    </form>
+<div class="admin_page">
+    <div class="admin_content">
+        <div class="admin_info">
+            <h3>Регистрация</h3>
+            <form method="post" action="/users/newUser" class="horizontal">
+                <div class="form_item">
+                    <div class="label">Имя пользователя</div>
+                    <div class="input"><input type="text" size="60" name="UserName" required></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">email</div>
+                    <div class="input"><input type="email" size="60" name="email" required></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Пароль</div>
+                    <div class="input"><input type="password" size="60" name="password" required></div>
+                </div>
+                <div class="form_but">
+                    <input type="submit" value="Зарегистрироваться" class="button succes">
+                    <a href="/" class="button simple">Отмена</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

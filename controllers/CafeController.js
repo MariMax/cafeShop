@@ -77,11 +77,20 @@ exports.add_routes = function (app) {
         });
     });
 
-    app.get("/cafes/updateValues/:cafeId", function (req, res) {
+    app.get("api/cafes/:cafeId", function (req, res) {
         Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
             if (error) ShowError(res, error); else
                 res.render("cafes/UpdateValues", { title: "UpdateCafeValues", cafe: cafe });
         });
+    });
+
+    app.get("/cafes/updateValues/:cafeId", function (req, res) {
+        if (req.session.user) {
+            Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
+                if (error) ShowError(res, error); else
+                    res.render("cafes/admin", { title: "UpdateCafeValues", cafe: cafe });
+            });
+        }else { res.redirect('users/login'); }
     });
 
     app.post("/cafes/updateValues", forms.updateCafeForm, function (req, res) {
