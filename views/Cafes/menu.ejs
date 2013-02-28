@@ -1,7 +1,8 @@
 <% layout('../layout') -%>
 <div class="cafe_page">
+    <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
     <div class="cafe_info">
-        <div class="cafe_name">Пицца и Блины, бистро</div>
+        <div class="cafe_name"><strong data-bind="text: Cafe.Name"></strong></div>
         <div class="cafe_tip">Ежедневно 09:00 - 00:00</div>
         <div class="cafe_address"><a href="#">Мингажева, 129</a></div>
         <div class="cafe_tel">(347) 266-85-45</div>
@@ -18,6 +19,7 @@
             <li><a href="#drink">Напитки</a></li>
         </ul>
         <div class="catalog clearfix" id="zavtraki">
+
             <div class="catalog_item">
                 <div class="img"><img src="images/content/img1.jpg" alt="img"></div>
                 <h3>Блинчик с малиной 75 г</h3>
@@ -26,7 +28,8 @@
                     <a href="#">заказать</a>
                 </div>
             </div>
-           
+
+
         </div>
         <div class="catalog clearfix" id="goryachie">
         </div>

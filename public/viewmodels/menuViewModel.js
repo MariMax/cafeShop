@@ -12,34 +12,44 @@ function Category(data) {
 }
 
 function Cafe(data) {
+    this.Name = ko.observable(data.Name);
     this.Slogan = ko.observable(data.Slogan);
     this.Address = ko.observable(data.Address);
     this.CellPhone = ko.observable(data.CellPhone);
     this.WorkTime = ko.observable(data.WorkTime);
     this.Id = ko.observable(data.Id);
-    this.Categories = ko.observableArray([]);
-
 }
 
 function MenuViewModel(cafeId) {
 
     var self = this;
+    self.CafeName = ko.observable();
     self.Cafe = ko.observable();
-
+    self.Categories = ko.observableArray([]);
+    debugger;
     $.getJSON("/api/cafes/" + cafeId, function (allData) {
-        var mappedCafe = $.map(allData, function (item) { return new Cafe(item) });
-        self.Cafe = mappedCafe;
+        var mapped = $.map(allData, function (item) { return new Cafe(item) });
+        debugger;
+        self.Cafe(mapped);
+        self.CafeName = self.Cafe.Name;
     });
 
     $.getJSON("/api/cafe/" + cafeId + "/category", function (allData) {
-        var mappedCafe = $.map(allData, function (item) { return new Category(item) });
-        self.Cafe.Categories(mappedCafe);
+        var mapped = $.map(allData, function (item) { return new Category(item) });
+        debugger;
+        self.Categories(mapped);
     });
 
-    $.each(self.Cafe.Categories, function (index, value) {
+    $.each(self.Categories, function (index, value) {
         $.getJSON("/api/cafe/" + cafeId + "/category/" + value.Id + "/dishes", function (allData) {
-            var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
-            value.Dishes(mappedDishes);
+            var mapped = $.map(allData, function (item) { return new Dish(item) });
+            debugger;
+            var category = new Category(value);
+            category.Dishes(mapped);
+            self.Categories.push(category);
         });
     });
 }
+
+var cafeId = document.getElementById("cafeId").value;
+ko.applyBindings(new MenuViewModel(cafeId));

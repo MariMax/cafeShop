@@ -8,8 +8,7 @@ var Schema = mongoose.Schema
 
 exports.add_routes = function (app) {
 
-    app.get("/cafe/:cafeId/category/:categoryId/dishes", function (req, res) 
-    { res.render("dishes/list", { title: "dishes list", cafeId:req.params.cafeId, categoryId:req.params.categoryId  }); });
+
 
     app.get("/api/dishes/:id", function (req, res) {
         Dish.findOne({ _id: req.params.id }, function (err, dish) {
