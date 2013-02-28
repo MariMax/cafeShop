@@ -27,28 +27,33 @@
 		<div id="ymaps-map-id_13613773245519471603" style="width: 100%; height: 100%;"></div>
 
 		<script type="text/javascript">
-		function fid_13613773245519471603(ymaps) {
-		    var map = new ymaps.Map("ymaps-map-id_13613773245519471603", {
-		        center: [55.966509846435514, 54.72631759918206],
-		        zoom: 13,
-		        type: "yandex#map"
-		    });
-
-		    map.controls
-		        .add("zoomControl")
-		        .add("mapTools")
-		        .add(new ymaps.control.TypeSelector(["yandex#map", "yandex#satellite", "yandex#hybrid", "yandex#publicMap"]));
-		    map.geoObjects
-		        .add(new ymaps.Placemark([55.968054798828085, 54.727509832853464], {
-		            balloonContent: '<div class="baloon_content"><b>Я живу тут!</b></div>',
-		            autoPan: false
-		        }, {
-		            iconImageHref: 'images/baloon.png',
-			        iconImageSize: [41, 52],
-			        iconImageOffset: [-20, -52]
-
-		        }));
-		};
+      function fid_13613773245519471603(ymaps) {
+          var map = new ymaps.Map("ymaps-map-id_13613773245519471603", {
+              center: [55.966509846435514, 54.72631759918206],
+              zoom: 13,
+              type: "yandex#map"
+          });
+          map.controls
+                      .add("zoomControl")
+                      .add("mapTools")
+                      .add(new ymaps.control.TypeSelector(["yandex#map", "yandex#satellite", "yandex#hybrid", "yandex#publicMap"]));
+          map.geoObjects
+                      .add(new ymaps.Placemark([55.968054798828085, 54.727509832853464], {
+                          balloonContent: '<div class="baloon_content"><b>Я живу тут!</b></div>',
+                          autoPan: false
+                      }, {
+                          iconImageHref: 'images/baloon.png',
+                          iconImageSize: [41, 52],
+                          iconImageOffset: [-20, -52]
+                      }));
+          map.events.add("click",
+                                  function (e) {
+                                      console.log(e.get("coordPosition"));
+                                  }
+              )
+      
+      
+       };
 		</script>
 		<script type="text/javascript" src="http://api-maps.yandex.ru/2.0-stable/?lang=ru-RU&coordorder=longlat&load=package.full&wizard=constructor&onload=fid_13613773245519471603"></script>
 	</div>

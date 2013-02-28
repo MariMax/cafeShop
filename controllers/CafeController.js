@@ -90,7 +90,7 @@ exports.add_routes = function (app) {
                 if (error) ShowError(res, error); else
                     res.render("cafes/admin", { title: "UpdateCafeValues", cafe: cafe });
             });
-        }else { res.redirect('users/login'); }
+        } else { res.redirect('users/login'); }
     });
 
     app.post("/cafes/updateValues", forms.updateCafeForm, function (req, res) {
@@ -107,7 +107,7 @@ exports.add_routes = function (app) {
                         if (user.approve && user.approveInCurrentCafe && user._cafe && user._cafe == req.form.cafeId)
                             Cafe.UpdateCafeValue(req.form.cafeId, req.form, function (error, cafe) {
                                 if (error) ShowError(res, error);
-                                else ShowError(res, cafe);
+                                else res.redirect('cafes/updatevalues/' + cafe._id);
                             });
                         else { ShowError(res, 'User not from this cafe'); }
                     }
@@ -166,11 +166,7 @@ exports.add_routes = function (app) {
                                 else {
                                     Cafe.dropToken(cafeId, function (error, result) { if (result) console.log(Date.now().toString() + ' token dropped ' + cafe.CellPhone); });
                                     console.log(Date.now().toString() + ' Cafe CellPhone is approved ' + result.CellPhone);
-                                    /*после подтверждения пользователя сохраняем его в сессию*/
-
-                                    ShowError(res, 'Cafe CellPhone is approved ' + result.CellPhone);
-
-
+                                    res.render("cafes/admin", { cafe: cafe });
                                 }
                             });
                         }

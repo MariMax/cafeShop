@@ -1,4 +1,9 @@
 <% layout('../layout') -%>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#cellPhone').blur(function () { console.log("endedit cell phone") })
+    });
+</script>
 		<div class="admin_page">
 
 			<div class="admin_title page_title_block">
@@ -30,7 +35,7 @@
 						</div>
 						<div class="form_item">
 							<div class="label">Сотовый (для sms оповещения)</div>
-							<div class="input"><input type="text" size="60" value="<%=  cafe.CellPhone  %>"name="CellPhone" required></div>
+							<div class="input"><input type="text" size="20" id ="cellPhone" value="<%=  cafe.CellPhone  %>"name="CellPhone" required></div>
 						</div>
 						<div class="form_but">
 							<input type="submit" value="Сохранить" class="button succes">
