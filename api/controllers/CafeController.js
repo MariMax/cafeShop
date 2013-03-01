@@ -1,5 +1,5 @@
 var models = require('../models/Cafe.js');
-var forms = require('../forms/CafeForms.js');
+var forms = require('../../site/forms/CafeForms.js');
 var User = require('../models/User.js').User;
 var Menu = require('../models/Menu.js').Menu;
 var common = require('../models/CommonFunctions.js');

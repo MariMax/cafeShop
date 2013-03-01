@@ -1,5 +1,5 @@
 
-var models = require("../models/User.js");
+var models = require("../../api/models/User.js");
 
 var form = require("express-form"),
     filter = form.filter,

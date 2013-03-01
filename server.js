@@ -1,6 +1,5 @@
 var express = require('express')
   , app = express()
-  , pages = require(__dirname + '/controllers/pages')
   , ejsLocals = require('ejs-locals')
   , nodemailer = require("nodemailer");
 
@@ -65,10 +64,10 @@ app.use(express.session({
     maxAge: new Date(Date.now()+3600000)
   }));
 // configuration settings 
-app.set('views', __dirname + '/views')
+app.set('views', __dirname + '/site/views')
 app.engine('ejs',ejsLocals)
 app.set('view engine', 'ejs')
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/site/public'))
 
 // mount routes
 app.use(function (req, res, next) {

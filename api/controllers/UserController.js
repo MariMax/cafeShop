@@ -1,7 +1,7 @@
 var models = require('../models/User.js');
 var cafeModel = require('../models/Cafe.js');
 
-var forms = require('../forms/UserForms.js');
+var forms = require('../../site/forms/UserForms.js');
 var User = models.User;
 var common = require('../models/CommonFunctions.js');
 var sendMail = common.sendMail;
@@ -15,7 +15,7 @@ var ShowError = common.ShowError;
 
 
 function approveUserMailSend(user, encodedToken, email) {
-    var approveLink = conf.site_url + "/users/approve-email/?userId=" + user._id + "&verify=" + encodedToken+"&email="+email;
+    var approveLink = conf.site_url + "/api/users/approve-email/?userId=" + user._id + "&verify=" + encodedToken+"&email="+email;
     var approveMessage = "Hello, <br/>Click for approve your email in cofeShop System:<br/><a href=\"" + approveLink + "\">" + approveLink + "</a>";
 
     sendMail(user.email, conf.site_email, conf.site_name + ': approve email', approveMessage,
