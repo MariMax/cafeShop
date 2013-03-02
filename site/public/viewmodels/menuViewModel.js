@@ -6,47 +6,33 @@ function Dish(data) {
 }
 
 function Category(data) {
+    this.id = ko.observable(data.id);
     this.Name = ko.observable(data.Name);
     this.IdName = ko.observable(data.IdName);
     this.Dishes = ko.observableArray([]);
 }
 
-function Cafe(data) {
-    this.Name = ko.observable(data.Name);
-    this.Slogan = ko.observable(data.Slogan);
-    this.Address = ko.observable(data.Address);
-    this.CellPhone = ko.observable(data.CellPhone);
-    this.WorkTime = ko.observable(data.WorkTime);
-    this.Id = ko.observable(data.Id);
-}
 
 function MenuViewModel(cafeId) {
 
     var self = this;
-    self.CafeName = ko.observable();
-    self.Cafe = ko.observable();
+    self.name = ko.observable('');
+    self.phone = ko.observable();
     self.Categories = ko.observableArray([]);
-    debugger;
-    $.getJSON("/api/cafes/" + cafeId, function (allData) {
-        var mapped = $.map(allData, function (item) { return new Cafe(item) });
-        debugger;
-        self.Cafe(mapped);
-        self.CafeName = self.Cafe.Name;
+
+    $.getJSON("/api/cafes/" + cafeId, function (data) {
+        self.name(data.Name);
+        self.phone(data.tempCellPhone);
     });
 
-    $.getJSON("/api/cafe/" + cafeId + "/category", function (allData) {
-        var mapped = $.map(allData, function (item) { return new Category(item) });
-        debugger;
-        self.Categories(mapped);
-    });
-
-    $.each(self.Categories, function (index, value) {
-        $.getJSON("/api/cafe/" + cafeId + "/category/" + value.Id + "/dishes", function (allData) {
-            var mapped = $.map(allData, function (item) { return new Dish(item) });
-            debugger;
-            var category = new Category(value);
-            category.Dishes(mapped);
-            self.Categories.push(category);
+    $.getJSON("/api/cafes/" + cafeId + "/category", function (allData) {
+        $.each(allData, function (index, value) {
+            $.getJSON("/api/cafe/" + cafeId + "/category/" + value._id + "/dishes", function (allData) {
+                var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
+                var category = new Category(value);
+                category.Dishes(mappedDishes);
+                self.Categories.push(category);
+            });
         });
     });
 }

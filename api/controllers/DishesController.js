@@ -39,7 +39,7 @@ exports.add_routes = function (app) {
     //});
 
     app.post("/api/cafe/:cafeId/category/:categoryId/dishes", function (req, res) {
-         console.log('body : ');
+        
         console.log('body : ' + req.body);
         Dish.newDish(req.params.cafeId, req.params.categoryId, req.body, function (dishId) {
             res.send({ id: dishId }, 201)

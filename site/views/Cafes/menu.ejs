@@ -2,41 +2,29 @@
 <div class="cafe_page">
     <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
     <div class="cafe_info">
-        <div class="cafe_name"><strong data-bind="text: Cafe.Name"></strong></div>
+        <div class="cafe_name"><strong data-bind="text: name"></strong></div>
         <div class="cafe_tip">Ежедневно 09:00 - 00:00</div>
         <div class="cafe_address"><a href="#">Мингажева, 129</a></div>
-        <div class="cafe_tel">(347) 266-85-45</div>
+        <div class="cafe_tel"><strong data-bind="text: phone"></strong></div>
         <div class="border_wave_bot"></div>
     </div>
     <div class="cafe_menu" id="tab-container">
-        <ul class="catalog_nav etabs">
-            <li><a href="#zavtraki">Завтраки</a></li>
-            <li><a href="#goryachie">Горячие блюда</a></li>
-            <li><a href="#salat">Салаты</a></li>
-            <li><a href="#sup">Супы</a></li>
-            <li><a href="#garnir">Гарниры</a></li>
-            <li><a href="#desert">Десерт</a></li>
-            <li><a href="#drink">Напитки</a></li>
+        <ul class="catalog_nav etabs" data-bind="foreach: Categories">
+            <li><a href="text: IdName"><strong data-bind="text: Name"></strong></a></li>
         </ul>
-        <div class="catalog clearfix" id="zavtraki">
-
+        <!-- ko foreach: Categories -->
+        <div class="catalog clearfix" id="text: IdName">
+            <!-- ko foreach: Dishes -->
             <div class="catalog_item">
                 <div class="img"><img src="images/content/img1.jpg" alt="img"></div>
-                <h3>Блинчик с малиной 75 г</h3>
-                <div class="price">50 р.</div>
+                <h3><strong data-bind="text: Name"></strong></h3>
+                <div class="price"><strong data-bind="text: Price"></strong></div>
                 <div class="buy">
                     <a href="#">заказать</a>
                 </div>
             </div>
-
-
+            <!-- /ko -->
         </div>
-        <div class="catalog clearfix" id="goryachie">
-        </div>
-        <div id="salat">asdf</div>
-        <div id="sup">asdfasf</div>
-        <div id="garnir">asd</div>
-        <div id="desert">oqinv</div>
-        <div id="drink">apqonb</div>
+        <!-- /ko -->
     </div>
 </div>

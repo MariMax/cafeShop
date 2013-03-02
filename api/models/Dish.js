@@ -4,19 +4,19 @@ var mongoose = require('mongoose')
     , Schema = mongoose.Schema
     , ObjectId = Schema.ObjectId;
 
-var uristring = 'mongodb://localhost/cafeShop';
+//var uristring = 'mongodb://localhost/cafeShop';
 
-// Ensure safe writes
-var mongoOptions = { db: { safe: true} };
+//// Ensure safe writes
+//var mongoOptions = { db: { safe: true} };
 
-// Connect
-mongoose.connect(uristring, mongoOptions, function (err, res) {
-    if (err) {
-        console.log('ERROR connecting to: ' + uristring + '. ' + err);
-    } else {
-        console.log('Succeeded connected to: ' + uristring);
-    }
-});
+//// Connect
+//mongoose.connect(uristring, mongoOptions, function (err, res) {
+//    if (err) {
+//        console.log('ERROR connecting to: ' + uristring + '. ' + err);
+//    } else {
+//        console.log('Succeeded connected to: ' + uristring);
+//    }
+//});
 
 var dishSchema = new Schema({
     _cafe: ObjectId, // { type: ObjectId, ref: 'Cafe' },
