@@ -95,10 +95,10 @@ log = function logError(error) {
 
 exports.logError = log;
 
-exports.ShowError = function(response, error) {
+exports.ShowError = function(response, error, status) {
     if (error) {
         log(error);
         }
-        response.json({ message: error });
+        response.json({ message: error, status: status},200);
     
 }

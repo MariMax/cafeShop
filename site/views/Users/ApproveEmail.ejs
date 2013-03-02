@@ -1,0 +1,49 @@
+<% layout('../layout') -%>
+<script type="text/javascript">
+    $(function () {
+
+        function postData() {
+            var jqXHR = $.post('/api/users/approve-email', $('form').serialize())
+            .done(function (data) {
+                if (data.status == 200) {
+                    $("#messenger").html(data.message);
+                    console.log("done " + data.message);
+                    $("#messenger").fadeIn("slow");
+                }
+                if (data.status = 500) {
+                    $("#messenger").html(data.message);
+                    console.log("fail " + data.message);
+                    $("#messenger").fadeIn("slow");
+                }
+            });
+        }
+
+        postData();
+
+    });
+
+</script>
+
+<div class="admin_page">
+    <div class="admin_content">
+        <div class="admin_info">
+            <h3>Подтверждение email</h3>
+            <form method="post" action="" class="horizontal">
+                <div id ="messenger" class="messenger"> </div>
+                <div class="form_item">
+                    <div class="input"><input type="text" size="60" name="userId" value="<%= userId %>" required hidden></div>
+                </div>
+                <div class="form_item">
+                    <div class="input"><input type="text" size="60" name="token" value="<%= token %>" required hidden></div>
+                </div>
+                <div class="form_item">
+                    <div class="input"><input type="email" size="60" name="email" value="<%= email %>" required hidden></div>
+                </div>
+                <div class="form_but">
+                    <a href="/" class="button succes">Продолжить</a>  
+                    <a href="/users/logout" class="button simple">Выйти</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

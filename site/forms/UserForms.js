@@ -18,7 +18,12 @@ var SignupForm = form(
 
     filter("password").trim(),
     validate("password")
-        .required(null, "enter password").regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$","wrong password 1 degit, 1 uppercase, 1 lover case and min length 8")
+        .required(null, "enter password").regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$","wrong password 1 degit, 1 uppercase, 1 lover case and min length 8"),
+
+    filter("passwordConfirm").trim(),
+    validate("passwordConfirm")
+        .required(null, "enter valid passwordConfirm").regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$","wrong password 1 degit, 1 uppercase, 1 lover case and min length 8")
+
 );
 
 var LoginForm = form(
@@ -71,10 +76,38 @@ var UpdatePasswordForm = form(
     validate("PasswordConfirmation")
         .required(null, "enter PasswordConfirmation").regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,}$","wrong password 1 degit, 1 uppercase, 1 lover case and min length 8")
 )
+
+var ResetPasswordForm2 = form(
+    filter("userId").trim(),
+    validate("userId")
+        .required(null, "enter userId"),
+
+   filter("verify").trim(),
+    validate("verify")
+        .required(null, "enter verify")
+)
+
+var ApproveEmailForm = form(
+    filter("userId").trim(),
+    validate("userId")
+        .required(null, "enter userId"),
+
+   filter("token").trim(),
+    validate("token")
+        .required(null, "enter token"),
+
+   filter("email").trim(),
+    validate("email")
+        .required(null, "enter email")
+        .isEmail('need some email')
+)
+
 exports.SignupForm = SignupForm;
 exports.LoginForm = LoginForm;
 
+exports.ApproveEmailForm = ApproveEmailForm;
 exports.ResetPasswordForm = ResetPaswordForm;
+exports.ResetPasswordForm2 = ResetPasswordForm2;
 exports.AssignWithCafeForm = AssignWithCafeForm;
 exports.UpdateNameForm = UpdateNameForm;
 exports.UpdateEmailForm = UpdateEmailForm;
