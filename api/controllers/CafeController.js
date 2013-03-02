@@ -9,7 +9,7 @@ var sendSMS = common.sendSMS;
 var approveuserInCafe = common.approveuserInCafe;
 var assignUserandCafe = common.assignUserandCafe;
 var logError = common.logError;
-var ShowError = common.ShowError;
+var ShowMessage = common.ShowMessage;
 
 
 var mongoose = require('mongoose')
@@ -27,25 +27,25 @@ exports.add_routes = function (app) {
         if (req.session.user) {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, error);
+                    if (error) ShowMessage(res, error);
                     else {
                         Cafe.findOne({ CellPhone: req.form.CellPhone }, function (error, cafeWithApprovedCellPhone) {
                             if (!cafeWithApprovedCellPhone) {
                                 Cafe.newCafe(req.form, function (error, cafe) {
 
-                                    if (error) ShowError(res, error); else {
+                                    if (error) ShowMessage(res, error); else {
                                         console.log(cafe);
                                         Menu.newMenu(cafe._id, { Name: "NewMenu", Description: "NewDescription" }, function (error, menu) {
-                                            if (error) ShowError(res, error);
+                                            if (error) ShowMessage(res, error);
                                         });
                                         assignUserandCafe(user._id, cafe._id, function (error, userAssigned) {
-                                            if (error) ShowError(res, error); else {
+                                            if (error) ShowMessage(res, error); else {
                                                 console.log(userAssigned)
                                                 approveuserInCafe(userAssigned, cafe, function (error, val) {
-                                                    if (error) ShowError(res, error); else {
+                                                    if (error) ShowMessage(res, error); else {
                                                         sendSMS(SMSconf, cafe.tempCellPhone, cafe.CellPhoneVerificationCode, function (data, response) {
                                                             logError("CellPhoneApprovelink " + conf.site_url + "/cafes/approve-CellPhone?cafeId=" + cafe._id.toString() + "&token=" + cafe.CellPhoneVerificationCode + "&cellPhone=" + encodeURIComponent(cafe.tempCellPhone));
-                                                            ShowError(res, "Wait SMS whith verify Code for approve cafe");
+                                                            ShowMessage(res, "Wait SMS whith verify Code for approve cafe");
                                                         });
                                                     }
                                                 })
@@ -54,32 +54,32 @@ exports.add_routes = function (app) {
                                     }
                                 });
                             } else {
-                                ShowError(res, "This CellPhone Number exist in our system, you should use another number")
+                                ShowMessage(res, "This CellPhone Number exist in our system, you should use another number")
                             }
                         });
                     }
                 });
-            } else { ShowError(res, 'WrongForm'); }
+            } else { ShowMessage(res, 'WrongForm'); }
         } else { res.redirect('users/login'); }
     });
 
     app.get("/cafes/getApprovedUsers/:cafeId", function (req, res) {
         User.getAllApprovedUsersInCafe(req.params.cafeId, function (error, users) {
-            if (error) ShowError(res, error);
-            else ShowError(res, users)
+            if (error) ShowMessage(res, error);
+            else ShowMessage(res, users)
         });
     });
 
     app.get("/cafes/getAllUsers/:cafeId", function (req, res) {
         User.getAllUsersInCafe(req.params.cafeId, function (error, users) {
-            if (error) ShowError(res, error);
-            else ShowError(res, users)
+            if (error) ShowMessage(res, error);
+            else ShowMessage(res, users)
         });
     });
 
     app.get("/api/cafes/:cafeId", function (req, res) {
         Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
-            if (error) ShowError(res, error); else
+            if (error) ShowMessage(res, "Не удалось найти кафе с Id "+req.params.cafeId,500); else
                 res.json(cafe,200)
         });
     });
@@ -87,7 +87,7 @@ exports.add_routes = function (app) {
     app.get("/cafes/updateValues/:cafeId", function (req, res) {
         if (req.session.user) {
             Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
-                if (error) ShowError(res, error); else
+                if (error) ShowMessage(res, error); else
                     res.render("cafes/admin", { title: "UpdateCafeValues", cafe: cafe });
             });
         } else { res.redirect('users/login'); }
@@ -97,7 +97,7 @@ exports.add_routes = function (app) {
         if (req.session.user) {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, error);
+                    if (error) ShowMessage(res, error);
                     else {
                         logError(user.approve);
                         logError(user.approveInCurrentCafe);
@@ -106,19 +106,19 @@ exports.add_routes = function (app) {
                         logError(req.form);
                         if (user.approve && user.approveInCurrentCafe && user._cafe && user._cafe == req.form.cafeId)
                             Cafe.UpdateCafeValue(req.form.cafeId, req.form, function (error, cafe) {
-                                if (error) ShowError(res, error);
+                                if (error) ShowMessage(res, error);
                                 else res.redirect('cafes/updatevalues/' + cafe._id);
                             });
-                        else { ShowError(res, 'User not from this cafe'); }
+                        else { ShowMessage(res, 'User not from this cafe'); }
                     }
                 });
-            } else { ShowError(res, 'WrongForm'); }
+            } else { ShowMessage(res, 'WrongForm'); }
         } else { res.redirect('users/login'); }
     })
 
     app.get("/cafes/updateCellPhone/:cafeId", function (req, res) {
         Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
-            if (error) ShowError(res, error); else
+            if (error) ShowMessage(res, error); else
                 res.render("cafes/UpdateCellPhone", { title: "updateCellPhone", cafe: cafe });
         });
     });
@@ -127,21 +127,21 @@ exports.add_routes = function (app) {
         if (req.session.user) {
 
             User.findOne({ _id: req.session.user }, function (error, user) {
-                if (error) ShowError(res, error);
+                if (error) ShowMessage(res, error);
                 else {
                     if (user.approve && user.approveInCurrentCafe && user._cafe && user._cafe == req.form.cafeId)
                         Cafe.findOne({ CellPhone: req.form.CellPhone }, function (error, approvedCafe) {
                             if (!approvedCafe) {
                                 Cafe.UpdateCellPhone(req.form.cafeId, req.form.CellPhone, function (error, cafe) {
-                                    if (error) ShowError(res, error);
+                                    if (error) ShowMessage(res, error);
                                     else {
                                         sendSMS(SMSconf, cafe.tempCellPhone, cafe.CellPhoneVerificationCode, function (data, response) {
                                             logError("CellPhoneApprovelink " + conf.site_url + "/cafes/approve-CellPhone?cafeId=" + cafe._id.toString() + "&token=" + cafe.CellPhoneVerificationCode + "&cellPhone=" + encodeURIComponent(cafe.tempCellPhone));
-                                            ShowError(res, "Wait SMS whith verify Code");
+                                            ShowMessage(res, "Wait SMS whith verify Code");
                                         })
                                     }
                                 });
-                            } else { ShowError(res, "This CellPhone Number exist in our system, you should use another number"); }
+                            } else { ShowMessage(res, "This CellPhone Number exist in our system, you should use another number"); }
                         });
                 }
             });
@@ -161,7 +161,7 @@ exports.add_routes = function (app) {
                             logError("We find cafe and token is right");
                             Cafe.approveCellPhone(cafeId, cellPhone, function (error, result) {
                                 if (error) {
-                                    ShowError(res, "Cant approveCafeCellPhone some errors in db");
+                                    ShowMessage(res, "Cant approveCafeCellPhone some errors in db");
                                 }
                                 else {
                                     Cafe.dropToken(cafeId, function (error, result) { if (result) console.log(Date.now().toString() + ' token dropped ' + cafe.CellPhone); });
@@ -171,14 +171,14 @@ exports.add_routes = function (app) {
                             });
                         }
                         else {
-                            ShowError(res, 'wrong Verification code');
+                            ShowMessage(res, 'wrong Verification code');
                         }
                     });
-                } else { ShowError(res, "Some one took this cellPhone faster than you ") }
+                } else { ShowMessage(res, "Some one took this cellPhone faster than you ") }
             });
         }
         else {
-            ShowError(res, 'I need additional data: cafeId, VerificationCode, verification cellphone');
+            ShowMessage(res, 'I need additional data: cafeId, VerificationCode, verification cellphone');
         }
     });
 

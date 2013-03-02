@@ -11,7 +11,7 @@
                     $("#messenger").fadeIn("slow");
                     document.location.href = '/';
                 }
-                if (data.status = 500) {
+                if (data.status == 500) {
                     $("#messenger").html(data.message);
                     console.log("fail " + data.message);
                     $("#messenger").fadeIn("slow");
