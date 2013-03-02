@@ -80,7 +80,7 @@ exports.add_routes = function (app) {
     app.get("api/cafes/:cafeId", function (req, res) {
         Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
             if (error) ShowError(res, error); else
-                res.render("cafes/UpdateValues", { title: "UpdateCafeValues", cafe: cafe });
+                res.json(cafe,200)
         });
     });
 

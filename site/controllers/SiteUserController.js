@@ -9,9 +9,17 @@ exports.add_routes = function (app) {
 
     app.get('/users/logout', function (req, res) {
         req.session.destroy(function () {
-            res.redirect('users/login');
+            res.redirect('/');
         });
     });
 
-    app.get('/users/approve-email', function (req, res) { res.render("users/ApproveEmail", { email: req.query.email, token: req.query.verify, userId: req.query.userId}); });
+    app.get('/users/approve-email', function (req, res) { res.render("users/ApproveEmail", { email: req.query.email, token: req.query.verify, userId: req.query.userId }); });
+
+    app.get("/users/update", function (req, res) { 
+      if (req.session.user)
+        {
+            
+    res.render("users/update",{userId:req.session.user}); }
+    else {res.redirect('users/login');}
+    });
 }

@@ -98,9 +98,9 @@ exports.add_routes = function (app) {
                                         ShowError(res, "Ошибка подклчения к БД, попробуйте еще раз позже", 500)
                                     } else
                                         if (token) {
-                                            approveUserMailSend(userT, token, req.form.email,function(error,result){
-                                            if (result)ShowError(res, "Пользователь уже зарегистрирован, но email не подтвержден, пожалуйста подтвердите его, ссылка на подтверждение отправлена на Ваш email", 200);
-                                            else ShowError(res, "Пользователь уже зарегистрирован, но email не подтвержден, однако, не удалось отправить ссылку на подтверждение, попробуйте еще раз позже", 500);
+                                            approveUserMailSend(userT, token, req.form.email, function (error, result) {
+                                                if (result) ShowError(res, "Пользователь уже зарегистрирован, но email не подтвержден, пожалуйста подтвердите его, ссылка на подтверждение отправлена на Ваш email", 200);
+                                                else ShowError(res, "Пользователь уже зарегистрирован, но email не подтвержден, однако, не удалось отправить ссылку на подтверждение, попробуйте еще раз позже", 500);
                                             });
                                         }
                                 });
@@ -134,7 +134,7 @@ exports.add_routes = function (app) {
         }
     });
 
-    app.post('/api/users/approve-email',forms.ApproveEmailForm, function (req, res) {
+    app.post('/api/users/approve-email', forms.ApproveEmailForm, function (req, res) {
         var userId = req.form.userId;
         var token = req.form.token;
         var email = req.form.email;
@@ -156,9 +156,9 @@ exports.add_routes = function (app) {
                                     /*после подтверждения пользователя сохраняем его в сессию*/
                                     req.session.regenerate(function () {
                                         req.session.user = user._id;
-                                       
-                                            ShowError(res, 'Пользователь подтвержден ' + result.email, 200);
-                                       
+
+                                        ShowError(res, 'Пользователь подтвержден ' + result.email, 200);
+
                                     });
 
 
@@ -259,10 +259,7 @@ exports.add_routes = function (app) {
     });
 
 
-
-
-
-    app.post('/users/login', forms.LoginForm, function (req, res) {
+    app.post('/api/users/login', forms.LoginForm, function (req, res) {
         if (req.form.isValid) {
             console.log(Date.now() + ' valid login form');
             User.authenticate(
@@ -273,34 +270,38 @@ exports.add_routes = function (app) {
                             req.session.regenerate(function () {
                                 req.session.user = user._id;
                                 /*Ура пользователь залогинился, надо куда-то его отправить*/
-                                res.redirect(req.body.redir || '/');
+                                //res.redirect(req.body.redir || '/');
+                                ShowError(res, 'Вход выполнен ' + user.email, 200);
                             });
                         } else {
                             console.log(Date.now() + ' cant find user or he does not approve');
                             if (!req.session.errors)
                                 req.session.errors = [];
-                            ShowError(res, Date.now() + " cant find user or he does not approve", 500)
+                            ShowError(res, "Не удалось найти пользователя или он не подтвержден", 500)
                         }
                     });
         } else {
             console.log(Date.now() + ' INvalid login form');
-            res.redirect('users/login');
+            ShowError(res, "Неверно заполнена форма входа", 500)
         }
 
     });
 
-    app.get("/users/assignwithcafe", function (req, res) { res.render("users/AssignWithCafe", { title: "AssignWithCafe" }); });
+    //app.get("/users/assignwithcafe", function (req, res) { res.render("users/AssignWithCafe", { title: "AssignWithCafe" }); });
 
     app.post('/users/assignwithcafe', forms.AssignWithCafeForm, function (req, res) {
-        if (req.form.isValid) {
-            assignUserandCafe(req.form.userId, req.form.cafeId, function (error, result) {
-                if (error) ShowError(res, error, 500); else
-                    ShowError(res, result, 200);
-            });
-        } else { ShowError(res, "error in assign form", 500); }
+        if (req.session.user)
+        {
+            if (req.form.isValid) {
+                assignUserandCafe(req.form.userId, req.form.cafeId, function (error, result) {
+                    if (error) ShowError(res, error, 500); else
+                        ShowError(res, result, 200);
+                });
+            } else { ShowError(res, "error in assign form", 500); }
+        } else { ShowError(res, "Not autentificated", 500); }
     });
 
-    app.get("/users/approveuserincafe", function (req, res) { res.render("users/ApproveInCafe", { title: "ApproveInCafe" }); });
+    //app.get("/users/approveuserincafe", function (req, res) { res.render("users/ApproveInCafe", { title: "ApproveInCafe" }); });
 
     app.post('/users/approveuserincafe', forms.AssignWithCafeForm, function (req, res) {
         if (req.session.user)/*если сотрудник кафе авторизован, то он сможет подтвердить что еще кто-то является сотрудником*/
@@ -322,40 +323,40 @@ exports.add_routes = function (app) {
     });
 
 
-    app.get('/users/getcafe/:userId', function (req, res) {
+    app.post('/api/users/getcafe/:userId', function (req, res) {
         User.findOne({ _id: req.params.userId }).populate('_cafe').exec(function (error, user) {
             if (error) { ShowError(res, error, 500) } else
                 if (user) ShowError(res, user._cafe, 200)
         });
     });
 
-    app.get('/users/getuser/:userId', function (req, res) {
+    app.post('/api/users/getuser/:userId', function (req, res) {
         User.findOne({ _id: req.params.userId }, function (error, user) {
             if (error) ShowError(res, error, 500); else
                 ShowError(res, user, 200);
         });
     });
 
-    app.get("/users/updateUserName", function (req, res) { res.render("users/updateUserName", { title: "updateUserName" }); });
+    //app.get("/users/updateUserName", function (req, res) { res.render("users/updateUserName", { title: "updateUserName" }); });
 
-    app.post('/users/updateUserName', forms.UpdateNameForm, function (req, res) {
+    app.post('/api/users/updateUserName', forms.UpdateNameForm, function (req, res) {
         if (req.session.user)/*Если человек не авторизован, то он не может сменить себе имя*/
         {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, error, 500); else
+                    if (error) ShowError(res, "Не удалось найти пользователя, попробуйте позже", 500); else
                         User.UpdateName(user._id, req.form.UserName, function (error, newName) {
-                            if (error) ShowError(res, error, 500); else
-                                ShowError(res, newName, 200);
+                            if (error) ShowError(res, "Не удалось изменить имя пользователя", 500); else
+                                ShowError(res, "Имя пользователя успешно изменено на "+newName, 200);
                         });
                 });
-            } else { ShowError(res, "Error on updateUserNameFrom", 500); }
-        } else { res.redirect('users/login'); }
+            } else { ShowError(res, "Неверно заполнена форма изменения имени пользователя", 500); }
+        } else {ShowError(res, "По какой-то причине вы не авторизованы, пожалуйста <a href='/users/login'>авторизуйтесь</a>", 500); }
     });
 
-    app.get("/users/updateEmail", function (req, res) { res.render("users/UpdateEmail", { title: "UpdateEmail" }); });
+    //app.get("/users/updateEmail", function (req, res) { res.render("users/UpdateEmail", { title: "UpdateEmail" }); });
 
-    app.post('/users/UpdateEmail', forms.UpdateEmailForm, function (req, res) {
+    app.post('/api/users/UpdateEmail', forms.UpdateEmailForm, function (req, res) {
         if (req.session.user)/*Если человек не авторизован, то он не может сменить себе email*/
         {
             if (req.form.isValid) {
@@ -406,25 +407,25 @@ exports.add_routes = function (app) {
         } else { res.redirect('users/login'); }
     });
 
-    app.get("/users/updatePassword", function (req, res) { res.render("users/UpdatePassword", { title: "UpdatePassword" }); });
+    //app.get("/users/updatePassword", function (req, res) { res.render("users/UpdatePassword", { title: "UpdatePassword" }); });
 
-    app.post('/users/UpdatePassword', forms.UpdatePasswordForm, function (req, res) {
+    app.post('/api/users/UpdatePassword', forms.UpdatePasswordForm, function (req, res) {
         if (req.session.user)/*Если человек не авторизован, то он не может сменить себе пароль*/
         {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, error, 500); else {
+                    if (error) ShowError(res, "Не удалось найти пользователя", 500); else {
                         console.log(req.form.NewPassword);
                         console.log(req.form.PasswordConfirmation);
                         if (req.form.NewPassword == req.form.PasswordConfirmation) {
                             User.UpdatePassword(req.session.user, req.form.OldPassword, req.form.NewPassword, function (error, resUser) {
-                                if (error) ShowError(res, error, 500); else
-                                    if (resUser) ShowError(res, resUser, 200);
+                                if (error) ShowError(res, "Не удалось изменить пароль, возможно старый пароль неверен", 500); else
+                                    if (resUser) ShowError(res, "Пароль успешно изменен", 200);
                             })
-                        } else { ShowError(res, "Error password not equal password confirm", 500); }
+                        } else { ShowError(res, "Пароль и его подтверждение не совпали", 500); }
                     }
                 })
-            } else { ShowError(res, "Error on newPasswordForm", 500); }
-        } else { res.redirect('users/login'); }
+            } else { ShowError(res, "Неверно заполнена форма смены пароля", 500); }
+        } else {ShowError(res, "По какой-то причине вы не авторизованы, пожалуйста <a href='/users/login'>авторизуйтесь</a>", 500); }
     });
 }
