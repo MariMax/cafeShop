@@ -102,9 +102,3 @@ exports.ShowMessage = function(response, message, status) {
         response.json({ message: message, status: status},200);
     
 }
-
-exports.ShowObject = function (response, object) {
-    if (object)
-    { log(object); }
-    response.json(object);
-}

@@ -1,7 +1,7 @@
 var models = require('../models/User.js');
 var cafeModel = require('../models/Cafe.js');
 
-var forms = require('../../site/forms/UserForms.js');
+var forms = require('../forms/UserForms.js');
 var User = models.User;
 var common = require('../models/CommonFunctions.js');
 var sendMail = common.sendMail;

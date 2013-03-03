@@ -3,7 +3,7 @@ var usersHelper = require('./api/controllers/UserController.js')
 var siteUsersHelper = require('./site/controllers/SiteUserController.js')
 var dishesHelper = require('./api/controllers/DishesController.js')
 var cafeHelper = require('./api/controllers/CafeController.js')
-var siteCafeHelper = require('./site/controllers/CafeController.js')
+var siteCafeHelper = require('./site/controllers/SiteCafeController.js')
 
 module.exports = function (app) {
 

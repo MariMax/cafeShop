@@ -12,7 +12,7 @@
                     var delay = 2000;
                     setTimeout("document.location.href='/'", delay);
                 }
-                if (data.status = 500) {
+                if (data.status == 500) {
                     $("#messenger").html(data.message);
                     console.log("fail " + data.message);
                     $("#messenger").fadeIn("slow");

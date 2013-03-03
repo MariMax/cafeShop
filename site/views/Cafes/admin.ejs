@@ -1,227 +1,390 @@
 <% layout('../layout') -%>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('#cellPhone').blur(function () { console.log("endedit cell phone") })
+
+    $(function () {
+
+        function getCafe() {
+
+            var cafeId = $('#cafeId').val();
+            var jqXHR = $.get('/api/cafes/' + cafeId)
+            .done(function (cafe) {
+
+                if (cafe) {
+                    if (cafe.Name)
+                        $('#name').attr('value', cafe.Name);
+                    if (cafe.Address)
+                        $('#Address').attr('value', cafe.Address);
+                    if (cafe.WorkTime)
+                        $('#WorkTime').attr('value', cafe.WorkTime);
+                    if (cafe.ClientPhone)
+                        $('#ClientPhone').attr('value', cafe.ClientPhone);
+                    if (cafe.CellPhone)
+                        $('#cellPhone').attr('value', cafe.CellPhone);
+                    else {
+                        document.location.href = '/cafes/newcafe'; //Сначала подтверди телефон, потом администрируй
+                    }
+                } else document.location.href = '/cafes/newcafe'; //а куда деваться если мы не нашли кафе, его надо создать
+            })
+        }
+        getCafe();
+
+        function postData() {
+
+            var jqXHR = $.post('/api/cafes/updateValues', $('form').serialize())
+            .done(function (data) {
+                if (data.status == 200) {
+                    $("#messenger").html(data.message);
+                    console.log("done " + data.message);
+                    $("#messenger").fadeIn("slow");
+                    //$('#verify').removeAttr('hidden');
+                }
+                if (data.status == 500) {
+                    $("#messenger").html(data.message);
+                    console.log("fail " + data.message);
+                    $("#messenger").fadeIn("slow");
+                }
+            });
+        }
+
+        function updatePhone() {
+
+            var jqXHR = $.post('/api/cafes/updateCellPhone', $('form').serialize())
+            .done(function (data) {
+                
+                if (data.status == 200) {
+                    $("#messenger").html(data.message);
+                    console.log("done " + data.message);
+                    $("#messenger").fadeIn("slow");
+                    $('#verify').removeAttr('hidden');
+                }
+                if (data.status == 500) {
+                    $("#messenger").html(data.message);
+                    console.log("fail " + data.message);
+                    $("#messenger").fadeIn("slow");
+                }
+            });
+        }
+        function confirmCellPhone() {
+
+            var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
+            .done(function (data) {
+                if (data.status == 200) {
+                    $("#messenger").html(data.message.message);
+                    console.log("done " + data.message);
+                    $("#messenger").fadeIn("slow");
+                    var cafeId = data.message.cafeId;
+                    var delay = 2000;
+                    setTimeout(document.location.href = '/cafes/updateValues/' + cafeId, delay);
+                }
+                if (data.status == 500) {
+                    $("#messenger").html(data.message);
+                    console.log("fail " + data.message);
+                    $("#messenger").fadeIn("slow");
+                }
+            });
+
+        }
+
+        function isValidPhoneNumber(number) {
+            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
+            return pattern.test(number);
+        }
+
+        $('#cellPhone').blur(function () {
+            var phone = $('#cellPhone').val();
+            if (!isValidPhoneNumber(phone)) {
+                var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+            } else {
+                $("#messenger").html('');
+                updatePhone();
+            }
+        })
+
+        $('#confirm').click(function () {
+            var code = $('#cellPhoneConfirmation').val();
+            if (!code) {
+                var err_text = "Введите код подтверждения";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+            } else { confirmCellPhone(); }
+        })
+
+        var field = new Array("Name", "cellPhone"); //поля обязательные 
+
+        $("form").submit(function () {// обрабатываем отправку формы  
+            var error = 0; // индекс ошибки
+            $("form").find(":input").each(function () {// проверяем каждое поле в форме
+                for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
+                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
+
+                        if (!$(this).val()) {// если в поле пустое
+                            // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
+                            error = 1; // определяем индекс ошибки       
+
+                        }
+                        else {
+                            // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
+                        }
+
+                    }
+                }
+            })
+
+            if (error == 0) { // если ошибок нет то отправляем данные
+                postData();
+                return false;
+            }
+            else {
+                if (error == 1) var err_text = "Необходимо ввести название кафе";
+                // if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+                return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
+            }
+
+
+
+        })
+
+
     });
+
 </script>
-		<div class="admin_page">
+<div class="admin_page">
 
-			<div class="admin_title page_title_block">
-				<h1>Администрирование</h1>
-				<div class="border_wave_bot"></div>
-			</div>
+    <div class="admin_title page_title_block">
+        <h1>Администрирование</h1>
+        <div class="border_wave_bot"></div>
+    </div>
 
-			<div class="admin_content">
-				<div class="admin_info">
-					<h3>Информация</h3>
-					<form method="post" action="/cafes/updateValues" class="horizontal">
-						<div class="form_item">
-							<div class="label">Название кафе/ресторана</div>
-                            <input type="text" size="20" name="cafeId" value="<%= cafe._id %>" required hidden>
-							<div class="input"><input type="text" size="60" name="Name" value="<%= cafe.Name %>" required>
-                                </div>
-						</div>
-						<div class="form_item">
-							<div class="label">Адрес</div>
-							<div class="input"><input type="text" size="60" value="<%= cafe.Address %>" name="Address"></div>
-						</div>
-						<div class="form_item">
-							<div class="label">Режим работы</div>
-							<div class="input"><input type="text" size="60" value="<%= cafe.WorkTime %>" name="WorkTime"></div>
-						</div>
-						<div class="form_item">
-							<div class="label">Телефон (для клиентов)</div>
-							<div class="input"><input type="text" size="60" value="<%= cafe.ClientPhone %>" name="ClientPhone"></div>
-						</div>
-						<div class="form_item">
-							<div class="label">Сотовый (для sms оповещения)</div>
-							<div class="input"><input type="text" size="20" id ="cellPhone" value="<%=  cafe.CellPhone  %>"name="CellPhone" required></div>
-						</div>
-						<div class="form_but">
-							<input type="submit" value="Сохранить" class="button succes">
-							<input type="reset" value="Очистить" class="button simple">
-						</div>
-					</form>
-				</div>
+    <div class="admin_content">
+        <div class="admin_info">
+            <h3>Информация</h3>
+            <form method="post" action="" class="horizontal">
+                <div id="messenger" class="messenger">
+                </div>
+                <div class="form_item">
 
-				<div class="admin_menu">
-					<h3>Меню заведения</h3>
-					<div id="tab-container">
-						<ul class="catalog_nav etabs">
-							<li><a href="#zavtraki">Завтраки</a></li>
-							<li><a href="#goryachie">Горячие блюда</a></li>
-							<li><a href="#salat">Салаты</a></li>
-							<li><a href="#sup">Супы</a></li>
-							<li><a href="#garnir">Гарниры</a></li>
-							<li><a href="#desert">Десерт</a></li>
-							<li><a href="#drink">Напитки</a></li>
-						</ul>
+                    <div class="label">Название кафе/ресторана</div>
+                    <input id="cafeId" type="text" size="20" name="cafeId" value="<%= cafeId %>" required hidden>
+                    <input id="Longitude" type="text" size="20" name="Longitude" hidden>
+                    <input id="Latitude" type="text" size="20" name="Latitude" hidden>
+                    <div class="input"><input id="name" type="text" size="60" name="Name" required>
+                    </div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Адрес</div>
+                    <div class="input"><input id="Address" type="text" size="60" name="Address"></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Режим работы</div>
+                    <div class="input"><input id="WorkTime" type="text" size="60" name="WorkTime"></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Телефон (для клиентов)</div>
+                    <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone"></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Сотовый (для sms оповещения)</div>
+                    <div class="input"><input type="text" size="20" id="cellPhone" name="cellPhone" required>
+                    </div>
+                </div>
+                <div id="verify" class="form_item" hidden>
+                    <div class="label">Введите код подтверждения</div>
+                    <div class="input"><input id="cellPhoneConfirmation" type="text" size="20" name="token">
+                    
+                        <input type="button" id="confirm" value="Подтвердить" class="button succes"></div>
+                    
+                </div>
+                    
 
-						<div class="catalog_admin clearfix" id="zavtraki">
+                <div class="form_but">
+                    <input type="submit" value="Сохранить" class="button succes">
+                    <input type="reset" value="Очистить" class="button simple">
+                </div>
+            </form>
+        </div>
 
-							<div class="catalog_item">
-								<div class="photo">
-									<a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
-								</div>
-								<div class="info">
-									<input type="text" name="" id="" class="name" placeholder="Название блюда">
-									<textarea name="" id="" placeholder="Описание блюда"></textarea>
-									<input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
-									<div class="week">
-										<input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
-										<input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
-										<input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
-										<input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
-										<input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
-										<input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
-										<input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
-										<input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
-									</div>
-								</div>
-								<a href="#" class="delete"></a>
-							</div>
+        <div class="admin_menu">
+            <h3>Меню заведения</h3>
+            <div id="tab-container">
+                <ul class="catalog_nav etabs">
+                    <li><a href="#zavtraki">Завтраки</a></li>
+                    <li><a href="#goryachie">Горячие блюда</a></li>
+                    <li><a href="#salat">Салаты</a></li>
+                    <li><a href="#sup">Супы</a></li>
+                    <li><a href="#garnir">Гарниры</a></li>
+                    <li><a href="#desert">Десерт</a></li>
+                    <li><a href="#drink">Напитки</a></li>
+                </ul>
 
-						</div>
-						<div class="catalog_admin clearfix" id="goryachie">
-							<div class="catalog_item">
-								<div class="photo">
-									<a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
-								</div>
-								<div class="info">
-									<input type="text" name="" id="" class="name" placeholder="Название блюда">
-									<textarea name="" id="" placeholder="Описание блюда"></textarea>
-									<input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
-									<div class="week">
-										<input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
-										<input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
-										<input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
-										<input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
-										<input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
-										<input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
-										<input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
-										<input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
-									</div>
-								</div>
-								<a href="#" class="delete"></a>
-							</div>
-						</div>
-						<div class="catalog_admin clearfix" id="salat">
-							<div class="catalog_item">
-								<div class="photo">
-									<a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
-								</div>
-								<div class="info">
-									<input type="text" name="" id="" class="name" placeholder="Название блюда">
-									<textarea name="" id="" placeholder="Описание блюда"></textarea>
-									<input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
-									<div class="week">
-										<input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
-										<input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
-										<input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
-										<input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
-										<input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
-										<input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
-										<input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
-										<input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
-									</div>
-								</div>
-								<a href="#" class="delete"></a>
-							</div>
-						</div>
-						<div class="catalog_admin clearfix" id="sup">
-							<div class="catalog_item">
-								<div class="photo">
-									<a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
-								</div>
-								<div class="info">
-									<input type="text" name="" id="" class="name" placeholder="Название блюда">
-									<textarea name="" id="" placeholder="Описание блюда"></textarea>
-									<input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
-									<div class="week">
-										<input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
-										<input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
-										<input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
-										<input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
-										<input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
-										<input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
-										<input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
-										<input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
-									</div>
-								</div>
-								<a href="#" class="delete"></a>
-							</div>
-						</div>
-						<div class="catalog_admin clearfix" id="garnir">
-							<div class="catalog_item">
-								<div class="photo">
-									<a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
-								</div>
-								<div class="info">
-									<input type="text" name="" id="" class="name" placeholder="Название блюда">
-									<textarea name="" id="" placeholder="Описание блюда"></textarea>
-									<input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
-									<div class="week">
-										<input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
-										<input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
-										<input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
-										<input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
-										<input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
-										<input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
-										<input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
-										<input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
-									</div>
-								</div>
-								<a href="#" class="delete"></a>
-							</div>
-						</div>
-						<div class="catalog_admin clearfix" id="desert">
-							<div class="catalog_item">
-								<div class="photo">
-									<a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
-								</div>
-								<div class="info">
-									<input type="text" name="" id="" class="name" placeholder="Название блюда">
-									<textarea name="" id="" placeholder="Описание блюда"></textarea>
-									<input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
-									<div class="week">
-										<input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
-										<input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
-										<input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
-										<input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
-										<input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
-										<input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
-										<input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
-										<input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
-									</div>
-								</div>
-								<a href="#" class="delete"></a>
-							</div>
-						</div>
-						<div class="catalog_admin clearfix" id="drink">
-							<div class="catalog_item">
-								<div class="photo">
-									<a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
-								</div>
-								<div class="info">
-									<input type="text" name="" id="" class="name" placeholder="Название блюда">
-									<textarea name="" id="" placeholder="Описание блюда"></textarea>
-									<input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
-									<div class="week">
-										<input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
-										<input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
-										<input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
-										<input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
-										<input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
-										<input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
-										<input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
-										<input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
-									</div>
-								</div>
-								<a href="#" class="delete"></a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+                <div class="catalog_admin clearfix" id="zavtraki">
 
-		</div>
+                    <div class="catalog_item">
+                        <div class="photo">
+                            <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                        </div>
+                        <div class="info">
+                            <input type="text" name="" id="" class="name" placeholder="Название блюда">
+                            <textarea name="" id="" placeholder="Описание блюда"></textarea>
+                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
+                            <div class="week">
+                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
+                                <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
+                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
+                                <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
+                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
+                                <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
+                                <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
+                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
+                            </div>
+                        </div>
+                        <a href="#" class="delete"></a>
+                    </div>
+
+                </div>
+                <div class="catalog_admin clearfix" id="goryachie">
+                    <div class="catalog_item">
+                        <div class="photo">
+                            <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                        </div>
+                        <div class="info">
+                            <input type="text" name="" id="" class="name" placeholder="Название блюда">
+                            <textarea name="" id="" placeholder="Описание блюда"></textarea>
+                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
+                            <div class="week">
+                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
+                                <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
+                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
+                                <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
+                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
+                                <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
+                                <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
+                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
+                            </div>
+                        </div>
+                        <a href="#" class="delete"></a>
+                    </div>
+                </div>
+                <div class="catalog_admin clearfix" id="salat">
+                    <div class="catalog_item">
+                        <div class="photo">
+                            <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                        </div>
+                        <div class="info">
+                            <input type="text" name="" id="" class="name" placeholder="Название блюда">
+                            <textarea name="" id="" placeholder="Описание блюда"></textarea>
+                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
+                            <div class="week">
+                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
+                                <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
+                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
+                                <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
+                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
+                                <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
+                                <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
+                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
+                            </div>
+                        </div>
+                        <a href="#" class="delete"></a>
+                    </div>
+                </div>
+                <div class="catalog_admin clearfix" id="sup">
+                    <div class="catalog_item">
+                        <div class="photo">
+                            <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                        </div>
+                        <div class="info">
+                            <input type="text" name="" id="" class="name" placeholder="Название блюда">
+                            <textarea name="" id="" placeholder="Описание блюда"></textarea>
+                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
+                            <div class="week">
+                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
+                                <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
+                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
+                                <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
+                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
+                                <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
+                                <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
+                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
+                            </div>
+                        </div>
+                        <a href="#" class="delete"></a>
+                    </div>
+                </div>
+                <div class="catalog_admin clearfix" id="garnir">
+                    <div class="catalog_item">
+                        <div class="photo">
+                            <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                        </div>
+                        <div class="info">
+                            <input type="text" name="" id="" class="name" placeholder="Название блюда">
+                            <textarea name="" id="" placeholder="Описание блюда"></textarea>
+                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
+                            <div class="week">
+                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
+                                <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
+                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
+                                <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
+                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
+                                <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
+                                <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
+                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
+                            </div>
+                        </div>
+                        <a href="#" class="delete"></a>
+                    </div>
+                </div>
+                <div class="catalog_admin clearfix" id="desert">
+                    <div class="catalog_item">
+                        <div class="photo">
+                            <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                        </div>
+                        <div class="info">
+                            <input type="text" name="" id="" class="name" placeholder="Название блюда">
+                            <textarea name="" id="" placeholder="Описание блюда"></textarea>
+                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
+                            <div class="week">
+                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
+                                <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
+                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
+                                <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
+                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
+                                <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
+                                <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
+                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
+                            </div>
+                        </div>
+                        <a href="#" class="delete"></a>
+                    </div>
+                </div>
+                <div class="catalog_admin clearfix" id="drink">
+                    <div class="catalog_item">
+                        <div class="photo">
+                            <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                        </div>
+                        <div class="info">
+                            <input type="text" name="" id="" class="name" placeholder="Название блюда">
+                            <textarea name="" id="" placeholder="Описание блюда"></textarea>
+                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
+                            <div class="week">
+                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
+                                <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
+                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
+                                <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
+                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
+                                <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
+                                <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
+                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
+                            </div>
+                        </div>
+                        <a href="#" class="delete"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

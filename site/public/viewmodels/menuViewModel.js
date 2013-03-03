@@ -26,24 +26,24 @@ function MenuViewModel(cafeId) {
     self.CafeName = ko.observable();
     self.Cafe = ko.observable();
     self.Categories = ko.observableArray([]);
-    debugger;
+    
     $.getJSON("/api/cafes/" + cafeId, function (allData) {
         var mapped = $.map(allData, function (item) { return new Cafe(item) });
-        debugger;
+       
         self.Cafe(mapped);
         self.CafeName = self.Cafe.Name;
     });
 
     $.getJSON("/api/cafe/" + cafeId + "/category", function (allData) {
         var mapped = $.map(allData, function (item) { return new Category(item) });
-        debugger;
+        
         self.Categories(mapped);
     });
 
     $.each(self.Categories, function (index, value) {
         $.getJSON("/api/cafe/" + cafeId + "/category/" + value.Id + "/dishes", function (allData) {
             var mapped = $.map(allData, function (item) { return new Dish(item) });
-            debugger;
+            
             var category = new Category(value);
             category.Dishes(mapped);
             self.Categories.push(category);
