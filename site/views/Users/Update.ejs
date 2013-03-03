@@ -8,11 +8,11 @@
             .done(function (data) {
                 if (data.status == 200) {
                     
-                    $("#name").attr("value", data.message.UserName);
+                    $("#name").attr("value", data.UserName);
                     //console.log("done " + data.message);
-                    $("#email").attr("value", data.message.email);
+                    $("#email").attr("value", data.email);
                 }
-                if (data.status = 500) {
+                if (data.status == 500) {
                     $("#messenger").html(data.message);
                     console.log("fail " + data.message);
                     $("#messenger").fadeIn("slow");
@@ -29,7 +29,7 @@
                     console.log("done " + data.message);
                     $("#messenger").fadeIn("slow");
                 }
-                if (data.status = 500) {
+                if (data.status == 500) {
                     $("#messenger").html(data.message);
                     console.log("fail " + data.message);
                     $("#messenger").fadeIn("slow");
@@ -45,7 +45,7 @@
                     console.log("done " + data.message);
                     $("#messenger").fadeIn("slow");
                 }
-                if (data.status = 500) {
+                if (data.status == 500) {
                     $("#messenger").html(data.message);
                     console.log("fail " + data.message);
                     $("#messenger").fadeIn("slow");
@@ -61,7 +61,7 @@
                     console.log("done " + data.message);
                     $("#messenger").fadeIn("slow");
                 }
-                if (data.status = 500) {
+                if (data.status == 500) {
                     $("#messenger").html(data.message);
                     console.log("fail " + data.message);
                     $("#messenger").fadeIn("slow");

@@ -9,9 +9,13 @@ var createCafeForm = form(
         .required(null, "please enter CafeName"),
 
 
-    filter("CellPhone").trim(),
-    validate("CellPhone")
-        .required(null, "please enter CellPhone")
+    filter("cellPhone").trim(),
+    validate("cellPhone")
+        .required(null, "please enter CellPhone"),
+
+    filter("userId").trim(),
+    validate("userId")
+        .required(null, "You should login")
         
         );
 
@@ -21,10 +25,26 @@ var UpdateCafeCellPhoneForm = form(
         .required(null, "please enter cafeId"),
 
 
-    filter("CellPhone").trim(),
-    validate("CellPhone")
-        .required(null, "please enter CellPhone")
+    filter("cellPhone").trim(),
+    validate("cellPhone")
+        .required(null, "please enter сellPhone")
         
+        );
+
+var ConfirmCafeCellPhoneForm = form(
+    filter("cafeId").trim(),
+    validate("cafeId")
+        .required(null, "please enter cafeId"),
+
+
+    filter("cellPhone").trim(),
+    validate("cellPhone")
+        .required(null, "please enter cellPhone")
+        .regex(/^(\+7)[0-9]{10}$/,"wrong cellPhone"),
+        
+    filter("token").trim(),
+    validate("token")
+        .required(null, "please enter token")
         );
 
 var updateCafeForm = form(
@@ -42,11 +62,12 @@ var updateCafeForm = form(
    filter("Latitude").trim(),
    filter("Longitude").trim(),
    filter("Logo").trim(),
-   filter("CellPhone").trim(),
-   validate("CellPhone")
+   filter("cellPhone").trim(),
+   validate("cellPhone")
         .required(null, "please enter CellPhone")
 );
         
 exports.createCafeForm = createCafeForm;
 exports.updateCafeForm = updateCafeForm;
 exports.UpdateCafeCellPhoneForm = UpdateCafeCellPhoneForm;
+exports.ConfirmCafeCellPhoneForm = ConfirmCafeCellPhoneForm;

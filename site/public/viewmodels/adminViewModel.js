@@ -25,14 +25,13 @@ function AdminViewModel(cafeId) {
     self.newDishName = ko.observable();
     self.newDishDescription = ko.observable();
     self.newDishPrice = ko.observable();
-    self.newDishCategory = ko.observable();
 
     // Operations
     self.saveInfo = function () {
 
     }
 
-    self.addDish = function () {
+    self.addDish = function (categoryId) {
         var dish = new Dish({ Name: this.newDishName(), Description: this.newDishDescription(), Price: this.newDishPrice() });
         self.dishes.push(dish);
         var url = "/api/cafe/" + cafeId + "/category/" + categoryId + "/dishes";
