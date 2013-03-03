@@ -1,7 +1,7 @@
 var models = require('../models/User.js');
 var cafeModel = require('../models/Cafe.js');
 
-var forms = require('../../site/forms/UserForms.js');
+var forms = require('../forms/UserForms.js');
 var User = models.User;
 var common = require('../models/CommonFunctions.js');
 var sendMail = common.sendMail;
@@ -9,7 +9,7 @@ var sendMail = common.sendMail;
 var approveuserInCafe = common.approveuserInCafe;
 var assignUserandCafe = common.assignUserandCafe;
 var logError = common.logError;
-var ShowError = common.ShowError;
+var ShowMessage = common.ShowMessage;
 
 
 
@@ -79,13 +79,13 @@ exports.add_routes = function (app) {
 
     app.post("/api/users/newUser", forms.SignupForm, function (req, res) {
         if (req.form.isValid) {
-            if (req.form.password != req.form.passwordConfirm) ShowError(res, "пароль и его подтверждение не совпали", 500);
+            if (req.form.password != req.form.passwordConfirm) ShowMessage(res, "пароль и его подтверждение не совпали", 500);
             else {
                 /*Проверяем существует ли полностью подтвержденный пользователь*/
                 User.findOne({ email: req.form.email }, function (error, user) {
                     if (user && user.approve) {
                         //logError(Date.now() + " user exists, try to remember password");
-                        ShowError(res, "Пользователь с таким email уже зарегистрирован постарайтесь вспомнить пароль или <a href='/users/forgot-password'>восстановить его</a> ", 500);
+                        ShowMessage(res, "Пользователь с таким email уже зарегистрирован постарайтесь вспомнить пароль или <a href='/users/forgot-password'>восстановить его</a> ", 500);
                     }
                     else {
                         /*Проверяем существует ли пользователь который начал регистрацию*/
@@ -95,29 +95,29 @@ exports.add_routes = function (app) {
                                 User.generateNewToken(userT._id, function (error, token) {
                                     if (error) {
                                         logError("Error on server can't generate new token for approve email address");
-                                        ShowError(res, "Ошибка подклчения к БД, попробуйте еще раз позже", 500)
+                                        ShowMessage(res, "Ошибка подклчения к БД, попробуйте еще раз позже", 500)
                                     } else
                                         if (token) {
                                             approveUserMailSend(userT, token, req.form.email, function (error, result) {
-                                                if (result) ShowError(res, "Пользователь уже зарегистрирован, но email не подтвержден, пожалуйста подтвердите его, ссылка на подтверждение отправлена на Ваш email", 200);
-                                                else ShowError(res, "Пользователь уже зарегистрирован, но email не подтвержден, однако, не удалось отправить ссылку на подтверждение, попробуйте еще раз позже", 500);
+                                                if (result) ShowMessage(res, "Пользователь уже зарегистрирован, но email не подтвержден, пожалуйста подтвердите его, ссылка на подтверждение отправлена на Ваш email", 200);
+                                                else ShowMessage(res, "Пользователь уже зарегистрирован, но email не подтвержден, однако, не удалось отправить ссылку на подтверждение, попробуйте еще раз позже", 500);
                                             });
                                         }
                                 });
                             } else {
                                 if (userT && userT.approve) {
                                     User.dropToken(userT._id, function (error, dropTokenUser) {
-                                        if (error) ShowError(res, error, 500); else
+                                        if (error) ShowMessage(res, error, 500); else
                                             newUser(req.form.email, req.form.password, req.form.UserName, function (error, user) {
-                                                if (error) ShowError(res, error, 500); else
-                                                    ShowError(res, "Пожалуйста подтвердите email, ссылка на подтверждение уже отправлена", 200);
+                                                if (error) ShowMessage(res, error, 500); else
+                                                    ShowMessage(res, "Пожалуйста подтвердите email, ссылка на подтверждение уже отправлена", 200);
                                             })
                                     });
                                 }
                                 else {
                                     newUser(req.form.email, req.form.password, req.form.UserName, function (error, user) {
-                                        if (error) ShowError(res, error, 500); else
-                                            ShowError(res, "Пожалуйста подтвердите email, ссылка на подтверждение уже отправлена", 200);
+                                        if (error) ShowMessage(res, error, 500); else
+                                            ShowMessage(res, "Пожалуйста подтвердите email, ссылка на подтверждение уже отправлена", 200);
                                     });
                                 }
                             }
@@ -129,7 +129,7 @@ exports.add_routes = function (app) {
         else {
             logError(Date.now() + "wrong new User form");
             logError(Date.now() + " " + req.form.errors);
-            ShowError(res, "Форма регистрации заполнена неверно", 500)
+            ShowMessage(res, "Форма регистрации заполнена неверно", 500)
 
         }
     });
@@ -148,32 +148,30 @@ exports.add_routes = function (app) {
 
                             User.approveEmail(userId, email, function (error, result) {
                                 if (error) {
-                                    ShowError(res, "По каким-то причинам не удалось подтвердить email попробуйте позже", 500);
+                                    ShowMessage(res, "По каким-то причинам не удалось подтвердить email попробуйте позже", 500);
                                 }
                                 else {
-                                    User.dropToken(userId, function (error, result) { if (result) console.log(Date.now() + ' token dropped ' + user.email); });
-                                    console.log(Date.now() + ' User approved ' + result.email);
-                                    /*после подтверждения пользователя сохраняем его в сессию*/
+                                    User.dropToken(userId, function (error, result) { if (result) console.log(Date.now() + ' token dropped ' + email); });
                                     req.session.regenerate(function () {
-                                        req.session.user = user._id;
+                                        console.log(Date.now() + ' User approved ' + result.email);
+                                        /*после подтверждения пользователя сохраняем его в сессию*/
+                                        req.session.user = userId;
+                                        console.log("user approved " + userId)
 
-                                        ShowError(res, 'Пользователь подтвержден ' + result.email, 200);
-
+                                        ShowMessage(res, 'Пользователь подтвержден ' + result.email, 200);
                                     });
-
-
                                 }
                             });
                         }
                         else {
-                            ShowError(res, 'Неверная ссылка на подтверждение email, попробуйте <a href="/users/newuser">еще раз</a>', 500);
+                            ShowMessage(res, 'Неверная ссылка на подтверждение email, попробуйте <a href="/users/newuser">еще раз</a>', 500);
                         }
                     });
-                } else { ShowError(res, "Кто-то занял этот email раньше, попробуйте <a href='/users/newuser'>еще раз</a> с другим email адресом", 500); }
+                } else { ShowMessage(res, "Кто-то занял этот email раньше, попробуйте <a href='/users/newuser'>еще раз</a> с другим email адресом", 500); }
             });
         }
         else {
-            ShowError(res, 'Неверная ссылка на подтверждение email, попробуйте <a href="/users/newuser">еще раз</a>', 500);
+            ShowMessage(res, 'Неверная ссылка на подтверждение email, попробуйте <a href="/users/newuser">еще раз</a>', 500);
         }
     });
 
@@ -196,24 +194,24 @@ exports.add_routes = function (app) {
 								    if (error) {
 								        console.log(error);
 								        console.log("reset link " + resetLink);
-								        ShowError(res, "Не удалось отправить Email с восстановлением пароля", 500);
+								        ShowMessage(res, "Не удалось отправить Email с восстановлением пароля", 500);
 								    } else {
 								        console.log("Message sent: " + response.message);
 								        console.log("reset link: " + resetLink);
-								        ShowError(res, "Информация по восстановлению пароля отправлена на ваш email", 200);
+								        ShowMessage(res, "Информация по восстановлению пароля отправлена на ваш email", 200);
 								    }
 								});
 
     		            }
     		            else {
-    		                ShowError(res, "Пользователь не зарегистрирован " + req.form.email, 500);
+    		                ShowMessage(res, "Пользователь не зарегистрирован " + req.form.email, 500);
     		            }
     		        });
     		    }
     		    else {
     		        console.log(Date.now() + 'errors on reset pass form');
     		        console.log(Date.now() + " " + req.form.errors);
-    		        ShowError(res, "Неверно заполнена форма, попробуйте указать email правильно", 500);
+    		        ShowMessage(res, "Неверно заполнена форма, попробуйте указать email правильно", 500);
 
     		    }
     		});
@@ -228,7 +226,7 @@ exports.add_routes = function (app) {
                     User.resetPassword(userId, function (error, result) {
                         if (error) {
                             console.log('Cant reset password');
-                            ShowError(res, "Не удалось сбросить пароль", 500);
+                            ShowMessage(res, "Не удалось сбросить пароль", 500);
                         }
                         else {
                             password = result;
@@ -237,11 +235,11 @@ exports.add_routes = function (app) {
                                 if (error) {
                                     console.log(error);
                                     console.log("new password " + password);
-                                    ShowError(res, "Не удалось отправить сообщение с новым паролем <a href='/users/Forgot-Password'>Восстановить пароль еще раз</a>", 500);
+                                    ShowMessage(res, "Не удалось отправить сообщение с новым паролем <a href='/users/Forgot-Password'>Восстановить пароль еще раз</a>", 500);
                                 } else {
                                     //console.log("Message sent: " + response.message);
-                                    ShowError(res, "Новый пароль отправлен на ваш email", 200)
-                                    //ShowError(res, "Your new password on your email " + password);
+                                    ShowMessage(res, "Новый пароль отправлен на ваш email", 200)
+                                    //ShowMessage(res, "Your new password on your email " + password);
                                 }
                             });
 
@@ -249,12 +247,12 @@ exports.add_routes = function (app) {
                     });
                 }
                 else {
-                    ShowError(res, 'Неверная ссылка на сброс пароля <a href="/users/Forgot-Password">Восстановить пароль</a>', 500);
+                    ShowMessage(res, 'Неверная ссылка на сброс пароля <a href="/users/Forgot-Password">Восстановить пароль</a>', 500);
                 }
             });
         }
         else {
-            ShowError(res, 'Неверная ссылка на сброс пароля <a href="/users/Forgot-Password">Восстановить пароль</a>', 500);
+            ShowMessage(res, 'Неверная ссылка на сброс пароля <a href="/users/Forgot-Password">Восстановить пароль</a>', 500);
         }
     });
 
@@ -271,18 +269,18 @@ exports.add_routes = function (app) {
                                 req.session.user = user._id;
                                 /*Ура пользователь залогинился, надо куда-то его отправить*/
                                 //res.redirect(req.body.redir || '/');
-                                ShowError(res, 'Вход выполнен ' + user.email, 200);
+                                ShowMessage(res, 'Вход выполнен ' + user.email, 200);
                             });
                         } else {
                             console.log(Date.now() + ' cant find user or he does not approve');
                             if (!req.session.errors)
                                 req.session.errors = [];
-                            ShowError(res, "Не удалось найти пользователя или он не подтвержден", 500)
+                            ShowMessage(res, "Не удалось найти пользователя или он не подтвержден", 500)
                         }
                     });
         } else {
             console.log(Date.now() + ' INvalid login form');
-            ShowError(res, "Неверно заполнена форма входа", 500)
+            ShowMessage(res, "Неверно заполнена форма входа", 500)
         }
 
     });
@@ -290,15 +288,14 @@ exports.add_routes = function (app) {
     //app.get("/users/assignwithcafe", function (req, res) { res.render("users/AssignWithCafe", { title: "AssignWithCafe" }); });
 
     app.post('/users/assignwithcafe', forms.AssignWithCafeForm, function (req, res) {
-        if (req.session.user)
-        {
+        if (req.session.user) {
             if (req.form.isValid) {
                 assignUserandCafe(req.form.userId, req.form.cafeId, function (error, result) {
-                    if (error) ShowError(res, error, 500); else
-                        ShowError(res, result, 200);
+                    if (error) ShowMessage(res, error, 500); else
+                        ShowMessage(res, result, 200);
                 });
-            } else { ShowError(res, "error in assign form", 500); }
-        } else { ShowError(res, "Not autentificated", 500); }
+            } else { ShowMessage(res, "error in assign form", 500); }
+        } else { ShowMessage(res, "Not autentificated", 500); }
     });
 
     //app.get("/users/approveuserincafe", function (req, res) { res.render("users/ApproveInCafe", { title: "ApproveInCafe" }); });
@@ -308,16 +305,16 @@ exports.add_routes = function (app) {
         {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {/*ищем сначала авторизованого юзера*/
-                    if (error) ShowError(res, error, 500); else
+                    if (error) ShowMessage(res, error, 500); else
                         if (user.approveInCurrentCafe && user._cafe && user._cafe == req.form.cafeId) {/*проеряем его принадлежность к нужному кафе*/
                             approveuserInCafe(req.form.userId, req.form.cafeId, function (error, result) {
-                                if (error) ShowError(res, error, 500); else
-                                    ShowError(res, result, 200);
+                                if (error) ShowMessage(res, error, 500); else
+                                    ShowMessage(res, result, 200);
                             })
                         } else
-                        { ShowError(res, "authorized user from another cafe", 500) }
+                        { ShowMessage(res, "authorized user from another cafe", 500) }
                 });
-            } else { ShowError(res, "error in approve form", 500); }
+            } else { ShowMessage(res, "error in approve form", 500); }
         }
         else { res.redirect('users/login'); }
     });
@@ -325,107 +322,119 @@ exports.add_routes = function (app) {
 
     app.post('/api/users/getcafe/:userId', function (req, res) {
         User.findOne({ _id: req.params.userId }).populate('_cafe').exec(function (error, user) {
-            if (error) { ShowError(res, error, 500) } else
-                if (user) ShowError(res, user._cafe, 200)
+            if (error) { ShowMessage(res, "Не удалось получить кафе пользователя", 500) } else
+                if (user) {
+                    var cafe = user._cafe;
+                    if (cafe) {
+                        cafe.CellPhoneVerificationCode = '';
+                        res.json(cafe, 200);
+                    } else res.json(404);
+                }
         });
     });
 
     app.post('/api/users/getuser/:userId', function (req, res) {
         User.findOne({ _id: req.params.userId }, function (error, user) {
-            if (error) ShowError(res, error, 500); else
-                ShowError(res, user, 200);
+            if (error) ShowMessage(res, error, 500); else {
+                var showUser = user;
+                showUser.token = '';
+                res.json(showUser, 200);
+
+            }
         });
     });
 
     //app.get("/users/updateUserName", function (req, res) { res.render("users/updateUserName", { title: "updateUserName" }); });
 
     app.post('/api/users/updateUserName', forms.UpdateNameForm, function (req, res) {
-        if (req.session.user)/*Если человек не авторизован, то он не может сменить себе имя*/
-        {
-            if (req.form.isValid) {
-                User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, "Не удалось найти пользователя, попробуйте позже", 500); else
-                        User.UpdateName(user._id, req.form.UserName, function (error, newName) {
-                            if (error) ShowError(res, "Не удалось изменить имя пользователя", 500); else
-                                ShowError(res, "Имя пользователя успешно изменено на "+newName, 200);
-                        });
-                });
-            } else { ShowError(res, "Неверно заполнена форма изменения имени пользователя", 500); }
-        } else {ShowError(res, "По какой-то причине вы не авторизованы, пожалуйста <a href='/users/login'>авторизуйтесь</a>", 500); }
+
+        if (req.form.isValid) {
+            User.findOne({ _id: req.session.user }, function (error, user) {
+                if (error) ShowMessage(res, "Не удалось найти пользователя, попробуйте позже", 500); else
+                    User.UpdateName(user._id, req.form.UserName, function (error, newName) {
+                        if (error) ShowMessage(res, "Не удалось изменить имя пользователя", 500); else
+                            ShowMessage(res, "Имя пользователя успешно изменено на " + newName, 200);
+                    });
+            });
+        } else { ShowMessage(res, "Неверно заполнена форма изменения имени пользователя", 500); }
+
     });
 
     //app.get("/users/updateEmail", function (req, res) { res.render("users/UpdateEmail", { title: "UpdateEmail" }); });
 
     app.post('/api/users/UpdateEmail', forms.UpdateEmailForm, function (req, res) {
-        if (req.session.user)/*Если человек не авторизован, то он не может сменить себе email*/
-        {
-            if (req.form.isValid) {
-                User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, error, 500); else
 
-                        User.findOne({ email: req.form.email }, function (error, userE) {
-                            if (userE) ShowError(res, "Email in use", 500); /*email уже занят*/
-                            else/*Есть баг, надо искать не первого попавшегося юзера с таким email а всех, их может быть много, и всем сбрасывать*/
-                                User.findOne({ tempemail: req.form.email }, function (error, userTmp) {
-                                    if (userTmp) {/*Кто-то уже хотел занять этот email, но еще не занял*/
-                                        User.dropToken(userTmp._id, function (error, result) {/*если пользователь не подтверди ни одного email то мы его удалим */
-                                            if (error) ShowError(res, error, 500); else
-                                                User.UpdateEmail(user._id, req.form.email, function (error, newEmail) {
-                                                    if (error) ShowError(res, error, 500); else {
-                                                        var userId = user._id;
+        if (req.form.isValid) {
+            User.findOne({ _id: req.session.user }, function (error, user) {
+                if (error) ShowMessage(res, error, 500); else
 
-                                                        User.generateNewToken(userId, function (error, token) {
-                                                            if (error) ShowError(res, error, 500); else
-                                                                if (token) {
-                                                                    approveUserMailSend(user, token, req.form.email);
-                                                                    ShowError(res, "Please confirm new email, we just send congirmation link, thanks", 200);
-                                                                }
+                    User.findOne({ email: req.form.email }, function (error, userE) {
+                        if (userE) ShowMessage(res, "Данный email уже кем-то занят", 500); /*email уже занят*/
+                        else/*Есть баг, надо искать не первого попавшегося юзера с таким email а всех, их может быть много, и всем сбрасывать*/
+                            User.findOne({ tempemail: req.form.email }, function (error, userTmp) {
+                                if (userTmp) {/*Кто-то уже хотел занять этот email, но еще не занял*/
+                                    User.dropToken(userTmp._id, function (error, result) {/*если пользователь не подтверди ни одного email то мы его удалим */
+                                        if (error) ShowMessage(res, error, 500); else
+                                            User.UpdateEmail(user._id, req.form.email, function (error, newEmail) {
+                                                if (error) ShowMessage(res, error, 500); else {
+                                                    var userId = user._id;
+
+                                                    User.generateNewToken(userId, function (error, token) {
+                                                        if (error) ShowMessage(res, error, 500); else
+                                                            if (token) {
+                                                                approveUserMailSend(user, token, req.form.email, function (error, result) {
+                                                                    if (result) ShowMessage(res, "Ссылка на подтверждение новоего email адреса отправлена", 200);
+                                                                    else ShowMessage(res, "Не удалось отправить ссылку на подтверждение нового email адреса, попробуйте еще раз позже", 500);
+                                                                });
+
+                                                            }
+                                                    });
+                                                }
+                                            });
+                                    });
+                                }
+                                else {/*Пока никто не хотел его занять занимаем сами*/
+                                    User.UpdateEmail(user._id, req.form.email, function (error, newEmail) {
+                                        if (error) ShowMessage(res, error, 500); else {
+                                            var userId = user._id;
+
+                                            User.generateNewToken(userId, function (error, token) {
+                                                if (error) ShowMessage(res, error, 500); else
+                                                    if (token) {
+                                                        approveUserMailSend(user, token, req.form.email, function (error, result) {
+                                                            if (result) ShowMessage(res, "Ссылка на подтверждение новоего email адреса отправлена", 200);
+                                                            else ShowMessage(res, "Не удалось отправить ссылку на подтверждение нового email адреса, попробуйте еще раз позже", 500);
                                                         });
                                                     }
-                                                });
-                                        });
-                                    }
-                                    else {/*Пока никто не хотел его занять занимаем сами*/
-                                        User.UpdateEmail(user._id, req.form.email, function (error, newEmail) {
-                                            if (error) ShowError(res, error, 500); else {
-                                                var userId = user._id;
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                    });
+            });
+        } else { ShowMessage(res, "Неверно заполнена форма смены email адреса", 500); }
 
-                                                User.generateNewToken(userId, function (error, token) {
-                                                    if (error) ShowError(res, error, 500); else
-                                                        if (token) {
-                                                            approveUserMailSend(user, token, req.form.email);
-                                                            ShowError(res, "Please confirm new email, we just send congirmation link, thanks", 200);
-                                                        }
-                                                });
-                                            }
-                                        });
-                                    }
-                                });
-                        });
-                });
-            } else { ShowError(res, "Error on updateEmailFrom", 500); }
-        } else { res.redirect('users/login'); }
     });
 
     //app.get("/users/updatePassword", function (req, res) { res.render("users/UpdatePassword", { title: "UpdatePassword" }); });
 
     app.post('/api/users/UpdatePassword', forms.UpdatePasswordForm, function (req, res) {
-        if (req.session.user)/*Если человек не авторизован, то он не может сменить себе пароль*/
-        {
-            if (req.form.isValid) {
-                User.findOne({ _id: req.session.user }, function (error, user) {
-                    if (error) ShowError(res, "Не удалось найти пользователя", 500); else {
-                        console.log(req.form.NewPassword);
-                        console.log(req.form.PasswordConfirmation);
-                        if (req.form.NewPassword == req.form.PasswordConfirmation) {
-                            User.UpdatePassword(req.session.user, req.form.OldPassword, req.form.NewPassword, function (error, resUser) {
-                                if (error) ShowError(res, "Не удалось изменить пароль, возможно старый пароль неверен", 500); else
-                                    if (resUser) ShowError(res, "Пароль успешно изменен", 200);
-                            })
-                        } else { ShowError(res, "Пароль и его подтверждение не совпали", 500); }
-                    }
-                })
-            } else { ShowError(res, "Неверно заполнена форма смены пароля", 500); }
-        } else {ShowError(res, "По какой-то причине вы не авторизованы, пожалуйста <a href='/users/login'>авторизуйтесь</a>", 500); }
+
+        if (req.form.isValid) {
+            User.findOne({ _id: req.session.user }, function (error, user) {
+                if (error) ShowMessage(res, "Не удалось найти пользователя", 500); else {
+                    console.log(req.form.NewPassword);
+                    console.log(req.form.PasswordConfirmation);
+                    if (req.form.NewPassword == req.form.PasswordConfirmation) {
+                        User.UpdatePassword(req.session.user, req.form.OldPassword, req.form.NewPassword, function (error, resUser) {
+                            if (error) ShowMessage(res, "Не удалось изменить пароль, возможно старый пароль неверен", 500); else
+                                if (resUser) ShowMessage(res, "Пароль успешно изменен", 200);
+                        })
+                    } else { ShowMessage(res, "Пароль и его подтверждение не совпали", 500); }
+                }
+            })
+        } else { ShowMessage(res, "Неверно заполнена форма смены пароля", 500); }
+
     });
 }

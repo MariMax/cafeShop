@@ -51,7 +51,7 @@ cafeSchema.statics.newCafe = function (data, cb) {
     if (data.Description) instance.Description = data.Description;
     if (data.WorkTime) instance.WorkTime = data.WorkTime;
     if (data.ClientPhone) instance.ClientPhone = data.ClientPhone;
-    if (data.CellPhone) instance.tempCellPhone = data.CellPhone;
+    if (data.cellPhone) instance.tempCellPhone = data.cellPhone;
     if (data.Latitude) instance.Latitude = data.Latitude;
     if (data.Longitude) instance.Longitude = data.Longitude;
     
