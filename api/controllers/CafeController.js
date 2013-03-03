@@ -48,7 +48,28 @@ exports.add_routes = function (app) {
                                                 }
                                             })
                                         }
-                                    })
+                                    });
+                                    Category.newCategory(cafe._id, 1, "zavtraki", "Завтраки", function (data) { }, function (error) {
+                                        logError("Category.newCategory "+error);
+                                    });
+                                    Category.newCategory(cafe._id, 2, "goryachie", "Горячие блюда", function (data) { }, function (error) {
+                                        logError("Category.newCategory "+error);
+                                    });
+                                    Category.newCategory(cafe._id, 3, "salat", "Салаты", function (data) { }, function (error) {
+                                        logError("Category.newCategory "+error);
+                                    });
+                                    Category.newCategory(cafe._id, 4, "sup", "Супы", function (data) { }, function (error) {
+                                        logError("Category.newCategory "+error);
+                                    });
+                                    Category.newCategory(cafe._id, 5, "garnir", "Гарниры", function (data) { }, function (error) {
+                                        logError("Category.newCategory "+error);
+                                    });
+                                    Category.newCategory(cafe._id, 5, "desert", "Десерт", function (data) { }, function (error) {
+                                        logError("Category.newCategory "+error);
+                                    });
+                                    Category.newCategory(cafe._id, 5, "drink", "Напитки", function (data) { }, function (error) {
+                                        logError("Category.newCategory "+error);
+                                    });
                                 }
                             });
                         } else {
@@ -78,9 +99,9 @@ exports.add_routes = function (app) {
     app.get("/api/cafes/:cafeId", function (req, res) {
         Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
             if (error) res.json(null, 200); else {
-                
+
                 cafe.CellPhoneVerificationCode = '';
-                
+
                 res.json(cafe, 200);
             }
         });

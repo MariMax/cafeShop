@@ -14,7 +14,7 @@ function Category(data) {
 
 
 function MenuViewModel(cafeId) {
-
+    debugger;
     var self = this;
     self.name = ko.observable('');
     self.phone = ko.observable();
@@ -37,5 +37,7 @@ function MenuViewModel(cafeId) {
     });
 }
 
-var cafeId = document.getElementById("cafeId").value;
-ko.applyBindings(new MenuViewModel(cafeId));
+if (document.getElementById("cafeId") != null) {
+    var cafeId = document.getElementById("cafeId").value;
+    ko.applyBindings(new MenuViewModel(cafeId), document.getElementById("cafe_menu_page"));
+}

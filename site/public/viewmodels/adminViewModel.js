@@ -14,7 +14,6 @@ function Category(data) {
 
 
 function AdminViewModel(cafeId) {
-
     var self = this;
     self.name = ko.observable('');
     self.phone = ko.observable();
@@ -60,11 +59,14 @@ function AdminViewModel(cafeId) {
                 var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
                 var category = new Category(value);
                 category.Dishes(mappedDishes);
+               
                 self.Categories.push(category);
             });
         });
     });
 }
 
-var cafeId = document.getElementById("cafeId").value;
-ko.applyBindings(new AdminViewModel(cafeId));
+if (document.getElementById("cafeId") != null) {
+    var cafeId = document.getElementById("cafeId").value;
+    ko.applyBindings(new AdminViewModel(cafeId), document.getElementById("admin_page"));
+}

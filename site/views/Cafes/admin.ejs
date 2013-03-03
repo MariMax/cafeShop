@@ -1,6 +1,132 @@
 <% layout('../layout') -%>
 <script type="text/javascript">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     $(function () {
     
@@ -153,7 +279,8 @@
     });
     
 </script>
-<div class="admin_page">
+
+<div class="admin_page" id="admin_page">
     <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
     <div class="admin_title page_title_block">
         <h1>Администрирование</h1>
@@ -211,16 +338,9 @@
         <div class="admin_menu">
             <h3>Меню заведения</h3>
             <div id="tab-container">
-                <ul class="catalog_nav etabs">
-                    <li><a href="#zavtraki">Завтраки</a></li>
-                    <li><a href="#goryachie">Горячие блюда</a></li>
-                    <li><a href="#salat">Салаты</a></li>
-                    <li><a href="#sup">Супы</a></li>
-                    <li><a href="#garnir">Гарниры</a></li>
-                    <li><a href="#desert">Десерт</a></li>
-                    <li><a href="#drink">Напитки</a></li>
+                <ul class="catalog_nav etabs" data-bind="foreach: Categories">
+                    <li><a data-bind="attr: { href: IdName }"><span data-bind="text: Name"></span></a></li>
                 </ul>
-                <!-- ko foreach: Categories -->
                 <div class="catalog_admin clearfix" id="text: IdName">
                     <div class="catalog_item">
                         <div class="photo">
@@ -244,7 +364,6 @@
                         <a href="#" class="delete"></a>
                     </div>
                 </div>
-                <!-- /ko -->
             </div>
         </div>
     </div>

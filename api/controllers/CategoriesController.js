@@ -8,21 +8,13 @@ var Schema = mongoose.Schema
 
 exports.add_routes = function (app) {
     app.get("/api/cafes/:cafeId/category", function (req, res) {
-        var categories = [];
-        var breakfastCategory = new Category();
-        breakfastCategory.Name = "Завтраки";
-        breakfastCategory.IdName = "zavtraki";
-        breakfastCategory._cafe = new ObjectId("513241e65e134f3817000004");
-        breakfastCategory.id = new ObjectId("512b936a21886d13fcb8bee9");
-
-        categories.push(breakfastCategory);
-        res.json(categories, 200);
-
-        //Category.find({ _cafe: req.params.cafeId }, function (err, category) {
-        //    if (err)
-        //        res.send(err, 404);
-        //    else
-        //        res.json(category, 200);
-        //});
+        console.log(req);
+        Category.find({ _cafe: req.params.cafeId }, function (err, category) {
+            if (err)
+                res.send(err, 404);
+            else
+                res.json(category, 200);
+        });
     });
+
 }
