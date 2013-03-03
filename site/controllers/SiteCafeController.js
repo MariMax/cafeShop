@@ -5,7 +5,7 @@ exports.add_routes = function (app) {
     app.get("/cafes/newCafe", function (req, res) { 
     if (req.session.user){
     res.render("cafes/newCafe", {userId:req.session.user}); }
-    else res.redirect('user/login');});
+    else res.redirect('users/login');});
 
     app.get("/cafes/updateValues/:cafeId", function (req, res) {
         if (req.session.user) {

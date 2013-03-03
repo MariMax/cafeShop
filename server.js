@@ -81,7 +81,7 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.get('/', function (req, res) { res.redirect('home') })
+//app.get('/', function (req, res) { res.redirect('home') })
 
 var routes = require('./routes.js');
 routes(app);

@@ -9,8 +9,8 @@
                     $("#messenger").html(data.message);
                     console.log("done " + data.message);
                     $("#messenger").fadeIn("slow");
-                    var delay = 2000;
-                    setTimeout("document.location.href='/'", delay);
+                    var delay = 3000;
+                    setTimeout(document.location.href='/users/login', delay);
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
@@ -42,7 +42,7 @@
                     <div class="input"><input type="email" size="60" name="email" value="<%= email %>" required hidden></div>
                 </div>
                 <div class="form_but">
-                    <a href="/" class="button succes">Продолжить</a>  
+                    <a href="/users/login" class="button succes">Продолжить</a>  
                     <a href="/users/logout" class="button simple">Выйти</a>
                 </div>
             </form>
