@@ -149,18 +149,27 @@
 
         })
 
-
+        var longitude = $('#Longitude');
+        var latitude = $('#Latitude');
         $('#Address').keyup(function () {
             var address = $('#Address').val();
             $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
                 done(function (data) {
                     var ar = data.response.GeoObjectCollection.featureMember;
+                    
+                    if (ar.length == 1&&ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind=='house') {
+                        var b = ar[0].GeoObject.Point.pos;
+                        var temp = new Array();
+                        temp = b.split(' ');
+                        longitude.attr('value', temp[0]);
+                        latitude.attr('value', temp[1]);
+                    }
                     console.log(ar.length);
                     console.log("_______Start_________");
                     for (var key in ar) {
                         var val = ar[key];
 
-                        console.log(val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
+                        console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind+' '+ val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
                     }
                     console.log("________end_________");
                 })
