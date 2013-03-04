@@ -1,15 +1,15 @@
 <% layout('../layout') -%>
 <script type="text/javascript">
 
-    
+
     $(function () {
-    
+
         function getCafe() {
-    
+
             var cafeId = $('#cafeId').val();
             var jqXHR = $.get('/api/cafes/' + cafeId)
             .done(function (cafe) {
-    
+ 
                 if (cafe) {
                     if (cafe.Name)
                         $('#name').attr('value', cafe.Name);
@@ -30,7 +30,7 @@
         getCafe();
     
         function postData() {
-    
+
             var jqXHR = $.post('/api/cafes/updateValues', $('form').serialize())
             .done(function (data) {
                 if (data.status == 200) {
@@ -46,12 +46,12 @@
                 }
             });
         }
-    
+
         function updatePhone() {
-    
+
             var jqXHR = $.post('/api/cafes/updateCellPhone', $('form').serialize())
             .done(function (data) {
-    
+
                 if (data.status == 200) {
                     $("#messenger").html(data.message);
                     console.log("done " + data.message);
@@ -66,7 +66,7 @@
             });
         }
         function confirmCellPhone() {
-    
+
             var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
             .done(function (data) {
                 if (data.status == 200) {
@@ -83,14 +83,14 @@
                     $("#messenger").fadeIn("slow");
                 }
             });
-    
+
         }
-    
+
         function isValidPhoneNumber(number) {
             var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
             return pattern.test(number);
         }
-    
+
         $('#cellPhone').blur(function () {
             var phone = $('#cellPhone').val();
             if (!isValidPhoneNumber(phone)) {
@@ -102,7 +102,7 @@
                 updatePhone();
             }
         })
-    
+
         $('#confirm').click(function () {
             var code = $('#cellPhoneConfirmation').val();
             if (!code) {
@@ -111,28 +111,28 @@
                 $("#messenger").fadeIn("slow");
             } else { confirmCellPhone(); }
         })
-    
+
         var field = new Array("Name", "cellPhone"); //поля обязательные 
-    
+
         $("form").submit(function () {// обрабатываем отправку формы  
             var error = 0; // индекс ошибки
             $("form").find(":input").each(function () {// проверяем каждое поле в форме
                 for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
                     if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
-    
+
                         if (!$(this).val()) {// если в поле пустое
                             // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
                             error = 1; // определяем индекс ошибки       
-    
+
                         }
                         else {
                             // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
                         }
-    
+
                     }
                 }
             })
-    
+
             if (error == 0) { // если ошибок нет то отправляем данные
                 postData();
                 return false;
@@ -144,17 +144,17 @@
                 $("#messenger").fadeIn("slow");
                 return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
             }
-    
-    
-    
+
+
+
         })
-    
-    
+
+
     });
-    
+
 </script>
 <div class="admin_page">
-    <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
+    
     <div class="admin_title page_title_block">
         <h1>Администрирование</h1>
         <div class="border_wave_bot"></div>

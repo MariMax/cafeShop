@@ -3,19 +3,20 @@
     $(function () {
 
         function getUser() {
+            debugger;
             var userId = $('#userId').val();
             var jqXHR = $.post('/api/users/getuser/' + userId)
             .done(function (data) {
-                if (data.status == 200) {
+                if (data) {
                     
                     $("#name").attr("value", data.UserName);
                     //console.log("done " + data.message);
                     $("#email").attr("value", data.email);
-                }
-                if (data.status == 500) {
-                    $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
-                    $("#messenger").fadeIn("slow");
+                }else {
+               
+                    $("#messenger").html("Не удалось получить пользователя");
+                    console.log("fail " + "Не удалось получить пользователя");
+                    
                 }
             });
         }
