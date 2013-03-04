@@ -8,81 +8,81 @@
 
             var cafeId = $('#cafeId').val();
             var jqXHR = $.get('/api/cafes/' + cafeId)
-            .done(function (cafe) {
- 
-                if (cafe) {
-                    if (cafe.Name)
-                        $('#name').attr('value', cafe.Name);
-                    if (cafe.Address)
-                        $('#Address').attr('value', cafe.Address);
-                    if (cafe.WorkTime)
-                        $('#WorkTime').attr('value', cafe.WorkTime);
-                    if (cafe.ClientPhone)
-                        $('#ClientPhone').attr('value', cafe.ClientPhone);
-                    if (cafe.CellPhone)
-                        $('#cellPhone').attr('value', cafe.CellPhone);
-                    else {
-                        document.location.href = '/cafes/newcafe'; //Сначала подтверди телефон, потом администрируй
-                    }
-                } else document.location.href = '/cafes/newcafe'; //а куда деваться если мы не нашли кафе, его надо создать
-            })
+                .done(function (cafe) {
+
+                    if (cafe) {
+                        if (cafe.Name)
+                            $('#name').attr('value', cafe.Name);
+                        if (cafe.Address)
+                            $('#Address').attr('value', cafe.Address);
+                        if (cafe.WorkTime)
+                            $('#WorkTime').attr('value', cafe.WorkTime);
+                        if (cafe.ClientPhone)
+                            $('#ClientPhone').attr('value', cafe.ClientPhone);
+                        if (cafe.CellPhone)
+                            $('#cellPhone').attr('value', cafe.CellPhone);
+                        else {
+                            document.location.href = '/cafes/newcafe'; //Сначала подтверди телефон, потом администрируй
+                        }
+                    } else document.location.href = '/cafes/newcafe'; //а куда деваться если мы не нашли кафе, его надо создать
+                })
         }
         getCafe();
-    
+
         function postData() {
 
             var jqXHR = $.post('/api/cafes/updateValues', $('form').serialize())
-            .done(function (data) {
-                if (data.status == 200) {
-                    $("#messenger").html(data.message);
-                    console.log("done " + data.message);
-                    $("#messenger").fadeIn("slow");
-                    //$('#verify').removeAttr('hidden');
-                }
-                if (data.status == 500) {
-                    $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
-                    $("#messenger").fadeIn("slow");
-                }
-            });
+                .done(function (data) {
+                    if (data.status == 200) {
+                        $("#messenger").html(data.message);
+                        console.log("done " + data.message);
+                        $("#messenger").fadeIn("slow");
+                        //$('#verify').removeAttr('hidden');
+                    }
+                    if (data.status == 500) {
+                        $("#messenger").html(data.message);
+                        console.log("fail " + data.message);
+                        $("#messenger").fadeIn("slow");
+                    }
+                });
         }
 
         function updatePhone() {
 
             var jqXHR = $.post('/api/cafes/updateCellPhone', $('form').serialize())
-            .done(function (data) {
+                .done(function (data) {
 
-                if (data.status == 200) {
-                    $("#messenger").html(data.message);
-                    console.log("done " + data.message);
-                    $("#messenger").fadeIn("slow");
-                    $('#verify').removeAttr('hidden');
-                }
-                if (data.status == 500) {
-                    $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
-                    $("#messenger").fadeIn("slow");
-                }
-            });
+                    if (data.status == 200) {
+                        $("#messenger").html(data.message);
+                        console.log("done " + data.message);
+                        $("#messenger").fadeIn("slow");
+                        $('#verify').removeAttr('hidden');
+                    }
+                    if (data.status == 500) {
+                        $("#messenger").html(data.message);
+                        console.log("fail " + data.message);
+                        $("#messenger").fadeIn("slow");
+                    }
+                });
         }
         function confirmCellPhone() {
 
             var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
-            .done(function (data) {
-                if (data.status == 200) {
-                    $("#messenger").html(data.message.message);
-                    console.log("done " + data.message);
-                    $("#messenger").fadeIn("slow");
-                    var cafeId = data.message.cafeId;
-                    var delay = 2000;
-                    setTimeout(document.location.href = '/cafes/updateValues/' + cafeId, delay);
-                }
-                if (data.status == 500) {
-                    $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
-                    $("#messenger").fadeIn("slow");
-                }
-            });
+                .done(function (data) {
+                    if (data.status == 200) {
+                        $("#messenger").html(data.message.message);
+                        console.log("done " + data.message);
+                        $("#messenger").fadeIn("slow");
+                        var cafeId = data.message.cafeId;
+                        var delay = 2000;
+                        setTimeout(document.location.href = '/cafes/updateValues/' + cafeId, delay);
+                    }
+                    if (data.status == 500) {
+                        $("#messenger").html(data.message);
+                        console.log("fail " + data.message);
+                        $("#messenger").fadeIn("slow");
+                    }
+                });
 
         }
 
@@ -150,6 +150,23 @@
         })
 
 
+        $('#Address').keyup(function () {
+            var address = $('#Address').val();
+            $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
+                done(function (data) {
+                    var ar = data.response.GeoObjectCollection.featureMember;
+                    console.log(ar.length);
+                    console.log("_______Start_________");
+                    for (var key in ar) {
+                        var val = ar[key];
+
+                        console.log(val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
+                    }
+                    console.log("________end_________");
+                })
+        })
+
+
     });
 
 </script>
@@ -178,6 +195,7 @@
                 <div class="form_item">
                     <div class="label">Адрес</div>
                     <div class="input"><input id="Address" type="text" size="60" name="Address"></div>
+                    
                 </div>
                 <div class="form_item">
                     <div class="label">Режим работы</div>
