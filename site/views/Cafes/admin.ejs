@@ -1,131 +1,5 @@
 <% layout('../layout') -%>
 <script type="text/javascript">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     $(function () {
@@ -148,9 +22,9 @@
                     if (cafe.CellPhone)
                         $('#cellPhone').attr('value', cafe.CellPhone);
                     else {
-                        document.location.href = '/cafes/newcafe'; //РЎРЅР°С‡Р°Р»Р° РїРѕРґС‚РІРµСЂРґРё С‚РµР»РµС„РѕРЅ, РїРѕС‚РѕРј Р°РґРјРёРЅРёСЃС‚СЂРёСЂСѓР№
+                            document.location.href = '/cafes/newcafe'; //Сначала подтверди телефон, потом администрируй
                     }
-                } else document.location.href = '/cafes/newcafe'; //Р° РєСѓРґР° РґРµРІР°С‚СЊСЃСЏ РµСЃР»Рё РјС‹ РЅРµ РЅР°С€Р»Рё РєР°С„Рµ, РµРіРѕ РЅР°РґРѕ СЃРѕР·РґР°С‚СЊ
+                    } else document.location.href = '/cafes/newcafe'; //а куда деваться если мы не нашли кафе, его надо создать
             })
         }
         getCafe();
@@ -213,14 +87,14 @@
         }
     
         function isValidPhoneNumber(number) {
-            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //РІР°Р»РёРґРЅС‹Р№ СЂРѕСЃСЃРёР№СЃРєРёР№ РЅРѕРјРµСЂ
+            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
             return pattern.test(number);
         }
     
         $('#cellPhone').blur(function () {
             var phone = $('#cellPhone').val();
             if (!isValidPhoneNumber(phone)) {
-                var err_text = "Р’РІРµРґРёС‚Рµ РїСЂР°РІРёР»СЊРЅС‹Р№ Р РѕСЃСЃРёР№СЃРєРёР№ СЃРѕС‚РѕРІС‹Р№ РЅРѕРјРµСЂ, РїСЂРёРјРµСЂ +79177640209";
+                var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
                 $("#messenger").html(err_text);
                 $("#messenger").fadeIn("slow");
             } else {
@@ -232,70 +106,95 @@
         $('#confirm').click(function () {
             var code = $('#cellPhoneConfirmation').val();
             if (!code) {
-                var err_text = "Р’РІРµРґРёС‚Рµ РєРѕРґ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ";
+                var err_text = "Введите код подтверждения";
                 $("#messenger").html(err_text);
                 $("#messenger").fadeIn("slow");
             } else { confirmCellPhone(); }
         })
     
-        var field = new Array("Name", "cellPhone"); //РїРѕР»СЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ 
+        var field = new Array("Name", "cellPhone"); //поля обязательные 
     
-        $("form").submit(function () {// РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РѕС‚РїСЂР°РІРєСѓ С„РѕСЂРјС‹  
-            var error = 0; // РёРЅРґРµРєСЃ РѕС€РёР±РєРё
-            $("form").find(":input").each(function () {// РїСЂРѕРІРµСЂСЏРµРј РєР°Р¶РґРѕРµ РїРѕР»Рµ РІ С„РѕСЂРјРµ
-                for (var i = 0; i < field.length; i++) { // РµСЃР»Рё РїРѕР»Рµ РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РІ СЃРїРёСЃРєРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С…
-                    if ($(this).attr("name") == field[i]) { //РїСЂРѕРІРµСЂСЏРµРј РїРѕР»Рµ С„РѕСЂРјС‹ РЅР° РїСѓСЃС‚РѕС‚Сѓ
+        $("form").submit(function () {// обрабатываем отправку формы  
+            var error = 0; // индекс ошибки
+            $("form").find(":input").each(function () {// проверяем каждое поле в форме
+                for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
+                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
     
-                        if (!$(this).val()) {// РµСЃР»Рё РІ РїРѕР»Рµ РїСѓСЃС‚РѕРµ
-                            // $(this).css('border', 'red 1px solid'); // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°РјРєСѓ РєСЂР°СЃРЅРѕРіРѕ С†РІРµС‚Р°
-                            error = 1; // РѕРїСЂРµРґРµР»СЏРµРј РёРЅРґРµРєСЃ РѕС€РёР±РєРё       
+                        if (!$(this).val()) {// если в поле пустое
+                            // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
+                            error = 1; // определяем индекс ошибки       
     
                         }
                         else {
-                            // $(this).css('border', 'gray 1px solid'); // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°РјРєСѓ РѕР±С‹С‡РЅРѕРіРѕ С†РІРµС‚Р°
+                            // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
                         }
     
                     }
                 }
             })
     
-            if (error == 0) { // РµСЃР»Рё РѕС€РёР±РѕРє РЅРµС‚ С‚Рѕ РѕС‚РїСЂР°РІР»СЏРµРј РґР°РЅРЅС‹Рµ
+            if (error == 0) { // если ошибок нет то отправляем данные
                 postData();
                 return false;
             }
             else {
-                if (error == 1) var err_text = "РќРµРѕР±С…РѕРґРёРјРѕ РІРІРµСЃС‚Рё РЅР°Р·РІР°РЅРёРµ РєР°С„Рµ";
-                // if (error == 2) var err_text = "Р’РІРµРґРёС‚Рµ РїСЂР°РІРёР»СЊРЅС‹Р№ Р РѕСЃСЃРёР№СЃРєРёР№ СЃРѕС‚РѕРІС‹Р№ РЅРѕРјРµСЂ, РїСЂРёРјРµСЂ +79177640209";
+                if (error == 1) var err_text = "Необходимо ввести название кафе";
+                // if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
                 $("#messenger").html(err_text);
                 $("#messenger").fadeIn("slow");
-                return false; //РµСЃР»Рё РІ С„РѕСЂРјРµ РІСЃС‚СЂРµС‚РёР»РёСЃСЊ РѕС€РёР±РєРё , РЅРµ  РїРѕР·РІРѕР»СЏРµРј РѕС‚РѕСЃР»Р°С‚СЊ РґР°РЅРЅС‹Рµ РЅР° СЃРµСЂРІРµСЂ.
+                return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
             }
     
     
     
         })
     
+        var longitude = $('#Longitude');
+        var latitude = $('#Latitude');
+        $('#Address').keyup(function () {
+            var address = $('#Address').val();
+            $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
+                done(function (data) {
+                    var ar = data.response.GeoObjectCollection.featureMember;
+                    
+                    if (ar.length == 1&&ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind=='house') {
+                        var b = ar[0].GeoObject.Point.pos;
+                        var temp = new Array();
+                        temp = b.split(' ');
+                        longitude.attr('value', temp[0]);
+                        latitude.attr('value', temp[1]);
+                    }
+                    console.log(ar.length);
+                    console.log("_______Start_________");
+                    for (var key in ar) {
+                        var val = ar[key];
+
+                        console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind+' '+ val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
+                    }
+                    console.log("________end_________");
+                })
+        })
+
     
     });
     
 </script>
 
 <div class="admin_page" id="admin_page">
-    <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
     <div class="admin_title page_title_block">
-        <h1>РђРґРјРёРЅРёСЃС‚СЂРёСЂРѕРІР°РЅРёРµ</h1>
+        <h1>Администрирование</h1>
         <div class="border_wave_bot"></div>
     </div>
 
     <div class="admin_content">
         <div class="admin_info">
-            <h3>РРЅС„РѕСЂРјР°С†РёСЏ</h3>
+            <h3>Информация</h3>
             <form method="post" action="" class="horizontal">
                 <div id="messenger" class="messenger">
                 </div>
                 <div class="form_item">
 
-                    <div class="label">РќР°Р·РІР°РЅРёРµ РєР°С„Рµ/СЂРµСЃС‚РѕСЂР°РЅР°</div>
+                    <div class="label">Название кафе/ресторана</div>
                     <input id="cafeId" type="text" size="20" name="cafeId" value="<%= cafeId %>" required hidden>
                     <input id="Longitude" type="text" size="20" name="Longitude" hidden>
                     <input id="Latitude" type="text" size="20" name="Latitude" hidden>
@@ -303,40 +202,41 @@
                     </div>
                 </div>
                 <div class="form_item">
-                    <div class="label">РђРґСЂРµСЃ</div>
+                    <div class="label">Адрес</div>
                     <div class="input"><input id="Address" type="text" size="60" name="Address"></div>
+                    
                 </div>
                 <div class="form_item">
-                    <div class="label">Р РµР¶РёРј СЂР°Р±РѕС‚С‹</div>
+                    <div class="label">Режим работы</div>
                     <div class="input"><input id="WorkTime" type="text" size="60" name="WorkTime"></div>
                 </div>
                 <div class="form_item">
-                    <div class="label">РўРµР»РµС„РѕРЅ (РґР»СЏ РєР»РёРµРЅС‚РѕРІ)</div>
+                    <div class="label">Телефон (для клиентов)</div>
                     <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone"></div>
                 </div>
                 <div class="form_item">
-                    <div class="label">РЎРѕС‚РѕРІС‹Р№ (РґР»СЏ sms РѕРїРѕРІРµС‰РµРЅРёСЏ)</div>
+                    <div class="label">Сотовый (для sms оповещения)</div>
                     <div class="input"><input type="text" size="20" id="cellPhone" name="cellPhone" required>
                     </div>
                 </div>
                 <div id="verify" class="form_item" hidden>
-                    <div class="label">Р’РІРµРґРёС‚Рµ РєРѕРґ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ</div>
+                    <div class="label">Введите код подтверждения</div>
                     <div class="input"><input id="cellPhoneConfirmation" type="text" size="20" name="token">
 
-                        <input type="button" id="confirm" value="РџРѕРґС‚РІРµСЂРґРёС‚СЊ" class="button succes"></div>
+                        <input type="button" id="confirm" value="Подтвердить" class="button succes"></div>
 
                 </div>
 
 
                 <div class="form_but">
-                    <input type="submit" value="РЎРѕС…СЂР°РЅРёС‚СЊ" class="button succes">
-                    <input type="reset" value="РћС‡РёСЃС‚РёС‚СЊ" class="button simple">
+                    <input type="submit" value="Сохранить" class="button succes">
+                    <input type="reset" value="Очистить" class="button simple">
                 </div>
             </form>
         </div>
 
         <div class="admin_menu">
-            <h3>РњРµРЅСЋ Р·Р°РІРµРґРµРЅРёСЏ</h3>
+            <h3>Меню заведения</h3>
             <div id="tab-container">
                 <ul class="catalog_nav etabs" data-bind="foreach: Categories">
                     <li><a data-bind="attr: { href: IdName }"><span data-bind="text: Name"></span></a></li>
@@ -344,21 +244,21 @@
                 <div class="catalog_admin clearfix" id="text: IdName">
                     <div class="catalog_item">
                         <div class="photo">
-                            <a href="#" class="addfile">Р¤РѕС‚Рѕ Р±Р»СЋРґР°<input type="file" name="" id=""></a>
+                            <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
                         </div>
                         <div class="info">
-                            <input type="text" name="" id="" class="name" placeholder="РќР°Р·РІР°РЅРёРµ Р±Р»СЋРґР°">
-                            <textarea name="" id="" placeholder="РћРїРёСЃР°РЅРёРµ Р±Р»СЋРґР°"></textarea>
-                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">СЂСѓР±</span>
+                            <input type="text" name="" id="" class="name" placeholder="Название блюда">
+                            <textarea name="" id="" placeholder="Описание блюда"></textarea>
+                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
                             <div class="week">
-                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Р’СЃСЋ РЅРµРґРµР»СЋ</label>
-                                <input type="checkbox" name="2" id="2"><label for="2" class="check">РџРѕРЅ</label>
-                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Р’С‚СЂ</label>
-                                <input type="checkbox" name="4" id="4"><label for="4" class="check">РЎСЂРґ</label>
-                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Р§С‚РІ</label>
-                                <input type="checkbox" name="6" id="6"><label for="6" class="check">РџСЏС‚</label>
-                                <input type="checkbox" name="7" id="7"><label for="7" class="check">РЎСѓР±</label>
-                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Р’СЃРє</label>
+                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
+                                <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
+                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
+                                <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
+                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
+                                <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
+                                <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
+                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
                             </div>
                         </div>
                         <a href="#" class="delete"></a>

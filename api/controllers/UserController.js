@@ -337,6 +337,7 @@ exports.add_routes = function (app) {
         User.findOne({ _id: req.params.userId }, function (error, user) {
             if (error) ShowMessage(res, error, 500); else {
                 var showUser = user;
+                console.log(showUser);
                 showUser.token = '';
                 res.json(showUser, 200);
 
