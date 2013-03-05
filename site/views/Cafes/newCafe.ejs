@@ -1,9 +1,8 @@
 <% layout('../layout') -%>
 <script type="text/javascript">
     $(function () {
-
+    
         function postData() {
-
             var jqXHR = $.post('/api/cafes/newCafe', $('form').serialize())
             .done(function (data) {
                 if (data.status == 200) {
@@ -23,9 +22,9 @@
                 }
             });
         }
-
+    
         function confirmCellPhone() {
-
+    
             var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
             .done(function (data) {
                 if (data.status == 200) {
@@ -34,7 +33,7 @@
                     $("#messenger").fadeIn("slow");
                     var cafeId = data.message.cafeId;
                     var delay = 2000;
-                    setTimeout(document.location.href='/cafes/updateValues/'+cafeId, delay);
+                    setTimeout(document.location.href = '/cafes/updateValues/' + cafeId, delay);
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
@@ -42,40 +41,40 @@
                     $("#messenger").fadeIn("slow");
                 }
             });
-
+    
         }
-
+    
         function isValidPhoneNumber(number) {
             var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
             return pattern.test(number);
         }
-
+    
         var field = new Array("Name", "cellPhone"); //поля обязательные 
-
-        $("form").submit(function () {// обрабатываем отправку формы  
+    
+        $("#submitBtn").click(function () {// обрабатываем отправку формы  
             var error = 0; // индекс ошибки
             $("form").find(":input").each(function () {// проверяем каждое поле в форме
                 for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
-                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
-
+                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустотус
+    
                         if (!$(this).val()) {// если в поле пустое
                             // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
                             error = 1; // определяем индекс ошибки       
-
+    
                         }
                         else {
                             // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
                         }
-
+    
                     }
                 }
             })
-
+    
             var cellPhone = $('#cellPhone').val();
             if (!isValidPhoneNumber(cellPhone))
             { error = 2; }
-
-
+    
+    
             if (error == 0) { // если ошибок нет то отправляем данные
                 postData();
                 return false;
@@ -87,11 +86,11 @@
                 $("#messenger").fadeIn("slow");
                 return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
             }
-
-
-
+    
+    
+    
         })
-
+    
         $('#confirm').click(function () {
             var code = $('#cellPhoneConfirmation').val();
             if (!code) {
@@ -101,7 +100,7 @@
             } else { confirmCellPhone(); }
         })
     });
-
+    
 </script>
 
 <div class="admin_page">
@@ -109,14 +108,15 @@
         <div class="admin_info">
             <h3>Регистрация нового кафе</h3>
             <form method="post" class="horizontal">
-                <div id ="messenger" class="messenger"> </div>
+                <div id="messenger" class="messenger">
+                </div>
                 <div id="name" class="form_item">
                     <div class="label">Название</div>
                     <div class="input"><input type="text" size="60" name="Name" required></div>
                 </div>
                 <div id="phone" class="form_item">
                     <div class="label">Сотовый телефон, для получения заказов</div>
-                    <div class="input"><input id ="cellPhone" type="text" size="60" name="cellPhone" required></div>
+                    <div class="input"><input id="cellPhone" type="text" size="60" name="cellPhone" required></div>
                 </div>
                 <div class="form_item">
                     <div class="input"><input id="userId" type="text" size="60" name="userId" value="<%=userId%>" required hidden></div>
@@ -126,11 +126,11 @@
                     <div class="label">Введите код подтверждения</div>
                     <div class="input"><input id="cellPhoneConfirmation" type="text" size="60" name="token"></div>
                     <div class="form_but">
-                    <input type="button" id="confirm" value="Подтвердить" class="button succes" >
-                </div>
+                        <input type="button" id="confirm" value="Подтвердить" class="button succes">
+                    </div>
                 </div>
                 <div id="submit" class="form_but">
-                    <input type="submit" value="Зарегистрировать" class="button succes" >
+                    <input type="submit" value="Зарегистрировать" class="button succes" id="submitBtn">
                 </div>
             </form>
         </div>

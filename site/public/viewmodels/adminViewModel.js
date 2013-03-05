@@ -6,14 +6,19 @@ function Dish(data) {
 }
 
 function Category(data) {
-    this.id = ko.observable(data.id);
-    this.Name = ko.observable(data.Name);
-    this.IdName = ko.observable(data.IdName);
-    this.Dishes = ko.observableArray([]);
+    var self = this;
+    self.id = ko.observable(data.id);
+    self.Name = ko.observable(data.Name);
+    self.IdName = ko.observable(data.IdName);
+    self.Dishes = ko.observableArray([]);
+    self.IdNameHash = ko.computed(function () {
+        return "#" + self.IdName;
+    });
 }
 
 
 function AdminViewModel(cafeId) {
+    debugger;
     var self = this;
     self.name = ko.observable('');
     self.phone = ko.observable();
@@ -59,7 +64,7 @@ function AdminViewModel(cafeId) {
                 var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
                 var category = new Category(value);
                 category.Dishes(mappedDishes);
-               
+
                 self.Categories.push(category);
             });
         });
@@ -68,5 +73,5 @@ function AdminViewModel(cafeId) {
 
 if (document.getElementById("cafeId") != null) {
     var cafeId = document.getElementById("cafeId").value;
-    ko.applyBindings(new AdminViewModel(cafeId), document.getElementById("admin_page"));
+    ko.applyBindings(new AdminViewModel(cafeId), document.getElementById("admin_menu"));
 }

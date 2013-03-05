@@ -1,7 +1,6 @@
 <% layout('../layout') -%>
+
 <script type="text/javascript">
-    
-    
     $(function () {
     
         function getCafe() {
@@ -156,7 +155,7 @@
             $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
                 done(function (data) {
                     var ar = data.response.GeoObjectCollection.featureMember;
-                    
+    
                     if (ar.length == 1&&ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind=='house') {
                         var b = ar[0].GeoObject.Point.pos;
                         var temp = new Array();
@@ -168,17 +167,18 @@
                     console.log("_______Start_________");
                     for (var key in ar) {
                         var val = ar[key];
-
+    
                         console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind+' '+ val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
                     }
                     console.log("________end_________");
                 })
         })
-
+    
     
     });
     
 </script>
+<script src="/viewmodels/adminViewModel.js"></script>
 
 <div class="admin_page" id="admin_page">
     <div class="admin_title page_title_block">
@@ -204,7 +204,7 @@
                 <div class="form_item">
                     <div class="label">Адрес</div>
                     <div class="input"><input id="Address" type="text" size="60" name="Address"></div>
-                    
+
                 </div>
                 <div class="form_item">
                     <div class="label">Режим работы</div>
@@ -239,17 +239,17 @@
             <h3>Меню заведения</h3>
             <div id="tab-container">
                 <ul class="catalog_nav etabs" data-bind="foreach: Categories">
-                    <li><a data-bind="attr: { href: IdName }"><span data-bind="text: Name"></span></a></li>
+                    <li><a data-bind="attr: { href: IdNameHash }"><span data-bind="text: Name"></span></a></li>
                 </ul>
-                <div class="catalog_admin clearfix" id="text: IdName">
+                <div class="catalog_admin clearfix" data-bind="attr: { id: IdName }">
                     <div class="catalog_item">
                         <div class="photo">
                             <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
                         </div>
                         <div class="info">
-                            <input type="text" name="" id="" class="name" placeholder="Название блюда">
-                            <textarea name="" id="" placeholder="Описание блюда"></textarea>
-                            <input type="text" name="" placeholder="0" id="" class="price"><span class="currency">руб</span>
+                            <input type="text" name="" id="" class="name" placeholder="Название блюда" data-bind="value: newDishName">
+                            <textarea name="" id="" placeholder="Описание блюда" data-bind="value: newDishDescription"></textarea>
+                            <input type="text" name="" placeholder="0" id="" class="price" data-bind="value: newDishPrice"><span class="currency">руб</span>
                             <div class="week">
                                 <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
                                 <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
@@ -261,7 +261,30 @@
                                 <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
                             </div>
                         </div>
-                        <a href="#" class="delete"></a>
+                        <a href="#" class="button"></a>
+                    </div>
+                    <div data-bind="foreach: Dishes">
+                        <div class="catalog_item">
+                            <div class="photo">
+                                <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                            </div>
+                            <div class="info">
+                                <input type="text" name="" id="" class="name" placeholder="Название блюда" data-bind="text: Name">
+                                <textarea name="" id="" placeholder="Описание блюда" data-bind="text: Description"></textarea>
+                                <input type="text" name="" placeholder="0" id="" class="price" data-bind="text: Price"><span class="currency">руб</span>
+                                <div class="week">
+                                    <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
+                                    <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
+                                    <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
+                                    <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
+                                    <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
+                                    <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
+                                    <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
+                                    <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
+                                </div>
+                            </div>
+                            <a href="#" class="delete button" data-bind="click: $root.removeDish"></a>
+                        </div>
                     </div>
                 </div>
             </div>

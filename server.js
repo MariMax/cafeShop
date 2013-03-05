@@ -3,7 +3,7 @@ var express = require('express')
   , ejsLocals = require('ejs-locals')
   , nodemailer = require("nodemailer");
 
- path = require('path');
+ fs = require('fs');
 
 var MongoStore = require('connect-mongo')(express),
     mongo = require('mongoose');
@@ -36,7 +36,7 @@ String.prototype.randomNumberString = function (stringLength) {
     return randomString;
 }
 
-if (path.existsSync('./configDefault.js')) {
+if (fs.existsSync('./configDefault.js')) {
     var configLocal = require('./configDefault.js');
     var mailSettings = configLocal.getMailConfig();
     smtpTransport = nodemailer.createTransport("SMTP",{

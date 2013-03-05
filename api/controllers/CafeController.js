@@ -64,10 +64,10 @@ exports.add_routes = function (app) {
                                     Category.newCategory(cafe._id, 5, "garnir", "Гарниры", function (data) { }, function (error) {
                                         logError("Category.newCategory "+error);
                                     });
-                                    Category.newCategory(cafe._id, 5, "desert", "Десерт", function (data) { }, function (error) {
+                                    Category.newCategory(cafe._id, 6, "desert", "Десерт", function (data) { }, function (error) {
                                         logError("Category.newCategory "+error);
                                     });
-                                    Category.newCategory(cafe._id, 5, "drink", "Напитки", function (data) { }, function (error) {
+                                    Category.newCategory(cafe._id, 7, "drink", "Напитки", function (data) { }, function (error) {
                                         logError("Category.newCategory "+error);
                                     });
                                 }

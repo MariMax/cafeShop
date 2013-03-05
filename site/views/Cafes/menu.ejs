@@ -11,21 +11,21 @@
     </div>
     <div class="cafe_menu" id="tab-container">
         <ul class="catalog_nav etabs" data-bind="foreach: Categories">
-            <li><a href="text: IdName"><!--ko text: Name--><!--/ko--></a></li>
+            <li><a href="text: IdName"><span data-bind="text: Name"></span></a></li>
         </ul>
-        <!-- ko foreach: Categories -->
-        <div class="catalog clearfix" id="text: IdName">
-            <!-- ko foreach: Dishes -->
-            <div class="catalog_item">
-                <div class="img"><img src="images/content/img1.jpg" alt="img"></div>
-                <h3><strong data-bind="text: Name"></strong></h3>
-                <div class="price"><strong data-bind="text: Price"></strong></div>
-                <div class="buy">
-                    <a href="#">заказать</a>
+        <div data-bind="foreach: Categories">
+            <div class="catalog clearfix" id="text: IdName">
+                <div data-bind="foreach: Dishes">
+                    <div class="catalog_item">
+                        <div class="img"><img src="images/content/img1.jpg" alt="img"></div>
+                        <h3><strong data-bind="text: Name"></strong></h3>
+                        <div class="price"><span data-bind="text: Price"></strong></div>
+                        <div class="buy">
+                            <a href="#">заказать</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <!-- /ko -->
         </div>
-        <!-- /ko -->
     </div>
 </div>
