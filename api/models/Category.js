@@ -23,7 +23,7 @@ categorySchema.statics.newCategory = function (cafeId, id, idName, name, cb, err
         else {
             cb(data);
         }
-        mongoose.connection.close()
+       // mongoose.connection.close()
     });
 };
 
