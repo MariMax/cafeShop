@@ -19,24 +19,16 @@ exports.add_routes = function (app) {
         });
     });
 
-    //app.put("/cafe/dishes/:id", function (req, res) {
-    //    var data = req.body;
-    //    var query = { _id: req.params.id };
-    //    Dish.findOne(query, function (err, dish) {
-    //        if (err)
-    //            res.send(err, 404);
-    //        else {
-    //            dish.Name = data.Name;
-    //            Dish.save(function (err) {
-    //                if (err)
-    //                    res.send(err, 404);
-    //                else
-    //                    res.json(dish, 200);
-    //            });
-    //            res.json(dish, 200);
-    //        }
-    //    });
-    //});
+    app.put("/api/dishes/:id", function (req, res) {
+        var data = req.body;
+        Dish.updateDish(req.params.id,data,function(err,dish)
+        {
+            if (err)
+                res.send(err, 404);
+            else
+                res.json(dish, 200);
+        });
+    });
 
     app.post("/api/cafe/:cafeId/category/:categoryId/dishes", function (req, res) {
         
@@ -50,21 +42,24 @@ exports.add_routes = function (app) {
     });
 
     app.get("/api/cafe/:cafeId/category/:categoryId/dishes", function (req, res) {
-        Dish.find({ _cafe: req.params.cafeId }, function (err, dish) {
+        Dish.find({ _cafe: req.params.cafeId, _category: req.params.categoryId }, function (err, dish) {
             if (err)
+            {
+                console.log('error : ' + err);
                 res.send(err, 404);
+            }
             else
                 res.json(dish, 200);
         });
     });
 
-    app.delete("/dishes/:id", function (req, res) {
-        Dish.remove({ _id: req.params.id }, function (err, numberOfDeleted) {
-             if (err)
+    app.delete("/api/dishes/:id", function (req, res) {
+        console.log('delete Dish');
+        Dish.remove({ _id: req.params.id }, function (err){
+            if (err)
                 res.send(err, 404);
-            else
-                res.json(data, 200);
         });
+        res.json(req.params.id, 200);
     });
 }
 

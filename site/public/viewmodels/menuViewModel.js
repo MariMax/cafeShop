@@ -1,28 +1,39 @@
-function Dish(data) {
-    this.Name = ko.observable(data.Name);
-    this.Description = ko.observable(data.Description);
-    this.Price = ko.observable(data.Price);
-    this.Id = ko.observable(data.Id);
-}
-
-function Category(data) {
-    this.id = ko.observable(data.id);
-    this.Name = ko.observable(data.Name);
-    this.IdName = ko.observable(data.IdName);
-    this.Dishes = ko.observableArray([]);
-}
-
-
 function MenuViewModel(cafeId) {
-    debugger;
     var self = this;
-    self.name = ko.observable('');
-    self.phone = ko.observable();
+    self.CafeName = ko.observable();
+    self.CafeAddress = ko.observable('Адрес не задан');
+    self.CafePhone = ko.observable('Телефон не задан');
+    self.CafeWorkTime = ko.observable('Время работы не задано');
     self.Categories = ko.observableArray([]);
 
-    $.getJSON("/api/cafes/" + cafeId, function (data) {
-        self.name(data.Name);
-        self.phone(data.tempCellPhone);
+
+    // Operations
+
+    self.buyDish = function (dish) {
+        var url = "/api/dishes/" + this.id();
+        var jsonData = ko.toJSON(dish);
+        $.ajax(url, {
+            data: jsonData,
+            type: "put", contentType: "application/json",
+            success: function (data) {
+                alert(data._id);
+            },
+            error: function (result) {
+                alert('error ' + result);
+                console.log(result);
+            }
+        });
+    };
+
+    $.getJSON('/api/cafes/' + cafeId, function (cafe) {
+        if (cafe.Name)
+            self.CafeName(cafe.Name);
+        if (cafe.Address)
+            self.CafeAddress(cafe.Address);
+        if (cafe.WorkTime)
+            self.CafeWorkTime(cafe.WorkTime);
+        if (cafe.ClientPhone)
+            self.CafePhone(cafe.ClientPhone);
     });
 
     $.getJSON("/api/cafes/" + cafeId + "/category", function (allData) {
@@ -39,5 +50,5 @@ function MenuViewModel(cafeId) {
 
 if (document.getElementById("cafeId") != null) {
     var cafeId = document.getElementById("cafeId").value;
-    ko.applyBindings(new MenuViewModel(cafeId), document.getElementById("cafe_menu_page"));
+    ko.applyBindings(new MenuViewModel(cafeId), document.getElementById("cafe_page"));
 }

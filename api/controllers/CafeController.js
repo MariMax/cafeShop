@@ -158,7 +158,7 @@ exports.add_routes = function (app) {
     });
 
     app.post('/api/cafes/approve-CellPhone', forms.ConfirmCafeCellPhoneForm, function (req, res, next) {
-
+        logError("hello");
         if (req.form.isValid) {
             logError("approve cellPhoneForm Valid");
             var cafeId = req.form.cafeId;

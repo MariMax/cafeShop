@@ -1,27 +1,36 @@
 <% layout('../layout') -%>
-<script src="/viewmodels/menuViewModel.js"></script>
+
+<footer>
+    <div class="wrap">
+        <div class="basket">
+			Вы выбрали:
+            <b>3 блюда на 156 руб.</b>
+            <a href="#" class="order button big cursiv second">Оформить</a>
+        </div>
+    </div>
+</footer>
 <div class="cafe_page" id="cafe_menu_page">
     <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
     <div class="cafe_info">
-        <div class="cafe_name"><strong data-bind="text: name"></strong></div>
-        <div class="cafe_tip">Ежедневно 09:00 - 00:00</div>
-        <div class="cafe_address"><a href="#">Мингажева, 129</a></div>
-        <div class="cafe_tel"><strong data-bind="text: phone"></strong></div>
+        <div class="cafe_name"><span data-bind="text: CafeName"></span></div>
+        <div class="cafe_tip"><span data-bind="text: CafeWorkTime"></span></div>
+        <div class="cafe_address"><a href="#"><span data-bind="text: CafeAddress"></span></a></div>
+        <div class="cafe_tel"><span data-bind="text: CafePhone"></span></div>
         <div class="border_wave_bot"></div>
     </div>
     <div class="cafe_menu" id="tab-container">
         <ul class="catalog_nav etabs" data-bind="foreach: Categories">
-            <li><a href="text: IdName"><span data-bind="text: Name"></span></a></li>
+            <li><a data-bind="attr: { href: IdNameHash }"><span data-bind="text: Name"></span></a></li>
         </ul>
         <div data-bind="foreach: Categories">
-            <div class="catalog clearfix" id="text: IdName">
+            <div class="catalog_admin clearfix" data-bind="attr: { id: IdName }">
                 <div data-bind="foreach: Dishes">
                     <div class="catalog_item">
                         <div class="img"><img src="images/content/img1.jpg" alt="img"></div>
-                        <h3><strong data-bind="text: Name"></strong></h3>
-                        <div class="price"><span data-bind="text: Price"></strong></div>
+                        <h3><span data-bind="text: Name"></span></h3>
+                        <div class="price"><span data-bind="text: Price"></span></div>
                         <div class="buy">
-                            <a href="#">заказать</a>
+                            <a href="#" data-bind="click: $root.buyDish">заказать</a>
                         </div>
                     </div>
                 </div>

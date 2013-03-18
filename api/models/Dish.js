@@ -24,7 +24,7 @@ var dishSchema = new Schema({
     Description: String,
     Price: Number,
     _category: ObjectId,
-    Days: [Number]
+    Days: []
 });
 
 
@@ -45,6 +45,25 @@ dishSchema.statics.newDish = function (cafeId, categoryId, data, cb, err) {
         }
         mongoose.connection.close()
     });
+};
+
+dishSchema.statics.updateDish = function (dishId, data, cb) {
+    console.log("updateDish");
+    var newdata = {};
+    if (data.Name && data.Name != '') newdata.Name = data.Name;
+    if (data.Description && data.Description != '') newdata.Description = data.Description;
+    if (data.Description && data.Description != '') newdata.Description = data.Description;
+    if (data.Price && data.Price > 0) newdata.Price = data.Price;
+    if (data.Days) newdata.Days = data.Days;
+
+    this.findByIdAndUpdate(dishId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            cb(error, null);
+        }
+        else {
+            cb(null, docs);
+        }
+    })
 };
 
 Dish = mongoose.model('Dish', dishSchema);

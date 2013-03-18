@@ -1,12 +1,9 @@
-<% layout('../layout') -%>
+п»ї<% layout('../layout') -%>
 
 <script type="text/javascript">
-    
-    
     $(function () {
     
         function getCafe() {
-    
             var cafeId = $('#cafeId').val();
             var jqXHR = $.get('/api/cafes/' + cafeId)
             .done(function (cafe) {
@@ -23,9 +20,9 @@
                     if (cafe.CellPhone)
                         $('#cellPhone').attr('value', cafe.CellPhone);
                     else {
-                            document.location.href = '/cafes/newcafe'; //Сначала подтверди телефон, потом администрируй
+                        document.location.href = '/cafes/newcafe'; //РЎРЅР°С‡Р°Р»Р° РїРѕРґС‚РІРµСЂРґРё С‚РµР»РµС„РѕРЅ, РїРѕС‚РѕРј Р°РґРјРёРЅРёСЃС‚СЂРёСЂСѓР№
                     }
-                    } else document.location.href = '/cafes/newcafe'; //а куда деваться если мы не нашли кафе, его надо создать
+                } else document.location.href = '/cafes/newcafe'; //Р° РєСѓРґР° РґРµРІР°С‚СЊСЃСЏ РµСЃР»Рё РјС‹ РЅРµ РЅР°С€Р»Рё РєР°С„Рµ, РµРіРѕ РЅР°РґРѕ СЃРѕР·РґР°С‚СЊ
             })
         }
         getCafe();
@@ -88,14 +85,14 @@
         }
     
         function isValidPhoneNumber(number) {
-            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
+            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //РІР°Р»РёРґРЅС‹Р№ СЂРѕСЃСЃРёР№СЃРєРёР№ РЅРѕРјРµСЂ
             return pattern.test(number);
         }
     
         $('#cellPhone').blur(function () {
             var phone = $('#cellPhone').val();
             if (!isValidPhoneNumber(phone)) {
-                var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                var err_text = "Р’РІРµРґРёС‚Рµ РїСЂР°РІРёР»СЊРЅС‹Р№ Р РѕСЃСЃРёР№СЃРєРёР№ СЃРѕС‚РѕРІС‹Р№ РЅРѕРјРµСЂ, РїСЂРёРјРµСЂ +79177640209";
                 $("#messenger").html(err_text);
                 $("#messenger").fadeIn("slow");
             } else {
@@ -107,43 +104,43 @@
         $('#confirm').click(function () {
             var code = $('#cellPhoneConfirmation').val();
             if (!code) {
-                var err_text = "Введите код подтверждения";
+                var err_text = "Р’РІРµРґРёС‚Рµ РєРѕРґ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ";
                 $("#messenger").html(err_text);
                 $("#messenger").fadeIn("slow");
             } else { confirmCellPhone(); }
         })
     
-        var field = new Array("Name", "cellPhone"); //поля обязательные 
+        var field = new Array("Name", "cellPhone"); //РїРѕР»СЏ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ 
     
-        $("form").submit(function () {// обрабатываем отправку формы  
-            var error = 0; // индекс ошибки
-            $("form").find(":input").each(function () {// проверяем каждое поле в форме
-                for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
-                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
+        $("form").submit(function () {// РѕР±СЂР°Р±Р°С‚С‹РІР°РµРј РѕС‚РїСЂР°РІРєСѓ С„РѕСЂРјС‹  
+            var error = 0; // РёРЅРґРµРєСЃ РѕС€РёР±РєРё
+            $("form").find(":input").each(function () {// РїСЂРѕРІРµСЂСЏРµРј РєР°Р¶РґРѕРµ РїРѕР»Рµ РІ С„РѕСЂРјРµ
+                for (var i = 0; i < field.length; i++) { // РµСЃР»Рё РїРѕР»Рµ РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ РІ СЃРїРёСЃРєРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹С…
+                    if ($(this).attr("name") == field[i]) { //РїСЂРѕРІРµСЂСЏРµРј РїРѕР»Рµ С„РѕСЂРјС‹ РЅР° РїСѓСЃС‚РѕС‚Сѓ
     
-                        if (!$(this).val()) {// если в поле пустое
-                            // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
-                            error = 1; // определяем индекс ошибки       
+                        if (!$(this).val()) {// РµСЃР»Рё РІ РїРѕР»Рµ РїСѓСЃС‚РѕРµ
+                            // $(this).css('border', 'red 1px solid'); // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°РјРєСѓ РєСЂР°СЃРЅРѕРіРѕ С†РІРµС‚Р°
+                            error = 1; // РѕРїСЂРµРґРµР»СЏРµРј РёРЅРґРµРєСЃ РѕС€РёР±РєРё       
     
                         }
                         else {
-                            // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
+                            // $(this).css('border', 'gray 1px solid'); // СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЂР°РјРєСѓ РѕР±С‹С‡РЅРѕРіРѕ С†РІРµС‚Р°
                         }
     
                     }
                 }
             })
     
-            if (error == 0) { // если ошибок нет то отправляем данные
+            if (error == 0) { // РµСЃР»Рё РѕС€РёР±РѕРє РЅРµС‚ С‚Рѕ РѕС‚РїСЂР°РІР»СЏРµРј РґР°РЅРЅС‹Рµ
                 postData();
                 return false;
             }
             else {
-                if (error == 1) var err_text = "Необходимо ввести название кафе";
-                // if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                if (error == 1) var err_text = "РќРµРѕР±С…РѕРґРёРјРѕ РІРІРµСЃС‚Рё РЅР°Р·РІР°РЅРёРµ РєР°С„Рµ";
+                // if (error == 2) var err_text = "Р’РІРµРґРёС‚Рµ РїСЂР°РІРёР»СЊРЅС‹Р№ Р РѕСЃСЃРёР№СЃРєРёР№ СЃРѕС‚РѕРІС‹Р№ РЅРѕРјРµСЂ, РїСЂРёРјРµСЂ +79177640209";
                 $("#messenger").html(err_text);
                 $("#messenger").fadeIn("slow");
-                return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
+                return false; //РµСЃР»Рё РІ С„РѕСЂРјРµ РІСЃС‚СЂРµС‚РёР»РёСЃСЊ РѕС€РёР±РєРё , РЅРµ  РїРѕР·РІРѕР»СЏРµРј РѕС‚РѕСЃР»Р°С‚СЊ РґР°РЅРЅС‹Рµ РЅР° СЃРµСЂРІРµСЂ.
             }
     
     
@@ -158,7 +155,7 @@
                 done(function (data) {
                     var ar = data.response.GeoObjectCollection.featureMember;
     
-                    if (ar.length == 1&&ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind=='house') {
+                    if (ar.length == 1 && ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'house') {
                         var b = ar[0].GeoObject.Point.pos;
                         var temp = new Array();
                         temp = b.split(' ');
@@ -170,12 +167,12 @@
                     for (var key in ar) {
                         var val = ar[key];
     
-                        console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind+' '+ val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
+                        console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind + ' ' + val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
                     }
                     console.log("________end_________");
                 })
         })
-
+    
     
     
     });
@@ -185,19 +182,19 @@
 
 <div class="admin_page" id="admin_page">
     <div class="admin_title page_title_block">
-        <h1>Администрирование</h1>
+        <h1>РђРґРјРёРЅРёСЃС‚СЂРёСЂРѕРІР°РЅРёРµ</h1>
         <div class="border_wave_bot"></div>
     </div>
 
     <div class="admin_content">
         <div class="admin_info">
-            <h3>Информация</h3>
+            <h3>РРЅС„РѕСЂРјР°С†РёСЏ</h3>
             <form method="post" action="" class="horizontal">
                 <div id="messenger" class="messenger">
                 </div>
                 <div class="form_item">
 
-                    <div class="label">Название кафе/ресторана</div>
+                    <div class="label">РќР°Р·РІР°РЅРёРµ РєР°С„Рµ/СЂРµСЃС‚РѕСЂР°РЅР°</div>
                     <input id="cafeId" type="text" size="20" name="cafeId" value="<%= cafeId %>" required hidden>
                     <input id="Longitude" type="text" size="20" name="Longitude" hidden>
                     <input id="Latitude" type="text" size="20" name="Latitude" hidden>
@@ -205,89 +202,92 @@
                     </div>
                 </div>
                 <div class="form_item">
-                    <div class="label">Адрес</div>
+                    <div class="label">РђРґСЂРµСЃ</div>
                     <div class="input"><input id="Address" type="text" size="60" name="Address"></div>
 
-                    
+
                 </div>
                 <div class="form_item">
-                    <div class="label">Режим работы</div>
+                    <div class="label">Р РµР¶РёРј СЂР°Р±РѕС‚С‹</div>
                     <div class="input"><input id="WorkTime" type="text" size="60" name="WorkTime"></div>
                 </div>
                 <div class="form_item">
-                    <div class="label">Телефон (для клиентов)</div>
+                    <div class="label">РўРµР»РµС„РѕРЅ (РґР»СЏ РєР»РёРµРЅС‚РѕРІ)</div>
                     <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone"></div>
                 </div>
                 <div class="form_item">
-                    <div class="label">Сотовый (для sms оповещения)</div>
+                    <div class="label">РЎРѕС‚РѕРІС‹Р№ (РґР»СЏ sms РѕРїРѕРІРµС‰РµРЅРёСЏ)</div>
                     <div class="input"><input type="text" size="20" id="cellPhone" name="cellPhone" required>
                     </div>
                 </div>
                 <div id="verify" class="form_item" hidden>
-                    <div class="label">Введите код подтверждения</div>
+                    <div class="label">Р’РІРµРґРёС‚Рµ РєРѕРґ РїРѕРґС‚РІРµСЂР¶РґРµРЅРёСЏ</div>
                     <div class="input"><input id="cellPhoneConfirmation" type="text" size="20" name="token">
 
-                        <input type="button" id="confirm" value="Подтвердить" class="button succes"></div>
+                        <input type="button" id="confirm" value="РџРѕРґС‚РІРµСЂРґРёС‚СЊ" class="button succes"></div>
 
                 </div>
 
 
                 <div class="form_but">
-                    <input type="submit" value="Сохранить" class="button succes">
-                    <input type="reset" value="Очистить" class="button simple">
+                    <input type="submit" value="РЎРѕС…СЂР°РЅРёС‚СЊ" class="button succes">
+                    <input type="reset" value="РћС‡РёСЃС‚РёС‚СЊ" class="button simple">
                 </div>
             </form>
         </div>
 
         <div class="admin_menu">
-            <h3>Меню заведения</h3>
+            <h3>РњРµРЅСЋ Р·Р°РІРµРґРµРЅРёСЏ</h3>
             <div id="tab-container">
                 <ul class="catalog_nav etabs" data-bind="foreach: Categories">
                     <li><a data-bind="attr: { href: IdNameHash }"><span data-bind="text: Name"></span></a></li>
                 </ul>
-                <div class="catalog_admin clearfix" data-bind="attr: { id: IdName }">
-                    <div class="catalog_item">
-                        <div class="photo">
-                            <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
-                        </div>
-                        <div class="info">
-                            <input type="text" name="" id="" class="name" placeholder="Название блюда" data-bind="value: newDishName">
-                            <textarea name="" id="" placeholder="Описание блюда" data-bind="value: newDishDescription"></textarea>
-                            <input type="text" name="" placeholder="0" id="" class="price" data-bind="value: newDishPrice"><span class="currency">руб</span>
-                            <div class="week">
-                                <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
-                                <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
-                                <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
-                                <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
-                                <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
-                                <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
-                                <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
-                                <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
-                            </div>
-                        </div>
-                        <a href="#" class="button"></a>
-                    </div>
-                    <div data-bind="foreach: Dishes">
+                <div data-bind="foreach: Categories">
+                    <div class="catalog_admin clearfix" data-bind="attr: { id: IdName }">
                         <div class="catalog_item">
                             <div class="photo">
-                                <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                                <a href="#" class="addfile">Р¤РѕС‚Рѕ Р±Р»СЋРґР°<input type="file" name="" id=""></a>
                             </div>
                             <div class="info">
-                                <input type="text" name="" id="" class="name" placeholder="Название блюда" data-bind="text: Name">
-                                <textarea name="" id="" placeholder="Описание блюда" data-bind="text: Description"></textarea>
-                                <input type="text" name="" placeholder="0" id="" class="price" data-bind="text: Price"><span class="currency">руб</span>
+                                <input type="text" name="" id="" class="name" placeholder="РќР°Р·РІР°РЅРёРµ Р±Р»СЋРґР°" required data-bind="value: newDishName">
+                                <textarea name="" id="" placeholder="РћРїРёСЃР°РЅРёРµ Р±Р»СЋРґР°" required data-bind="value: newDishDescription"></textarea>
+                                <input type="text" name="" placeholder="0" id="" class="price" required data-bind="value: newDishPrice"><span class="currency">СЂСѓР±</span>
                                 <div class="week">
-                                    <input type="checkbox" name="1" id="1"><label for="1" class="check">Всю неделю</label>
-                                    <input type="checkbox" name="2" id="2"><label for="2" class="check">Пон</label>
-                                    <input type="checkbox" name="3" id="3"><label for="3" class="check">Втр</label>
-                                    <input type="checkbox" name="4" id="4"><label for="4" class="check">Срд</label>
-                                    <input type="checkbox" name="5" id="5"><label for="5" class="check">Чтв</label>
-                                    <input type="checkbox" name="6" id="6"><label for="6" class="check">Пят</label>
-                                    <input type="checkbox" name="7" id="7"><label for="7" class="check">Суб</label>
-                                    <input type="checkbox" name="8" id="8"><label for="8" class="check">Вск</label>
+                                    <input type="checkbox" value="AllWeek" data-bind=" attr:{ id: 'nallWeek' + id(),name: 'nallWeek' + id(),checked: newDishDays,  } "><label data-bind="attr:{ for: 'nallweek' + id()  }" class="check">Р’СЃСЋ РЅРµРґРµР»СЋ</label>
+                                    <input type="checkbox" value="Mon" data-bind="attr:{ id: 'nmon' + id(),name: 'nmon' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nmon' + id()  }" class="check">РџРѕРЅ</label>
+                                    <input type="checkbox" value="Tue" data-bind="attr:{ id: 'ntue' + id(),name:'ntue' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'ntue' + id()  }" class="check">Р’С‚СЂ</label>
+                                    <input type="checkbox" value="Wed" data-bind="attr:{ id: 'nwed' + id(),name:'nwed' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'nwed' + id()  }" class="check">РЎСЂРґ</label>
+                                    <input type="checkbox" value="Thu" data-bind="attr:{ id: 'nthu' + id(),name: 'nthu' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nthu' + id()  }" class="check">Р§С‚РІ</label>
+                                    <input type="checkbox" value="Fri" data-bind="attr:{ id: 'nfri' + id(),name:'nfri' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'nfri' + id()  }" class="check">РџСЏС‚</label>
+                                    <input type="checkbox" value="Sat" data-bind="attr:{ id: 'nsat' + id(),name: 'nsat' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nsat' + id()  }" class="check">РЎСѓР±</label>
+                                    <input type="checkbox" value="Sun" data-bind="attr:{ id: 'nsun' + id(),name: 'nsun' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nsun' + id()  }" class="check">Р’СЃРє</label>
                                 </div>
                             </div>
-                            <a href="#" class="delete button" data-bind="click: $root.removeDish"></a>
+                            <a href="#" class="button succes" data-bind="click: addDish">Р”РѕР±Р°РІРёС‚СЊ</a>
+                        </div>
+                        <div data-bind="foreach: Dishes">
+                            <div class="catalog_item">
+                                <div class="photo">
+                                    <a href="#" class="addfile">Р¤РѕС‚Рѕ Р±Р»СЋРґР°<input type="file" name="" id=""></a>
+                                </div>
+                                <div class="info">
+                                    <input type="text" name="" id="" class="name" placeholder="РќР°Р·РІР°РЅРёРµ Р±Р»СЋРґР°" required data-bind="value: Name">
+                                    <textarea name="" id="" placeholder="РћРїРёСЃР°РЅРёРµ Р±Р»СЋРґР°" required data-bind="value: Description"></textarea>
+                                    <input type="text" name="" placeholder="0" id="" class="price" required data-bind="value: Price"><span class="currency">СЂСѓР±</span>
+                                    <div class="week">
+                                        <input type="checkbox" value="AllWeek" data-bind=" attr:{ id: 'allWeek' + id(), name: 'allWeek' + id()  },checked: Days"><label data-bind="attr:{ for: 'allweek' + id()  }" class="check">Р’СЃСЋ РЅРµРґРµР»СЋ</label>
+                                        <input type="checkbox" value="Mon" data-bind="attr:{ id: 'mon' + id(),name: 'mon' + id()  },checked: Days"><label data-bind="attr:{ for: 'mon' + id()  }" class="check">РџРѕРЅ</label>
+                                        <input type="checkbox" value="Tue" data-bind="attr:{ id: 'tue' + id(),name: 'tue' + id()  },checked: Days"><label data-bind="attr:{ for: 'tue' + id()  }" class="check">Р’С‚СЂ</label>
+                                        <input type="checkbox" value="Wed" data-bind="attr:{ id: 'wed' + id(),name: 'wed' + id()  },checked: Days"><label data-bind="attr:{ for: 'wed' + id()  }" class="check">РЎСЂРґ</label>
+                                        <input type="checkbox" value="Thu" data-bind="attr:{ id: 'thu' + id(),name: 'thu' + id()  },checked: Days"><label data-bind="attr:{ for: 'thu' + id()  }" class="check">Р§С‚РІ</label>
+                                        <input type="checkbox" value="Fri" data-bind="attr:{ id: 'fri' + id(),name: 'fri' + id()  },checked: Days"><label data-bind="attr:{ for: 'fri' + id()  }" class="check">РџСЏС‚</label>
+                                        <input type="checkbox" value="Sat" data-bind="attr:{ id: 'sat' + id(),name: 'sat' + id()  },checked: Days"><label data-bind="attr:{ for: 'sat' + id()  }" class="check">РЎСѓР±</label>
+                                        <input type="checkbox" value="Sun" data-bind="attr:{ id: 'sun' + id(),name: 'sun' + id()  },checked: Days"><label data-bind="attr:{ for: 'sun' + id()  }" class="check">Р’СЃРє</label>
+                                    </div>
+                                </div>
+                                <a href="#" class="delete button" data-bind="click: $parent.removeDish">РЈРґР°Р»РёС‚СЊ</a>
+                                <a href="#" class="button succes" data-bind="click: updateDish">РЎРѕС…СЂР°РЅРёС‚СЊ</a>
+                            </div>
                         </div>
                     </div>
                 </div>
