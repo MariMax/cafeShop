@@ -5,24 +5,20 @@ function MenuViewModel(cafeId) {
     self.CafePhone = ko.observable('Телефон не задан');
     self.CafeWorkTime = ko.observable('Время работы не задано');
     self.Categories = ko.observableArray([]);
+    self.OrderedDishes = ko.observableArray([]);
+    self.OrderedDishesPrices = ko.computed(function () { 
+    var total = 0;
+    ko.utils.arrayForEach(self.OrderedDishes(), function (dish) {
+                total += dish.Price();
+            })
+            return total; 
+    });
 
 
     // Operations
 
     self.buyDish = function (dish) {
-        var url = "/api/dishes/" + this.id();
-        var jsonData = ko.toJSON(dish);
-        $.ajax(url, {
-            data: jsonData,
-            type: "put", contentType: "application/json",
-            success: function (data) {
-                alert(data._id);
-            },
-            error: function (result) {
-                alert('error ' + result);
-                console.log(result);
-            }
-        });
+        self.OrderedDishes.push(dish)
     };
 
     $.getJSON('/api/cafes/' + cafeId, function (cafe) {

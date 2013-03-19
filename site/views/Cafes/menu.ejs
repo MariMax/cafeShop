@@ -4,7 +4,7 @@
     <div class="wrap">
         <div class="basket">
 			Вы выбрали:
-            <b>3 блюда на 156 руб.</b>
+            <b><span data-bind="text: OrderedDishes().length"></span> блюда на <span data-bind="text: OrderedDishesPrices()"></span> руб.</b>
             <a href="#" class="order button big cursiv second">Оформить</a>
         </div>
     </div>
