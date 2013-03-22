@@ -98,7 +98,7 @@ exports.add_routes = function (app) {
 
     app.get("/api/cafes/:cafeId", function (req, res) {
         Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
-            if (error) res.json(null, 200); else {
+            if (error) res.json(null, 404); else {
 
                 cafe.CellPhoneVerificationCode = '';
 
