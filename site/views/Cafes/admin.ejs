@@ -149,18 +149,20 @@
     
         var longitude = $('#Longitude');
         var latitude = $('#Latitude');
-        $('#Address').keyup(function () {
-            var address = $('#Address').val();
+        var addressInput = $('#Address');
+        addressInput.keyup(function () {
+            var address = addressInput.val();
             $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
                 done(function (data) {
                     var ar = data.response.GeoObjectCollection.featureMember;
     
-                    if (ar.length == 1 && ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'house') {
+                    if (ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'house') {
                         var b = ar[0].GeoObject.Point.pos;
                         var temp = new Array();
                         temp = b.split(' ');
                         longitude.attr('value', temp[0]);
                         latitude.attr('value', temp[1]);
+                        addressInput.attr('value',ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description)
                     }
                     console.log(ar.length);
                     console.log("_______Start_________");

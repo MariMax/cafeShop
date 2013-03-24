@@ -50,25 +50,25 @@ exports.add_routes = function (app) {
                                         }
                                     });
                                     Category.newCategory(cafe._id, 1, "zavtraki", "Завтраки", function (data) { }, function (error) {
-                                        logError("Category.newCategory "+error);
+                                        logError("Category.newCategory " + error);
                                     });
                                     Category.newCategory(cafe._id, 2, "goryachie", "Горячие блюда", function (data) { }, function (error) {
-                                        logError("Category.newCategory "+error);
+                                        logError("Category.newCategory " + error);
                                     });
                                     Category.newCategory(cafe._id, 3, "salat", "Салаты", function (data) { }, function (error) {
-                                        logError("Category.newCategory "+error);
+                                        logError("Category.newCategory " + error);
                                     });
                                     Category.newCategory(cafe._id, 4, "sup", "Супы", function (data) { }, function (error) {
-                                        logError("Category.newCategory "+error);
+                                        logError("Category.newCategory " + error);
                                     });
                                     Category.newCategory(cafe._id, 5, "garnir", "Гарниры", function (data) { }, function (error) {
-                                        logError("Category.newCategory "+error);
+                                        logError("Category.newCategory " + error);
                                     });
                                     Category.newCategory(cafe._id, 6, "desert", "Десерт", function (data) { }, function (error) {
-                                        logError("Category.newCategory "+error);
+                                        logError("Category.newCategory " + error);
                                     });
                                     Category.newCategory(cafe._id, 7, "drink", "Напитки", function (data) { }, function (error) {
-                                        logError("Category.newCategory "+error);
+                                        logError("Category.newCategory " + error);
                                     });
                                 }
                             });
@@ -103,6 +103,14 @@ exports.add_routes = function (app) {
                 cafe.CellPhoneVerificationCode = '';
 
                 res.json(cafe, 200);
+            }
+        });
+    });
+
+    app.get("/api/cafes/all/:i", function (req, res) {
+        Cafe.find({ CanWorkInCafeShop: true }, function (error, cafes) {
+            if (error) res.json(null, 404); else {
+                res.json(cafes, 200);
             }
         });
     });

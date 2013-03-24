@@ -4,7 +4,7 @@ var mongoose = require('mongoose')
 
 
 var uristring = 'mongodb://localhost/cafeShop';
-
+//var uristring = 'mongodb://nodejitsu_marimax:nv3cr1i421o6f4p5ibonma0npq@ds051977.mongolab.com:51977/nodejitsu_marimax_nodejitsudb6949724517';
 // Ensure safe writes
 var mongoOptions = { db: { safe: true} };
 
@@ -40,7 +40,7 @@ var cafeSchema = new Schema({
     //Dishes:[{type:ObjectId,ref:'Dish'}],
     //Menus:[{type:ObjectId,ref:'Menu'}],
     //Orders:[{type:ObjectId,ref:'Order'}],
-    CanWorkInCafeShop:Boolean
+    CanWorkInCafeShop:{type:Boolean,'default':true}
 });
 
 cafeSchema.statics.newCafe = function (data, cb) {

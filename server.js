@@ -61,7 +61,7 @@ app.use(express.bodyParser());
 app.use(express.session({
     secret: conf.secret,
     store: new MongoStore(conf.db),
-    maxAge: new Date(Date.now()+3600000)
+    maxAge: null
   }));
 // configuration settings 
 app.set('views', __dirname + '/site/views')
