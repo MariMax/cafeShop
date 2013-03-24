@@ -11,7 +11,7 @@ mongoose.connect(conf.mongoConnection, mongoOptions, function (err, res) {
     if (err) {
         console.log('ERROR connecting to: ' + conf.mongoConnection + '. ' + err);
     } else {
-        console.log('Succeeded connected to: ' + conf.mongoConnection);
+        console.log('Succeeded connected to: ' + conf.mongoConnection); 
     }
 });
 
