@@ -4,17 +4,19 @@ exports.getSiteConfig = function () {
     site_name: 'cafeShop',
     site_email: 'cafeShop support <cafeShop@gmail.com>',
     db: {
-    	db: 'nodejitsu_marimax_nodejitsudb6949724517',
-    	host: 'ds051977.mongolab.com',
-    	//db: 'cafeShop',
-    	//host: 'localhost'
-        port:'51977',
-        username: 'nodejitsu_marimax',
-        password: 'nv3cr1i421o6f4p5ibonma0npq'
+    	//db: 'nodejitsu_marimax_nodejitsudb6949724517',
+    	//host: 'ds051977.mongolab.com',
+    	db: 'cafeShop',
+    	host: 'localhost'
+        //port:'51977',
+        //username: 'nodejitsu_marimax',
+        //password: 'nv3cr1i421o6f4p5ibonma0npq'
         
         //var uristring = 'mongodb://nodejitsu_marimax:nv3cr1i421o6f4p5ibonma0npq@ds051977.mongolab.com:51977/nodejitsu_marimax_nodejitsudb6949724517';
     },
-    secret: 'cafeShop'
+    secret: 'cafeShop',
+   // mongoConnection: 'mongodb://nodejitsu_marimax:nv3cr1i421o6f4p5ibonma0npq@ds051977.mongolab.com:51977/nodejitsu_marimax_nodejitsudb6949724517'
+    mongoConnection: 'mongodb://localhost/cafeShop'
   }
 
   return configValues;

@@ -2,18 +2,16 @@ var mongoose = require('mongoose')
     ,Schema = mongoose.Schema
     ,ObjectId = Schema.ObjectId;
 
-//var uristring = 'mongodb://localhost/cafeShop';
-var uristring = 'mongodb://nodejitsu_marimax:nv3cr1i421o6f4p5ibonma0npq@ds051977.mongolab.com:51977/nodejitsu_marimax_nodejitsudb6949724517';
 // Ensure safe writes
 var mongoOptions = { db: { safe: true} };
 
 
 // Connect
-mongoose.connect(uristring, mongoOptions, function (err, res) {
+mongoose.connect(conf.mongoConnection, mongoOptions, function (err, res) {
     if (err) {
-        console.log('ERROR connecting to: ' + uristring + '. ' + err);
+        console.log('ERROR connecting to: ' + conf.mongoConnection + '. ' + err);
     } else {
-        console.log('Succeeded connected to: ' + uristring);
+        console.log('Succeeded connected to: ' + conf.mongoConnection);
     }
 });
 
