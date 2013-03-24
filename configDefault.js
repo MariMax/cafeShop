@@ -1,20 +1,20 @@
 exports.getSiteConfig = function () {
   configValues =  {
-    site_url: 'http://localhost:28528',
+    site_url: 'http://cafeshop.eu01.aws.af.cm',
     site_name: 'cafeShop',
-    site_email: 'cafeShop support <cafeShop@gmail.com>',
+    site_email: 'cafeShop support <maxim@ucluster.ru>',
     db: {
-    	//db: 'nodejitsu_marimax_nodejitsudb6949724517',
-    	//host: 'ds051977.mongolab.com',
+    	//db: 'cafeshop',
+    	//host: 'ds049997.mongolab.com',
     	db: 'cafeShop',
     	host: 'localhost'
-        //port:'51977',
-        //username: 'nodejitsu_marimax',
-        //password: 'nv3cr1i421o6f4p5ibonma0npq'
-        
-        //var uristring = 'mongodb://nodejitsu_marimax:nv3cr1i421o6f4p5ibonma0npq@ds051977.mongolab.com:51977/nodejitsu_marimax_nodejitsudb6949724517';
-    },
-    secret: 'cafeShop'
+        //port:'49997',
+        //username: 'cafeShop',
+        //password: 'XSWzaq'
+       },
+    secret: 'cafeShop',
+    //mongoConnection: 'mongodb://cafeShop:XSWzaq@ds049997.mongolab.com:49997/cafeshop'
+    mongoConnection: 'mongodb://localhost/cafeShop'
   }
 
   return configValues;
@@ -22,9 +22,9 @@ exports.getSiteConfig = function () {
 
 exports.getMailConfig = function () {
   configValues =  {
-    host: 'Gmail',
-    username: 'maxim@ucluster.ru',
-    password: '11'
+    host: 'email-smtp.us-east-1.amazonaws.com',
+    username: 'AKIAJIAH67F7AIPW4PVA',
+    password: 'Al0RfYaw9Wt9VdLpm0xTsiTIyIvVeet4cUsg63QVEMbu'
   }
   return configValues;
 }
