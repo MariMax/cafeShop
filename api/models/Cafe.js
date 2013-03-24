@@ -3,8 +3,8 @@ var mongoose = require('mongoose')
     , ObjectId = Schema.ObjectId
 
 
-var uristring = 'mongodb://localhost/cafeShop';
-//var uristring = 'mongodb://nodejitsu_marimax:nv3cr1i421o6f4p5ibonma0npq@ds051977.mongolab.com:51977/nodejitsu_marimax_nodejitsudb6949724517';
+//var uristring = 'mongodb://localhost/cafeShop';
+var uristring = 'mongodb://nodejitsu_marimax:nv3cr1i421o6f4p5ibonma0npq@ds051977.mongolab.com:51977/nodejitsu_marimax_nodejitsudb6949724517';
 // Ensure safe writes
 var mongoOptions = { db: { safe: true} };
 
