@@ -39,15 +39,17 @@ String.prototype.randomNumberString = function (stringLength) {
 if (path.existsSync('./configDefault.js')) {
     var configLocal = require('./configDefault.js');
     var mailSettings = configLocal.getMailConfig();
-    smtpTransport = nodemailer.createTransport("SMTP",{
-            service: mailSettings.host,
-            auth: {
-                user:  mailSettings.username,
-                pass: mailSettings.password
-            }
-        });
-        
 
+        
+        smtpTransport = nodemailer.createTransport("SMTP", {
+    host: mailSettings.host, // hostname
+    secureConnection: true, // use SSL
+    port: 465, // port for secure SMTP
+    auth: {
+        user: mailSettings.username,
+        pass: mailSettings.password
+    }
+});
     conf = configLocal.getSiteConfig();
     SMSconf = configLocal.getSMSConfig();
 }
@@ -61,7 +63,7 @@ app.use(express.bodyParser());
 app.use(express.session({
     secret: conf.secret,
     store: new MongoStore(conf.db),
-    maxAge: null
+    maxAge: new Date(Date.now()+3600000)
   }));
 // configuration settings 
 app.set('views', __dirname + '/site/views')
