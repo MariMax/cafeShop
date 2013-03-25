@@ -247,7 +247,7 @@
                 </ul>
 
                 <div data-bind="foreach: Categories">
-                    <div data-bind="attr: { id: IdName, class: active() ? 'catalog clearfix active':'catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
+                    <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
                         <div class="catalog_item">
                             <div class="photo">
                                 <a href="#" class="addfile">Фото блюда<input type="file" data-bind="attr:{id: 'nimage'+id()}, event: { change: function(e){ var photo=document.getElementById ('nimage'+id()); debugger; var file = photo.files[0];  console.log('Binary content: ' + file.getAsBinary()); } }"></a>
