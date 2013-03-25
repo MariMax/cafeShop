@@ -3,18 +3,16 @@ var mongoose = require('mongoose')
     , ObjectId = Schema.ObjectId
 
 
-var uristring = 'mongodb://localhost/cafeShop';
-
 // Ensure safe writes
 var mongoOptions = { db: { safe: true} };
 
 
 // Connect
-mongoose.connect(uristring, mongoOptions, function (err, res) {
+mongoose.connect(conf.mongoConnection, mongoOptions, function (err, res) {
     if (err) {
-        console.log('ERROR connecting to: ' + uristring + '. ' + err);
+        console.log('ERROR connecting to: ' + conf.mongoConnection + '. ' + err);
     } else {
-        console.log('Succeeded connected to: ' + uristring);
+        console.log('Succeeded connected to: ' + conf.mongoConnection);
     }
 });
 
@@ -40,7 +38,7 @@ var cafeSchema = new Schema({
     //Dishes:[{type:ObjectId,ref:'Dish'}],
     //Menus:[{type:ObjectId,ref:'Menu'}],
     //Orders:[{type:ObjectId,ref:'Order'}],
-    CanWorkInCafeShop:Boolean
+    CanWorkInCafeShop:{type:Boolean,'default':true}
 });
 
 cafeSchema.statics.newCafe = function (data, cb) {

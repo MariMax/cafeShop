@@ -5,7 +5,7 @@ var mongoose = require('mongoose')
 
 mongoTypes.loadTypes(mongoose, 'email');
 
-mongoose.connect('mongodb://localhost/cafeShop');
+mongoose.connect(conf.mongoConnection);
 
 function required(val) { return val && val.length; }
 

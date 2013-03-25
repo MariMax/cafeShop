@@ -18,7 +18,7 @@ function approveUserMailSend(user, encodedToken, email,callback) {
     var approveLink = conf.site_url + "/users/approve-email/?userId=" + user._id + "&verify=" + encodedToken+"&email="+email;
     var approveMessage = "Hello, <br/>Click for approve your email in cofeShop System:<br/><a href=\"" + approveLink + "\">" + approveLink + "</a>";
 
-    sendMail(user.email, conf.site_email, conf.site_name + ': approve email', approveMessage,
+    sendMail(user.tempemail, conf.site_email, conf.site_name + ': approve email', approveMessage,
 								function (error, response) {
 								    if (error) {
 								        console.log(Date.now() + " " + error);

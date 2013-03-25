@@ -7,16 +7,14 @@ var mongoose = require('mongoose')
 mongoTypes.loadTypes(mongoose, 'email');
 
 
-var uristring = 'mongodb://localhost/cafeShop';
-
 // Ensure safe writes
 var mongoOptions = { db: { safe: true} };
 // Connect
-mongoose.connect(uristring, mongoOptions, function (err, res) {
+mongoose.connect(conf.mongoConnection, mongoOptions, function (err, res) {
     if (err) {
-        console.log('ERROR connecting to: ' + uristring + '. ' + err);
+        console.log('ERROR connecting to: ' + conf.mongoConnection + '. ' + err);
     } else {
-        console.log('Succeeded connected to: ' + uristring);
+        console.log('Succeeded connected to: ' + conf.mongoConnection);
     }
 });
 

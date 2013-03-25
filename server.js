@@ -3,12 +3,12 @@ var express = require('express')
   , ejsLocals = require('ejs-locals')
   , nodemailer = require("nodemailer");
 
- fs = require('fs');
+ //fs = require('fs');
 
 var MongoStore = require('connect-mongo')(express),
     mongo = require('mongoose');
 
-//var path = require('path');
+var path = require('path');
 
 String.prototype.randomString = function (stringLength) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -36,18 +36,20 @@ String.prototype.randomNumberString = function (stringLength) {
     return randomString;
 }
 
-if (fs.existsSync('./configDefault.js')) {
+if (path.existsSync('./configDefault.js')) {
     var configLocal = require('./configDefault.js');
     var mailSettings = configLocal.getMailConfig();
-    smtpTransport = nodemailer.createTransport("SMTP",{
-            service: mailSettings.host,
-            auth: {
-                user:  mailSettings.username,
-                pass: mailSettings.password
-            }
-        });
-        
 
+        
+        smtpTransport = nodemailer.createTransport("SMTP", {
+    host: mailSettings.host, // hostname
+    secureConnection: true, // use SSL
+    port: 465, // port for secure SMTP
+    auth: {
+        user: mailSettings.username,
+        pass: mailSettings.password
+    }
+});
     conf = configLocal.getSiteConfig();
     SMSconf = configLocal.getSMSConfig();
 }
