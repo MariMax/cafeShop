@@ -3,8 +3,13 @@
 <script type="text/javascript">
     $(function () {
     
-    $('.fileupload').fileupload({ dataType: 'json',
-        done: function (e, data) { console.log(e); console.log(data);} });
+        $('.fileupload').fileupload({ dataType: 'json',
+            done: function (e, data) {
+                var newId = "#" + e.target.id.replace("newPhotoInput", "newPhoto");
+                $(newId).attr("style", "background:#fff url(\"" + data.result[0].url + "\") no-repeat center 25%;");
+                $("#newPhotoTmpUrl").val(data.result[0].url);
+            }
+        });
     
     
         function getCafe() {
@@ -166,7 +171,7 @@
                         temp = b.split(' ');
                         longitude.attr('value', temp[0]);
                         latitude.attr('value', temp[1]);
-                        addressInput.attr('value',ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description)
+                        addressInput.attr('value', ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description)
                     }
                     console.log(ar.length);
                     console.log("_______Start_________");
@@ -182,7 +187,7 @@
     
 </script>
 
-
+<input type="hidden" id="newPhotoTmpUrl" data-bind="value: TmpUrl" />
 <div class="admin_page" id="admin_page">
     <div class="admin_title page_title_block">
         <h1>Администрирование</h1>
@@ -253,8 +258,8 @@
                 <div data-bind="foreach: Categories">
                     <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
                         <div class="catalog_item">
-                            <div class="photo">
-                                <a href="#" class="addfile">Фото блюда<input class="fileupload" type="file" name="files[]" data-url="/upload"></a>
+                            <div class="photo" data-bind="attr: { id: 'newPhoto'+IdName() }">
+                                <a href="#" class="addfile">Фото блюда<input class="fileupload" type="file" name="files[]" data-url="/upload" data-bind="attr: { id: 'newPhotoInput'+IdName() }"></a>
                             </div>
                             <div class="info">
                                 <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: newDishName">
@@ -271,7 +276,7 @@
                                     <input type="checkbox" value="Sun" data-bind="attr:{ id: 'nsun' + id(), name: 'nsun' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nsun' + id()  }" class="check">Вск</label>
                                 </div>
                             </div>
-                            <a href="#" class="button succes" data-bind="click: addDish">Добавить</a>
+                            <a href="#" class="button succes" data-bind="click: function(data){ addDish(data, $parent.TmpUrl)}">Добавить</a>
                         </div>
                         <div data-bind="foreach: Dishes">
                             <div class="catalog_item">
