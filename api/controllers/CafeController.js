@@ -12,12 +12,6 @@ var logError = common.logError;
 var ShowMessage = common.ShowMessage;
 
 
-var mongoose = require('mongoose')
-    , mongoTypes = require('mongoose-types')
-var Schema = mongoose.Schema
-    , ObjectId = Schema.ObjectId;
-
-
 
 exports.add_routes = function (app) {
 

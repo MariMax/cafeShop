@@ -1,10 +1,6 @@
 var models = require('../models/Dish.js');
 var Dish = models.Dish;
 
-var mongoose = require('mongoose')
-    , mongoTypes = require('mongoose-types')
-var Schema = mongoose.Schema
-    , ObjectId = Schema.ObjectId;
 
 exports.add_routes = function (app) {
 
