@@ -3,6 +3,10 @@
 <script type="text/javascript">
     $(function () {
     
+    $('.fileupload').fileupload({ dataType: 'json',
+        done: function (e, data) { console.log(e); console.log(data);} });
+    
+    
         function getCafe() {
             var cafeId = $('#cafeId').val();
             var jqXHR = $.get('/api/cafes/' + cafeId)
@@ -250,7 +254,7 @@
                     <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
                         <div class="catalog_item">
                             <div class="photo">
-                                <a href="#" class="addfile">Фото блюда<input type="file" data-bind="attr:{id: 'nimage'+id()}, event: { change: function(e){ var photo=document.getElementById ('nimage'+id()); debugger; var file = photo.files[0];  console.log('Binary content: ' + file.getAsBinary()); } }"></a>
+                                <a href="#" class="addfile">Фото блюда<input class="fileupload" type="file" name="files[]" data-url="/upload"></a>
                             </div>
                             <div class="info">
                                 <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: newDishName">
