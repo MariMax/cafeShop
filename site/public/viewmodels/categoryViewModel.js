@@ -5,6 +5,12 @@ function Category(data) {
     self.IdName = ko.observable(data.IdName);
     self.Dishes = ko.observableArray([]);
     self.IdNameHash = ko.observable('#' + data.IdName);
+    self.active = ko.observable(false);
+    self.activeText = ko.computed(function () {
+        if (self.active())
+            return 'active';
+        return '';
+    });
     self.newDishName = ko.observable();
     self.newDishDescription = ko.observable();
     self.newDishPrice = ko.observable();
@@ -49,3 +55,4 @@ function Category(data) {
 
 
 }
+

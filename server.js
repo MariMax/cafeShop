@@ -1,7 +1,8 @@
 var express = require('express')
   , app = express()
   , ejsLocals = require('ejs-locals')
-  , nodemailer = require("nodemailer");
+  , nodemailer = require("nodemailer")
+  , upload = require('jquery-file-upload-middleware');
 
  //fs = require('fs');
 
@@ -57,7 +58,19 @@ else {
     console.log('Не удалось загрузить настройки');
 }
 
+// configure upload middleware
+    upload.configure({
+        uploadDir: __dirname + '/site/public/uploads',
+        uploadUrl: '/uploads',
+        imageVersions: {
+            thumbnail: {
+                width: 80,
+                height: 80
+            }
+        }
+    });
 
+app.use('/upload', upload.fileHandler());
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.session({

@@ -24,7 +24,8 @@ var dishSchema = new Schema({
     Description: String,
     Price: Number,
     _category: ObjectId,
-    Days: []
+    Days: [],
+    Image: String
 });
 
 

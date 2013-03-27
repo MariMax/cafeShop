@@ -11,6 +11,9 @@ function Dish(data) {
         $.each(data.Days, function (index, value) {
             self.Days.push(value);
         });
+        self.Image = ko.observable("/images/icon_add_photo.png");
+        if (data.Image != null)
+            self.Image(data.Image);
     }
 
     self.updateDish = function (dish) {
@@ -28,6 +31,10 @@ function Dish(data) {
             }
         });
     };
+
+    self.uploadImage = function () {
+
+    }
 
 
 }

@@ -3,6 +3,10 @@
 <script type="text/javascript">
     $(function () {
     
+    $('.fileupload').fileupload({ dataType: 'json',
+        done: function (e, data) { console.log(e); console.log(data);} });
+    
+    
         function getCafe() {
             var cafeId = $('#cafeId').val();
             var jqXHR = $.get('/api/cafes/' + cafeId)
@@ -174,13 +178,10 @@
                     console.log("________end_________");
                 })
         })
-    
-    
-    
     });
     
 </script>
-<script src="/viewmodels/adminViewModel.js"></script>
+
 
 <div class="admin_page" id="admin_page">
     <div class="admin_title page_title_block">
@@ -242,27 +243,32 @@
             <h3>Меню заведения</h3>
             <div id="tab-container">
                 <ul class="catalog_nav etabs" data-bind="foreach: Categories">
-                    <li><a data-bind="attr: { href: IdNameHash }"><span data-bind="text: Name"></span></a></li>
+                    <li data-bind="attr: { class: activeText() } ">
+                        <a data-bind="click: $root.setActiveCategory  ">
+                            <span data-bind="text: Name"></span>
+                        </a>
+                    </li>
                 </ul>
+
                 <div data-bind="foreach: Categories">
-                    <div class="catalog_admin clearfix" data-bind="attr: { id: IdName }">
+                    <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
                         <div class="catalog_item">
                             <div class="photo">
-                                <a href="#" class="addfile">Фото блюда<input type="file" name="" id=""></a>
+                                <a href="#" class="addfile">Фото блюда<input class="fileupload" type="file" name="files[]" data-url="/upload"></a>
                             </div>
                             <div class="info">
                                 <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: newDishName">
                                 <textarea name="" id="" placeholder="Описание блюда" required data-bind="value: newDishDescription"></textarea>
                                 <input type="text" name="" placeholder="0" id="" class="price" required data-bind="value: newDishPrice"><span class="currency">руб</span>
                                 <div class="week">
-                                    <input type="checkbox" value="AllWeek" data-bind=" attr:{ id: 'nallWeek' + id(),name: 'nallWeek' + id(),checked: newDishDays,  } "><label data-bind="attr:{ for: 'nallweek' + id()  }" class="check">Всю неделю</label>
-                                    <input type="checkbox" value="Mon" data-bind="attr:{ id: 'nmon' + id(),name: 'nmon' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nmon' + id()  }" class="check">Пон</label>
-                                    <input type="checkbox" value="Tue" data-bind="attr:{ id: 'ntue' + id(),name:'ntue' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'ntue' + id()  }" class="check">Втр</label>
-                                    <input type="checkbox" value="Wed" data-bind="attr:{ id: 'nwed' + id(),name:'nwed' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'nwed' + id()  }" class="check">Срд</label>
-                                    <input type="checkbox" value="Thu" data-bind="attr:{ id: 'nthu' + id(),name: 'nthu' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nthu' + id()  }" class="check">Чтв</label>
-                                    <input type="checkbox" value="Fri" data-bind="attr:{ id: 'nfri' + id(),name:'nfri' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'nfri' + id()  }" class="check">Пят</label>
-                                    <input type="checkbox" value="Sat" data-bind="attr:{ id: 'nsat' + id(),name: 'nsat' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nsat' + id()  }" class="check">Суб</label>
-                                    <input type="checkbox" value="Sun" data-bind="attr:{ id: 'nsun' + id(),name: 'nsun' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nsun' + id()  }" class="check">Вск</label>
+                                    <input type="checkbox" value="AllWeek" data-bind=" attr:{ id: 'nallWeek' + id(), name: 'nallWeek' + id(),checked: newDishDays,  } "><label data-bind="attr:{ for: 'nallweek' + id()  }" class="check">Всю неделю</label>
+                                    <input type="checkbox" value="Mon" data-bind="attr:{ id: 'nmon' + id(), name: 'nmon' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nmon' + id()  }" class="check">Пон</label>
+                                    <input type="checkbox" value="Tue" data-bind="attr:{ id: 'ntue' + id(), name:'ntue' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'ntue' + id()  }" class="check">Втр</label>
+                                    <input type="checkbox" value="Wed" data-bind="attr:{ id: 'nwed' + id(), name:'nwed' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'nwed' + id()  }" class="check">Срд</label>
+                                    <input type="checkbox" value="Thu" data-bind="attr:{ id: 'nthu' + id(), name: 'nthu' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nthu' + id()  }" class="check">Чтв</label>
+                                    <input type="checkbox" value="Fri" data-bind="attr:{ id: 'nfri' + id(), name:'nfri' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'nfri' + id()  }" class="check">Пят</label>
+                                    <input type="checkbox" value="Sat" data-bind="attr:{ id: 'nsat' + id(), name: 'nsat' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nsat' + id()  }" class="check">Суб</label>
+                                    <input type="checkbox" value="Sun" data-bind="attr:{ id: 'nsun' + id(), name: 'nsun' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nsun' + id()  }" class="check">Вск</label>
                                 </div>
                             </div>
                             <a href="#" class="button succes" data-bind="click: addDish">Добавить</a>
@@ -298,3 +304,4 @@
     </div>
 
 </div>
+
