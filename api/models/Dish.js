@@ -67,5 +67,9 @@ dishSchema.statics.updateDish = function (dishId, data, cb) {
     })
 };
 
+dishSchema.statics.getDish = function (dishId, callback) {
+    this.findOne({ _id: dishId }, callback);
+}
+
 Dish = mongoose.model('Dish', dishSchema);
 exports.Dish = Dish;

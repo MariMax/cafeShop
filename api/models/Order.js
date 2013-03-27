@@ -5,27 +5,164 @@ var mongoose = require('mongoose')
 
 mongoTypes.loadTypes(mongoose, 'email');
 
-mongoose.connect(conf.mongoConnection);
-
-function required(val) { return val && val.length; }
+var dishSchema = new Schema({
+    dishId:ObjectId,
+    count:Number
+});
 
 var orderSchema = new Schema({
     _cafe:{type:ObjectId, ref:'Cafe'},
-    _deliveryMethod:{type:ObjectId, ref:'DeliveryMethod'},
+    //_deliveryMethod:{type:ObjectId, ref:'DeliveryMethod'},
     UserName:String,
     UserPhone:String,
     Email:{
-        type: mongoose.SchemaTypes.Email,
-        validate: [required, 'Введите Email']
+        type: mongoose.SchemaTypes.Email
+       
     },
-    Dishes:[{type:ObjectId,ref:'Dish'}],
+    Dishes:[dishSchema],
     Description:String,
     Price:Number,
     OrderDate:{type:Date, 'default' : Date.now()},
-    Approved:{type:Boolean, 'default' : false}/*оплачен ли заказ*/,
-    OrderGetTime:{type:Date,'default' : Date.now()}/*Дата когда заказ должен быть выполнен*/
+    Approved:{type:Boolean, 'default' : false}/*оплачен ли заказ*/
+    //OrderGetTime:{type:Date,'default' : Date.now()}/*Дата когда заказ должен быть выполнен*/
 
 });
 
+
+
+orderSchema.statics.createOrder = function (cafeId, dish, _quantify, callback) {
+    if (!_quantify) _quantify = 1;
+    var instance = new Order();
+    var dishOrder = new OrderDish({dishId:dish,count:_quantify});
+    instance.Dishes.push(dishOrder);
+    instance.save(function (error, data) {
+        if (error) {
+            callback(error);
+        }
+        else {
+            callback(null, instance);
+        }
+    })
+}
+
+orderSchema.statics.setOrderDishes = function (orderId, dish, _quantify, callback) {
+    if (!_quantify) _quantify = 1;
+    Order.findOne({ _id: orderId, Approved:false }, function (error, order) {
+        if (error) callback(error);
+        else {
+            var num = -1;
+            for (var key in order.Dishes) {
+                var val = order.Dishes[key];
+                if (val.dishId == dish) {
+                    num = key; 
+                    order.Dishes[key].count = _quantify; 
+                    order.save(function (error, data) {
+                        if (error) {
+                            callback(error);
+                        }
+                        else {
+                            callback(null, order);
+                        }
+                    }); 
+                    break;
+                }
+            }
+            if (num == -1) {
+                var dishOrder = new OrderDish({ dishId: dish, count: _quantify });
+                order.Dishes.push(dishOrder);
+                order.save(function (error, data) {
+                    if (error) {
+                        callback(error);
+                    }
+                    else {
+                        callback(null, instance);
+                    }
+                });
+            }
+        }
+    })
+}
+
+
+orderSchema.statics.deleteOrderDish = function (orderId, dish, callback) {
+
+    Order.findOne({ _id: orderId, Approved:false }, function (error, order) {
+        if (error) callback(error);
+        else {
+            var num = -1;
+            for (var key in order.Dishes) {
+                var val = order.Dishes[key];
+                if (val.dishId == dish) {
+                    num = key;
+                    order.Dishes[key].remove();
+                    order.save(function (error, data) {
+                        if (error) {
+                            callback(error);
+                        }
+                        else {
+                            callback(null, order);
+                        }
+                    });
+                    break;
+                }
+            }
+            if (num==-1) callback(null, order);
+
+        }
+    })
+}
+
+orderSchema.statics.setOrderInformation = function (orderId, data, callback) {
+    console.log("UpdateOrderDescription");
+    var newdata = {};
+    if (data.description && data.description != '') newdata.Description = data.description;
+    if (data.email && data.email != '') newdata.Email = data.email;
+    if (data.userName && data.userName != '') newdata.UserName = data.userName;
+    if (data.userPhone && data.userPhone != '') newdata.UserPhone = data.userPhone;
+    if (data.price && data.price > 0) newdata.Price = data.price;
+    this.findOne({ _id: orderId, Approved: false }, function (err, order) {
+        if (err) callback(err); else
+            this.findByIdAndUpdate(orderId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
+                if (error) {
+                    cb(error);
+                }
+                else {
+                    Order.findOne({ _id: orderId }, cb)
+                }
+            })
+    });
+
+
+};
+
+orderSchema.statics.getOrder = function (orderId, callback) {
+    Order.findOne({_id:orderId},callback);
+     }
+
+     orderSchema.statics.dropOrder = function (orderId, callback) {
+         Order.findOne({ _id: orderId, Approved: false }, function (error, order) {
+             if (error) callback(error); else
+                 Order.findByIdAndRemove(orderId, callback);
+         });
+     }
+
+orderSchema.statics.approveOrder = function (orderId, callback) {     console.log("UpdateOrderDescription");
+    var newdata = {};
+    newdata.Approved = true;
+
+    this.findByIdAndUpdate(orderId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            cb(error);
+        }
+        else {
+            Order.findOne({ _id: orderId }, cb)
+        }
+    })
+
+    
+};
+
+OrderDish = mongoose.model('orderDish', dishSchema);
 Order = mongoose.model('Order', orderSchema);
 exports.Order = Order;
+

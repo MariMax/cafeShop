@@ -31,9 +31,9 @@ exports.getMailConfig = function () {
 
 exports.getSMSConfig = function () {
     configValues = {
-        accountSid:'Денег пока жалко не выложу в общий доступ',
-        authToken: 'Денег пока жалко не выложу в общий доступ',
-        From:'Денег пока жалко не выложу в общий доступ'
+        accountSid:'AC26a253b30671ca908581ad0d64746241',
+        authToken: 'b0cf25f4e9d41a5f3adad56386ce14df',
+        From:'+16572153237'
     }
      return configValues;
 }

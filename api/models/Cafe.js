@@ -135,5 +135,9 @@ cafeSchema.statics.UpdateCellPhone = function (cafeId, cellPhone, callback) {
 
 };
 
+cafeSchema.statics.getCafe = function (cafeId, callback) {
+    this.findOne({ _id: cafeId }, callback);
+}
+
 Cafe = mongoose.model('Cafe', cafeSchema);
 exports.Cafe = Cafe;
