@@ -50,6 +50,10 @@ UserSchema.statics.getAllApprovedUsersInCafe = function (cafeId, callback) {
     this.find({ _cafe: cafeId, approveInCurrentCafe: true }, callback);
 }
 
+UserSchema.statics.getFirstApprovedUserInCafe = function (cafeId, callback) {
+    this.findOne({ _cafe: cafeId, approveInCurrentCafe: true }, callback);
+}
+
 UserSchema.statics.getAllUsersInCafe = function (cafeId, callback) {
     this.find({ _cafe: cafeId }, callback);
 }

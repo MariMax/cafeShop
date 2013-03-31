@@ -7,7 +7,8 @@ mongoTypes.loadTypes(mongoose, 'email');
 
 var dishSchema = new Schema({
     dishId:ObjectId,
-    count:Number
+    count:Number,
+    price:Number
 });
 
 var orderSchema = new Schema({
@@ -30,10 +31,11 @@ var orderSchema = new Schema({
 
 
 
-orderSchema.statics.createOrder = function (cafeId, dish, _quantify, callback) {
+orderSchema.statics.createOrder = function (cafeId, dish, _quantify,_price, callback) {
     if (!_quantify) _quantify = 1;
     var instance = new Order();
-    var dishOrder = new OrderDish({dishId:dish,count:_quantify});
+    var dishOrder = new OrderDish({ dishId: dish, count: _quantify, price:_price });
+    instance._cafe = cafeId;
     instance.Dishes.push(dishOrder);
     instance.save(function (error, data) {
         if (error) {
@@ -45,17 +47,18 @@ orderSchema.statics.createOrder = function (cafeId, dish, _quantify, callback) {
     })
 }
 
-orderSchema.statics.setOrderDishes = function (orderId, dish, _quantify, callback) {
+orderSchema.statics.setOrderDishes = function (orderId, dish, _quantify,_price, callback) {
     if (!_quantify) _quantify = 1;
-    Order.findOne({ _id: orderId, Approved:false }, function (error, order) {
+    Order.findOne({ _id: orderId, Approved: false }, function (error, order) {
         if (error) callback(error);
         else {
             var num = -1;
             for (var key in order.Dishes) {
                 var val = order.Dishes[key];
                 if (val.dishId == dish) {
-                    num = key; 
-                    order.Dishes[key].count = _quantify; 
+                    num = key;
+                    order.Dishes[key].count = _quantify;
+                    order.Dishes[key].price = _price;
                     order.save(function (error, data) {
                         if (error) {
                             callback(error);
@@ -63,19 +66,19 @@ orderSchema.statics.setOrderDishes = function (orderId, dish, _quantify, callbac
                         else {
                             callback(null, order);
                         }
-                    }); 
+                    });
                     break;
                 }
             }
             if (num == -1) {
-                var dishOrder = new OrderDish({ dishId: dish, count: _quantify });
+                var dishOrder = new OrderDish({ dishId: dish, count: _quantify,price:_price });
                 order.Dishes.push(dishOrder);
                 order.save(function (error, data) {
                     if (error) {
                         callback(error);
                     }
                     else {
-                        callback(null, instance);
+                        callback(null, data);
                     }
                 });
             }
@@ -83,6 +86,33 @@ orderSchema.statics.setOrderDishes = function (orderId, dish, _quantify, callbac
     })
 }
 
+orderSchema.statics.calcOrderPrice = function (orderId, callback) {
+
+    Order.findOne({ _id: orderId, Approved: false }, function (error, order) {
+        if (error) callback(error);
+        else {
+            var num = -1;
+            var price = 0;
+            for (var key in order.Dishes) {
+                var val = order.Dishes[key];
+                if (val.count!=null&&val.price!=null)
+                price += val.count * val.price;
+                console.log(price);
+            }
+            order.Price = price;
+            order.save(function (error, data) {
+                if (error) {
+                    callback(error);
+                }
+                else {
+                    callback(null, order);
+                }
+            });
+
+
+        }
+    })
+}
 
 orderSchema.statics.deleteOrderDish = function (orderId, dish, callback) {
 
@@ -122,12 +152,12 @@ orderSchema.statics.setOrderInformation = function (orderId, data, callback) {
     if (data.price && data.price > 0) newdata.Price = data.price;
     this.findOne({ _id: orderId, Approved: false }, function (err, order) {
         if (err) callback(err); else
-            this.findByIdAndUpdate(orderId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
+            Order.findByIdAndUpdate(orderId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
                 if (error) {
-                    cb(error);
+                    callback(error);
                 }
                 else {
-                    Order.findOne({ _id: orderId }, cb)
+                    Order.findOne({ _id: orderId }, callback)
                 }
             })
     });

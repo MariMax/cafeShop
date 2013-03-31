@@ -2,6 +2,9 @@ var Order = require('../models/Order.js').Order;
 var Dish = require('../models/Dish.js').Dish;
 var Cafe = require('../models/Cafe.js').Cafe;
 var forms = require('../forms/PayForms.js');
+var sendSMS = require('../models/CommonFunctions.js').sendSMS;
+var sendMail = require('../models/CommonFunctions.js').sendMail;
+var User = require('../models/User.js').User;
 
 exports.add_routes = function (app) {
 
@@ -24,7 +27,7 @@ exports.add_routes = function (app) {
                 Dish.getDish(dishId, function (error, dish) {
                     if (error) res.send(error, 404);
                     else
-                        Order.createOrder(cafeId, dishId, count, function (error, order) {
+                        Order.createOrder(cafeId, dishId, count,dish.Price, function (error, order) {
                             if (error)
                                 res.send(error, 404);
                             else {
@@ -48,15 +51,16 @@ exports.add_routes = function (app) {
                     if (error) res.send(error, 404);
                     else
                         Dish.getDish(dishId, function (error, dish) {
-                            if (error) res.send(error, 404);
+                            if (error || dish._cafe != cafeId) res.send("Наверное блюдо не из этого кафе", 404);
                             else
-                                Order.setOrderDishes(orderId, dishId, count, function (error, order) {
-                                    if (error)
-                                        res.send(error, 404);
-                                    else {
-                                        res.json(order, 200);
-                                    }
-                                })
+                                console.log("set order " + orderId + " " + dishId + " " + count)
+                            Order.setOrderDishes(orderId, dishId, count,dish.Price, function (error, order) {
+                                if (error)
+                                    res.send(error, 404);
+                                else {
+                                    res.json(order, 200);
+                                }
+                            })
 
                         })
                 })
@@ -66,28 +70,12 @@ exports.add_routes = function (app) {
 
     app.get("/api/order/calcPrice/:orderId", function (req, res) {
         var orderId = req.params.orderId;
-        Order.getOrder(orderId, function (error, order) {
-            if (error) res.send(error, 404); else {
-                var price = 0;
-                for (var key in order.Dishes) {
-                    var dishId = order.Dishes[key].dishId;
-                    var count = order.Dishes[key].dishId;
-                    Dish.getDish(dishId, function (error, dish) {
-                        if (error) res.send(error, 404); else
-                        { if (dish.Price) price += dish.Price * count }
-                    })
-                }
-                var data = {};
-                data.price = price;
-                Order.setOrderInformation(orderId, data, function (error, order)
-                { if (error) res.send(error, 404); else res.json(order, 200) });
-            }
-        })
+        Order.calcOrderPrice(orderId, function (error, result) { if (error) res.send(error, 404); else res.json(result, 200) })
     });
 
     app.get("/api/order/delete/:orderId", function (req, res) {
         var orderId = req.params.orderId;
-        Order.dropOrder(orderId, function (error, result) { if (error) res.send(error, 404); else res.json(result, 200) });
+        Order.dropOrder(orderId, function (error, result) { if (error) res.send(error, 404); else res.json("Ok", 200) });
     });
 
     app.get("/api/order/deleteDish/:orderId/:dishId", function (req, res) {
@@ -113,12 +101,38 @@ exports.add_routes = function (app) {
     app.get("/api/order/paySystemAnswer/:orderId", function (req, res) {
         //Оплата Ответ платежной системы
         var orderId = req.params.orderId;
-        Order.approveOrder(orderId, function (error, order) { 
-        if (error) res.send(error,404);
+        Order.approveOrder(orderId, function (error, order) {
+            if (error) res.send(error, 404);
 
-        else {
-            //Рассылка sms продавцу, покупателю и 3 email
-            res.json(order,200);}})
+            else {
+                //Рассылка sms продавцу, покупателю и 3 email
+                Cafe.getCafe(order._cafe, function (error, cafe) {
+                    if (error) res.send(error, 404);
+                    else {
+                        var messageText = "Номер заказа: " + order._id;
+                        for (var key in order.Dishes) {
+                            var dishId = order.Dishes[key].dishId;
+                            var count = order.Dishes[key].dishId;
+                            Dish.getDish(dishId, function (error, dish) {
+                                if (error) res.send(error, 404); else {
+                                    messageText += dish.Name + " ";
+                                    if (dish.Price) messageText += dish.price + " ";
+                                }
+                            })
+                        }
+                        sendSMS(SMSconf, cafe.Phone, messageText + " " + order.Description);
+                        sendSMS(SMSconf, order.UserPhone, messageText + " " + order.Description);
+                        sendMail(order.Email, conf.site_email, conf.site_name + ': approve order', messageText + " " + order.Description);
+                        sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': approve order', messageText + " " + order.Description);
+                        User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
+                            if (user)
+                                sendMail(user.Email, conf.site_email, conf.site_name + ': approve order', messageText + " " + order.Description);
+                        })
+                    }
+                })
+                res.json(order, 200);
+            }
+        })
     })
 
 
