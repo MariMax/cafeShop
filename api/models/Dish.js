@@ -37,6 +37,7 @@ dishSchema.statics.newDish = function (cafeId, categoryId, data, cb, err) {
     instance.Description = data.Description;
     instance.Price = data.Price;
     instance.Days = data.Days;
+    instance.Image = data.Image;
     instance.save(function (error, data) {
         if (error) {
             err(error);

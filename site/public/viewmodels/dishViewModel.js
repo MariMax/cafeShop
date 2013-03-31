@@ -3,8 +3,11 @@ function Dish(data) {
     self.id = ko.observable(data._id);
     self.Name = ko.observable(data.Name);
     self.Description = ko.observable(data.Description);
-    self.Price = ko.observable(data.Price);
+    self.Price = ko.observable(0);
+    if (data.Price)
+        self.Price(data.Price);
     self.Days = ko.observableArray([]);
+    self.Image = ko.observable(data.Image);
     if (data.Days == null)
         self.Days.push("AllWeek");
     else {

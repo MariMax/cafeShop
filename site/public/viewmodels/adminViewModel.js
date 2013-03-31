@@ -2,7 +2,7 @@
 function AdminViewModel(cafeId) {
     var self = this;
     self.Categories = ko.observableArray([]);
-    self.TmpUrl = ko.observable();
+    
 
     // Operations
     $.ajax(
