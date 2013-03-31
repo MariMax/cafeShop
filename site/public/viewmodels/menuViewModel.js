@@ -80,5 +80,5 @@ function MenuViewModel(cafeId) {
 
 if (document.getElementById("cafeId") != null) {
     var cafeId = document.getElementById("cafeId").value;
-    ko.applyBindings(new MenuViewModel(cafeId), document.getElementById("cafe_page"));
+    ko.applyBindings(new MenuViewModel(cafeId), document.getElementById("cafe_menu_page"));
 }

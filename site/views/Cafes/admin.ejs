@@ -128,7 +128,7 @@
                          $("#messenger").fadeIn("slow");
                          var cafeId = data.message.cafeId;
                          var delay = 2000;
-                         setTimeout(document.location.href = '/cafes/updateValues/' + cafeId, delay);
+                         setTimeout(document.location.href = '/cafe/'+cafeId+'/admin/', delay);
                      }
                      if (data.status == 500) {
                          $("#messenger").html(data.message);
@@ -290,7 +290,7 @@
             </form>
         </div>
 
-        <div class="admin_menu">
+        <div class="admin_menu" id="admin_menu">
             <h3>Меню заведения</h3>
             <div id="tab-container">
                 <ul class="catalog_nav etabs" data-bind="foreach: Categories">
@@ -305,11 +305,12 @@
                     <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
                         <div class="catalog_item">
 
-                            <div class="photo" data-bind="attr: { id: 'newPhoto'+IdName() }">
+                            <div class="photo">
 
                                 <!--<form action="/api/upload" enctype="multipart/form-data" method="post" class="uploadForm" data-bind="attr: { id: 'newPhotoForm'+IdName() }">-->
-                                <a href="#" class="addfile">Фото блюда
+                                <a href="#" class="addfile">
                                     <img src="" alt="" width="186" height="131" data-bind="attr: { id: 'newPhotoImage'+IdName() }"></img>
+                                    Фото блюда
                                     <input class="fileupload" type="file" name="uploads" data-url="/upload" data-bind="attr: { id: 'newPhotoInput'+IdName() }"></a>
                                 <!--</form>-->
                             </div>
@@ -334,9 +335,10 @@
                         <div data-bind="foreach: Dishes">
                             <div class="catalog_item">
                                 <div class="photo">
-                                    <a href="#" class="addfile">Фото блюда
-                                        <img data-bind=" attr: { src: Image() }" width="186" height="131"></img>
-                                        <input type="file" name="" id=""></a>
+                                    <a href="#" class="addfile">
+                                        <img width="186" height="131" data-bind="attr: { id: 'existsPhotoImage'+id(), src: Image() }"></img>
+                                        Фото блюда
+                                        <input class="existsfileupload" type="file" name="uploads" data-url="/uploadExists" data-bind="attr: { id: 'existsPhotoInput'+id() }"></a>
                                 </div>
                                 <div class="info">
                                     <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: Name">
@@ -353,8 +355,8 @@
                                         <input type="checkbox" value="Sun" data-bind="attr:{ id: 'sun' + id(),name: 'sun' + id()  },checked: Days"><label data-bind="attr:{ for: 'sun' + id()  }" class="check">Вск</label>
                                     </div>
                                 </div>
-                                <a href="#" class="delete button" data-bind="click: $parent.removeDish">Удалить</a>
-                                <a href="#" class="button succes" data-bind="click: updateDish">Сохранить</a>
+                                <a href="#" class="delete" data-bind="click: $parent.removeDish"></a>
+                                <a href="#" class="button succes small" data-bind="click: updateDish">Сохранить</a>
                             </div>
                         </div>
                     </div>

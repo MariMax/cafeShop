@@ -2,14 +2,14 @@
 
 <script type="text/javascript">
     $(function () {
-
-                            
-
+    
+    
+    
         function getUserCafe(userId) {
             $.post('/api/users/getcafe/' + userId)
         .done(function (data) {
             if (data && data.CellPhoneApprove)
-                document.location.href = '/cafes/updateValues/' + data._id;
+                document.location.href = '/cafe/'+data._id+'/admin/';
             else document.location.href = '/cafes/newcafe';
         })
         }

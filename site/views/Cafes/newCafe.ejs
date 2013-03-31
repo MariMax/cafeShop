@@ -33,7 +33,7 @@
                     $("#messenger").fadeIn("slow");
                     var cafeId = data.message.cafeId;
                     var delay = 2000;
-                    setTimeout(document.location.href = '/cafes/updateValues/' + cafeId, delay);
+                    setTimeout(document.location.href = '/cafe/'+cafeId+'/admin/'  , delay);
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);

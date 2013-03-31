@@ -4,17 +4,17 @@ exports.getSiteConfig = function () {
     site_name: 'cafeShop',
     site_email: 'idiEsh support <noreply@idiesh.ru>',
     db: {
-    	db: 'cafeshop',
-    	host: 'ds049997.mongolab.com',
-    	//db: 'cafeShop',
-    	//host: 'localhost'
-        port:'49997',
-        username: 'cafeShop',
-        password: 'XSWzaq'
+    	//db: 'cafeshop',
+    	//host: 'ds049997.mongolab.com',
+    	db: 'cafeShop',
+    	host: 'localhost'
+        //port:'49997',
+       // username: 'cafeShop',
+       // password: 'XSWzaq'
        },
     secret: 'cafeShop',
-    mongoConnection: 'mongodb://cafeShop:XSWzaq@ds049997.mongolab.com:49997/cafeshop'
-    //mongoConnection: 'mongodb://localhost/cafeShop'
+   // mongoConnection: 'mongodb://cafeShop:XSWzaq@ds049997.mongolab.com:49997/cafeshop'
+    mongoConnection: 'mongodb://localhost/cafeShop'
   }
 
   return configValues;

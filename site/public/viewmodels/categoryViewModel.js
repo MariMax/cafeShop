@@ -26,6 +26,7 @@ function Category(data) {
             type: "post", contentType: "application/json",
             success: function (data) {
                 $('#newPhotoTmpUrl').val("")
+                $('#newPhotoImage' + self.IdName()).attr("src", "");
                 alert(data);
             },
             error: function (result) {
