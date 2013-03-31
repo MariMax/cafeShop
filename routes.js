@@ -3,6 +3,7 @@ var usersHelper = require('./api/controllers/UserController.js')
 var siteUsersHelper = require('./site/controllers/SiteUserController.js')
 var dishesHelper = require('./api/controllers/DishesController.js')
 var cafeHelper = require('./api/controllers/CafeController.js')
+var orderHelper = require('./api/controllers/OrderController.js')
 
 var categoriesHelper = require('./api/controllers/CategoriesController.js')
 var siteCafeHelper = require('./site/controllers/SiteCafeController.js')
@@ -16,4 +17,5 @@ module.exports = function (app) {
     cafeHelper.add_routes(app);
     siteCafeHelper.add_routes(app);
     categoriesHelper.add_routes(app);
+    orderHelper.add_routes(app);
 };
