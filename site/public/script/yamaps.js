@@ -9,7 +9,7 @@ function fid_13613773245519471603(ymaps) {
                                         .add("zoomControl")
                                         .add("mapTools")
                                         .add(new ymaps.control.TypeSelector(["yandex#map", "yandex#satellite", "yandex#hybrid", "yandex#publicMap"]));
-
+            
                     $.get('/api/cafes/All/1')
         .done(function (data) {
            
@@ -20,7 +20,7 @@ function fid_13613773245519471603(ymaps) {
 
                 map.geoObjects
                                         .add(new ymaps.Placemark([cafe.Longitude,cafe.Latitude], {
-                                            balloonContent: '<div class="baloon_content"><b>' + cafe.Name + '</b></div>',
+                                            balloonContent: '<div class="baloon_content"><b>' + cafe.Name + '</b> <a href="/cafe/'+cafe._id+'/menu">Меню</a></div>',
                                             autoPan: false
                                         }, {
                                             iconImageHref: '/images/baloon.png',
@@ -36,7 +36,7 @@ function fid_13613773245519471603(ymaps) {
                 
                     map.events.add("click",
                                             function (e) {
-                                                myMap.balloon.open(
+                                                map.balloon.open(
                                                 // Позиция балуна
                             e.get("coordPosition"), {
                                 // Свойства балуна:
