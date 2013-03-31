@@ -102,7 +102,7 @@ exports.add_routes = function (app) {
     });
 
     app.get("/api/cafes/all/:i", function (req, res) {
-        Cafe.find({ CanWorkInCafeShop: true }, function (error, cafes) {
+        Cafe.find({ CanWorkInCafeShop: true, Longitude:{$ne: null},Latitude:{$ne: null}  }, function (error, cafes) {
             if (error) res.json(null, 404); else {
                 res.json(cafes, 200);
             }

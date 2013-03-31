@@ -1,25 +1,36 @@
 {
   "name": "NodeSite",
-  "version": "0.0.1",
+  "version": "0.0.1-19",
   "author": "",
   "description": "",
   "contributors": [],
   "main": "./server.js",
   "keywords": [],
-  "dependencies": {"express":"latest",  "ejs":"latest","ejs-locals":"latest",
-  "mongoose": "latest",
+  "dependencies": {
+    "express": "3.1.0",
+    "ejs": "latest",
+    "ejs-locals": "latest",
+    "mongoose": "latest",
     "nodemailer": "latest",
     "mongoose-types": "latest",
-    "express-form": "latest",
+    "express-form": "0.8.x",
     "connect": "latest",
     "connect-mongo": "latest",
-    "restler":"latest",
-	"jquery-file-upload-middleware": "latest"
+    "restler": "latest",
+    "jquery-file-upload-middleware": "latest"
   },
   "noAnalyze": true,
   "engines": {
-    "node": ">=0.6"
-  },  
+    "node": "0.8.x"
+  },
   "devDependencies": {},
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "subdomain": "idiesh",
+  "domains": [
+    "idiesh.ru",
+    "www.idiesh.ru"
+  ],
+  "scripts": {
+    "start": "node server.js"
+  }
 }

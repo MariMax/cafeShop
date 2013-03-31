@@ -4,12 +4,10 @@ var express = require('express')
   , nodemailer = require("nodemailer")
   , upload = require('jquery-file-upload-middleware');
 
-//fs = require('fs');
+fs = require('fs');
 
 var MongoStore = require('connect-mongo')(express),
     mongo = require('mongoose');
-
-var path = require('path');
 
 String.prototype.randomString = function (stringLength) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -37,7 +35,7 @@ String.prototype.randomNumberString = function (stringLength) {
     return randomString;
 }
 
-if (path.existsSync('./configDefault.js')) {
+if (fs.existsSync('./configDefault.js')) {
     var configLocal = require('./configDefault.js');
     var mailSettings = configLocal.getMailConfig();
 
