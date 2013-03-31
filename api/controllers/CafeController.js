@@ -3,6 +3,7 @@ var forms = require('../forms/CafeForms.js');
 var User = require('../models/User.js').User;
 var Menu = require('../models/Menu.js').Menu;
 var common = require('../models/CommonFunctions.js');
+//var gm = require('gm');
 var sendMail = common.sendMail;
 var sendSMS = common.sendSMS;
 
@@ -197,6 +198,58 @@ exports.add_routes = function (app) {
             ShowMessage(res, 'Неверно заполнена форма подтверждения номера телефона', 500);
         }
     });
+
+    //app.post("/api/upload", function (req, res) {
+    //    User.findOne({ _id: req.session.user }, function (error, user) {
+    //        if (error) ShowMessage(res, "Не удалось найти пользователя", 500);
+    //        else {
+    //            //console.log('upload');
+    //            //console.log(req.files.uploads);
+
+
+    //            //var files = [];
+    //            //var fileKeys = Object.keys(req.files);
+
+    //            //console.log(req.files);
+    //            var files = req.files["uploads"];
+    //            console.log(files);
+    //            console.log(files.path);
+    //            var newPath = uploadsDir + files.name;
+    //            var fileData = fs.readFileSync(files.path);
+    //            fs.writeFileSync(newPath, fileData);
+    //            res.json(files.name, 200);
+
+    //            //var src1 = newPath;
+    //            //var dst1 = thumbnailDir + files.name;
+    //            //console.log(newPath);
+    //            //console.log(dst1);
+    //            //console.log('resize');
+    //            //gm(newPath).thumb(181, 131, dst1, 100, function (err) {
+    //            //    if (!err)
+    //            //        console.log("ok");
+    //            //    console.log(err);
+    //            //});
+    //            //im.resize({
+    //            //    srcData: fs.readFileSync(src1, 'binary'),
+    //            //    width: 186,
+    //            //    heigth: 131
+    //            //}, function (err, stdout, stderr) {
+    //            //    if (err) throw err
+    //            //    fs.writeFileSync(dst1, stdout, 'binary');
+    //            //    console.log('resized kittens.jpg to fit within 256x256px')
+    //            //});
+
+    //            //fs.readFile(files.path, function (err, data) {
+    //            //    var newPath = uploadsDir + files.name;
+    //            //    console.log(newPath);
+    //            //    fs.writeFile(newPath, data, function (err) {
+
+
+    //            //    });
+    //            //});
+    //        }
+    //    });
+    //});
 
 
 

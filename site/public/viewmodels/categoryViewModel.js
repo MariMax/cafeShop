@@ -15,18 +15,17 @@ function Category(data) {
     self.newDishDescription = ko.observable();
     self.newDishPrice = ko.observable();
     self.newDishDays = ko.observableArray([]);
-    self.newDishTmpImageUrl = ko.observable('/images/icon_add_photo.png');
 
-    self.addDish = function (data, imageurl) {
+    self.addDish = function (data) {
         debugger;
-        var dish = new Dish({ Name: this.newDishName(), Description: this.newDishDescription(), Price: this.newDishPrice(), Days: this.newDishDays() });
+        var dish = new Dish({ Name: this.newDishName(), Description: this.newDishDescription(), Price: this.newDishPrice(), Days: this.newDishDays(), Image: $('#newPhotoTmpUrl').val() });
         var url = "/api/cafe/" + cafeId + "/category/" + this.id() + "/dishes";
         var jsonData = ko.toJSON(dish);
         $.ajax(url, {
             data: jsonData,
             type: "post", contentType: "application/json",
             success: function (data) {
-                debugger;
+                $('#newPhotoTmpUrl').val("")
                 alert(data);
             },
             error: function (result) {

@@ -2,12 +2,18 @@ var express = require('express')
   , app = express()
   , ejsLocals = require('ejs-locals')
   , nodemailer = require("nodemailer")
-  , upload = require('jquery-file-upload-middleware');
+, upload = require('jquery-file-upload-middleware'),
+//, im = require('imagemagick')
+
 
 fs = require('fs');
+uploadsDir = __dirname + "\\site\\public\\uploads\\";
+thumbnailDir = __dirname + "\\site\\public\\uploads\\thumbnail\\";
 
 var MongoStore = require('connect-mongo')(express),
     mongo = require('mongoose');
+
+//var path = require('path');
 
 String.prototype.randomString = function (stringLength) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -59,20 +65,40 @@ else {
 // configure upload middleware
 upload.configure({
     tmpDir: __dirname + '/site/tmp',
-    publicDir: __dirname + '/site/public',
+    //publicDir: __dirname + '/site/public',
     uploadDir: __dirname + '/site/public/uploads',
     uploadUrl: '/uploads',
     safeFileTypes: /\.(gif|jpe?g|png)$/i,
     imageTypes: /\.(gif|jpe?g|png)$/i,
     imageVersions: {
-        'thumbnail': {
-            width: 80,
-            height: 80
+        thumbnail: {
+            width: 200,
+            height: 200
         }
+    }
+    ,
+    accessControl: {
+        allowOrigin: '*',
+        allowMethods: 'OPTIONS, HEAD, GET, POST, PUT, DELETE'
     }
 });
 
+
 app.use('/upload', upload.fileHandler());
+//upload.on('end', function (fileInfo) {
+//    var src1 = __dirname + '\\site\\public\\uploads\\' + fileInfo.name;
+//    var dst1 = __dirname + '\\site\\public\\uploads\\thumbnail\\' + fileInfo.name;
+//    console.log(src1);
+//    console.log(dst1);
+//    im.resize({
+//        srcPath: src1,
+//        dstPath: dst1,
+//        width: 256
+//    }, function (err, stdout, stderr) {
+//        if (err) throw err;
+//        console.log('resized kittens.jpg to fit within 256x256px');
+//    });
+//});
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.session({

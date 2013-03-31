@@ -1,11 +1,21 @@
 <% layout('../layout') -%>
 
+
 <footer>
     <div class="wrap">
         <div class="basket">
 			Вы выбрали:
-            <b><span data-bind="text: OrderedDishes().length"></span> блюда на <span data-bind="text: OrderedDishesPrices()"></span> руб.</b>
+            <a href="#" class="basket_link"><span data-bind="text: OrderedDishes().length"></span> блюда на <span data-bind="text: OrderedDishesPrices()"></span> руб.</a>
             <a href="#" class="order button big cursiv second">Оформить</a>
+        </div>
+        <div class="basket_block" data-bind="foreach: OrderedDishes">
+            <div class="item">
+                <div class="img">
+                    <img data-bind="attr: { src: Image(), alt: Name() }"></img>
+                </div>
+                <h3><span data-bind="text: Name"></span></h3>
+                <div class="price"><span data-bind="text: Price"></span></div>
+            </div>
         </div>
     </div>
 </footer>
@@ -30,7 +40,7 @@
             <div data-bind="attr: { id: IdName , class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
                 <div data-bind="foreach: Dishes">
                     <div class="catalog_item">
-                        <div class="img"><img data-bind="attr: { src: Image(), alt: Name() }" ></div>
+                        <div class="img"><img data-bind="attr: { src: Image(), alt: Name() }" width="186" height="131"></div>
                         <h3><span data-bind="text: Name"></span></h3>
                         <div class="price"><span data-bind="text: Price"></span></div>
                         <div class="buy">
@@ -42,3 +52,13 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $('.basket_link').mouseover(function () {
+        $('.basket_block').show().removeClass('fadeOutDown').addClass('animated fadeInUp')
+    }).mouseout(function () {
+        $('.basket_block').removeClass('fadeInUp').addClass('fadeOutDown');
+        setTimeout(function () {
+            $('.basket_block').hide();
+        }, 500)
+    });
+</script>

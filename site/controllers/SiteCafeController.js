@@ -19,10 +19,4 @@ exports.add_routes = function (app) {
 
         } else { res.redirect('users/login'); }
     });
-
-    app.post("/upload", function (req, res) {
-        if (req.session.user) {
-            console.log(req);
-        } else { res.redirect('users/login'); }
-    });
 }
