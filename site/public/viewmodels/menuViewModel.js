@@ -1,5 +1,7 @@
 function MenuViewModel(cafeId) {
+
     var self = this;
+    self.CafeId = cafeId;
     self.CafeName = ko.observable();
     self.CafeAddress = ko.observable('Адрес не задан');
     self.CafePhone = ko.observable('Телефон не задан');
@@ -18,7 +20,7 @@ function MenuViewModel(cafeId) {
     // Operations
 
     self.buyDish = function (dish) {
-        self.OrderedDishes.push(dish)
+        self.OrderedDishes.push(dish);
     };
 
     $.getJSON('/api/cafes/' + cafeId, function (cafe) {
