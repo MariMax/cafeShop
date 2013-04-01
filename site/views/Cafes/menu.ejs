@@ -1,24 +1,7 @@
 
 <% layout('../layout') -%>
 
-<footer>
-    <div class="wrap">
-        <div class="basket">
-			Вы выбрали:
-            <a href="#" class="basket_link"><span data-bind="text: OrderedDishes().length"></span> блюда на <span data-bind="text: OrderedDishesPrices()"></span> руб.</a>
-            <a href="#" class="order button big cursiv second">Оформить</a>
-        </div>
-        <div class="basket_block" data-bind="foreach: OrderedDishes">
-            <div class="item">
-                <div class="img">
-                    <img data-bind="attr: { src: Image(), alt: Name() }"></img>
-                </div>
-                <h3><span data-bind="text: Name"></span></h3>
-                <div class="price"><span data-bind="text: Price"></span></div>
-            </div>
-        </div>
-    </div>
-</footer>
+
 <div class="cafe_page" id="cafe_menu_page">
     <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
     <div class="cafe_info">
@@ -51,6 +34,24 @@
             </div>
         </div>
     </div>
+    <footer>
+        <div class="wrap">
+            <div class="basket">
+			Вы выбрали:
+                <a href="#" class="basket_link"><span data-bind="text: OrderedDishes().length"></span> блюда на <span data-bind="text: OrderedDishesPrices()"></span> руб.</a>
+                <a href="#" class="order button big cursiv second">Оформить</a>
+            </div>
+            <div class="basket_block" data-bind="foreach: OrderedDishes">
+                <div class="item">
+                    <div class="img">
+                        <img data-bind="attr: { src: Image(), alt: Name() }"></img>
+                    </div>
+                    <h3><span data-bind="text: Name"></span></h3>
+                    <div class="price"><span data-bind="text: Price"></span></div>
+                </div>
+            </div>
+        </div>
+    </footer>
 </div>
 
 <script type="text/javascript">
