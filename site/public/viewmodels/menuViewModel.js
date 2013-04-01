@@ -19,7 +19,33 @@ function MenuViewModel(cafeId) {
 
     // Operations
     self.order = function () {
-        $.post("/order/", { "data": self });
+        var first = true;
+        var orderId = null;
+        ko.utils.arrayForEach(self.OrderedDishes(), function (dish) {
+            if (first) {
+                $.ajax({
+                        url: '/api/order/createOrder/' + self.CafeId + '/' + dish.id() + '/1',
+                        type: "GET",
+                        async: false
+                }).done(function (order) {
+                    orderId = order._id;
+                    first = false;
+                })
+            } else {
+                $.ajax({
+                    url: '/api/order/addDish/' + orderId + '/' + self.CafeId + '/' + dish.id() + '/1',
+                    type: "GET",
+                    async: false
+                }).done(function (order) { orderId = order._id;  }
+                )
+             }
+            $.ajax({
+                url: '/api/order/calcPrice/' + orderId,
+                type: "GET",
+                async: false
+            }).done(function (order) { document.location.href = '/order/buy/' + order._id;})
+
+        });
     }
     self.buyDish = function (dish) {
         self.OrderedDishes.push(dish);

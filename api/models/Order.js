@@ -86,6 +86,49 @@ orderSchema.statics.setOrderDishes = function (orderId, dish, _quantify,_price, 
     })
 }
 
+orderSchema.statics.addOrderDishes = function (orderId, dish, _quantify, _price, callback) {
+    if (!_quantify) _quantify = 1;
+    Order.findOne({ _id: orderId, Approved: false }, function (error, order) {
+        if (error) callback(error);
+        else {
+            var num = -1;
+            for (var key in order.Dishes) {
+                var val = order.Dishes[key];
+                if (val.dishId == dish) {
+                    num = key;
+                    var count = 0;
+                    count += order.Dishes[key].count;
+                    count += Number(_quantify);
+                    order.Dishes[key].count = count;
+                    order.Dishes[key].price = _price;
+                    order.save(function (error, data) {
+                        if (error) {
+                            callback(error);
+                        }
+                        else {
+                            callback(null, order);
+                        }
+                    });
+                    break;
+                }
+            }
+            if (num == -1) {
+                var dishOrder = new OrderDish({ dishId: dish, count: _quantify, price: _price });
+                order.Dishes.push(dishOrder);
+                order.save(function (error, data) {
+                    if (error) {
+                        callback(error);
+                    }
+                    else {
+                        callback(null, data);
+                    }
+                });
+            }
+        }
+    })
+}
+
+
 orderSchema.statics.calcOrderPrice = function (orderId, callback) {
 
     Order.findOne({ _id: orderId, Approved: false }, function (error, order) {
@@ -182,10 +225,10 @@ orderSchema.statics.approveOrder = function (orderId, callback) {     console.lo
 
     this.findByIdAndUpdate(orderId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
         if (error) {
-            cb(error);
+            callback(error);
         }
         else {
-            Order.findOne({ _id: orderId }, cb)
+            Order.findOne({ _id: orderId }, callback)
         }
     })
 

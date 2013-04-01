@@ -1,72 +1,135 @@
 ﻿<% layout('../layout') -%>
 
 <script type="text/javascript">
-      $(function () {
-    
-    
+    $(function () {
 
-    
-          
-         
-    
-          function isValidPhoneNumber(number) {
-              var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
-              return pattern.test(number);
-          }
-    
-          $('#cellPhone').blur(function () {
-              var phone = $('#cellPhone').val();
-              if (!isValidPhoneNumber(phone)) {
-                  var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
-                  $("#messenger").html(err_text);
-                  $("#messenger").fadeIn("slow");
-              } else {
-                  $("#messenger").html('');
-                  updatePhone();
-              }
-          })
-    
- 
-    
-          var field = new Array("Name", "cellPhone"); //поля обязательные 
-    
-          $("form").submit(function () {// обрабатываем отправку формы  
-              var error = 0; // индекс ошибки
-              $("form").find(":input").each(function () {// проверяем каждое поле в форме
-                  for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
-                      if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
-    
-                          if (!$(this).val()) {// если в поле пустое
-                              // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
-                              error = 1; // определяем индекс ошибки       
-    
-                          }
-                          else {
-                              // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
-                          }
-    
-                      }
-                  }
-              })
-    
-              if (error == 0) { // если ошибок нет то отправляем данные
-                  postData();
-                  return false;
-              }
-              else {
-                  if (error == 1) var err_text = "Необходимо ввести название кафе";
-                  // if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
-                  $("#messenger").html(err_text);
-                  $("#messenger").fadeIn("slow");
-                  return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
-              }
-    
-    
-    
-          })
+            function postData() {
+            var jqXHR = $.post('/api/order/pay', $('form').serialize())
+            .done(function (data) {
+                //document.location.href = '/order/buy/' + order._id;
+                //Отправить на страницу оплаты как вариант
+            });
 
-      });
-    
+
+
+        }
+
+
+        function getCafe(cafeId) {
+
+            var jqXHR = $.get('/api/cafes/' + cafeId)
+               .done(function (cafe) {
+
+
+                       if (cafe.Name)
+                           $('#name').attr('value', cafe.Name);
+                       if (cafe.Address)
+                           $('#Address').attr('value', cafe.Address);
+                       if (cafe.WorkTime)
+                           $('#WorkTime').attr('value', cafe.WorkTime);
+                       if (cafe.ClientPhone)
+                           $('#ClientPhone').attr('value', cafe.ClientPhone);
+                      
+               })
+        }
+
+        function getOrder(orderId) {
+
+            var jqXHR = $.get('/api/order/' + orderId)
+               .done(function (order) {
+                   
+                   getCafe(order._cafe);
+               })
+        }
+        orderId = $('#orderId').val();
+        getOrder(orderId);
+
+
+
+        function isValidPhoneNumber(number) {
+            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
+            return pattern.test(number);
+        }
+
+        $('#cellPhone').blur(function () {
+            var phone = $('#cellPhone').val();
+            if (!isValidPhoneNumber(phone)) {
+                var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+            } else {
+                $("#messenger").html('');
+            }
+        })
+
+        function isValidEmailAddress(emailAddress) {
+            var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+            return pattern.test(emailAddress);
+        }
+
+        $('#email').blur(function () {
+            var email = $('#email').val();
+            if (!isValidEmailAddress(email)) {
+                var err_text = "Введите правильный email";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+            } else {
+                $("#messenger").html('');
+            }
+        })
+
+
+
+        var field = new Array("userName", "cellPhone", "email", "description"); //поля обязательные 
+
+        $("form").submit(function () {// обрабатываем отправку формы  
+            var error = 0; // индекс ошибки
+            $("form").find(":input").each(function () {// проверяем каждое поле в форме
+                for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
+                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
+
+                        if (!$(this).val()) {// если в поле пустое
+                            // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
+                            error = 1; // определяем индекс ошибки       
+
+                        }
+                        else {
+                            // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
+                        }
+
+                    }
+                }
+            })
+
+            var phone = $("#cellPhone").val();
+            if (!isValidPhoneNumber(phone)) {
+                error = 2;
+            }
+             var email = $("#email").val();
+            if (!isValidEmailAddress(email)) {
+                error = 3;
+            }
+
+            debugger;
+            if (error == 0) { // если ошибок нет то отправляем данные
+                postData();
+                return false;
+            }
+            else {
+                if (error == 1) var err_text = "Необходимо ввести свое имя";
+                 if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                 if (error == 3) var err_text = "Введите правильный email";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+                return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
+            }
+
+
+
+        })
+
+    });
+
 </script>
 
 
@@ -84,128 +147,67 @@
                 </div>
                 <div class="form_item">
                     <div class="label">Название кафе/ресторана</div>
-                    <input id="cafeId" type="text" size="20" name="cafeId" value="<%= cafeId %>" required hidden>
-                    <div class="input"><p><%= cafeName %></p></div>
+                    
+                    <input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden>
+                    <div class="input"><input id="name" type="text" size="60" name="name" disabled></div>
                 </div>
                 <div class="form_item">
                     <div class="label">Адрес</div>
-                    <div class="input"><p><%= cafeAddress %></p></div>
+                    <div class="input"><input id="Address" type="text" size="60" name="Address" disabled></div>
                 </div>
                 <div class="form_item">
                     <div class="label">Телефон</div>
-                    <div class="input"><p><%= cafePhone %></p></div>
+                    <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone" disabled></div>
                 </div>
                 <div class="form_item">
                     <div class="label">Время работы</div>
-                    <div class="input"><p><%= workTime %></p></div>
+                    <div class="input"><input id="WorkTime" type="text" size="60" name="WorkTime" disabled></div>
                 </div>
+
+                <div class="cafe_page" id="order_page">
+                    <div class="form_item">
+                        <div class="label">Ваш Заказ</div>
+                        <div class="basket_block" data-bind="foreach: OrderedDishes">
+                            <div class="item">
+                                <h3><span data-bind="text: Name"></span></h3>
+                                <div class="price"><span data-bind="text: price"></span></div>
+                                <div class="add"><a href="#" data-bind="click: $root.addDish">+</a></div>
+                                <div class="count"><span data-bind="text: count"></span></div>
+                                <div class="dec"><a href="#" data-bind="click: $root.decDish">-</a></div>
+                                <div class="delete"><a href="#" data-bind="click: $root.delete">Удалить</a></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="form_item">
                     <div class="label">Ваше Имя</div>
-                    <div class="input"><input id="userName" type="text" size="60" name="userName"></div>
+                    <div class="input"><input id="userName" type="text" size="60" name="userName" required></div>
                 </div>
                 <div class="form_item">
                     <div class="label">Ваш email для связи</div>
-                    <div class="input"><input id="wmail" type="email" size="60" name="email"></div>
+                    <div class="input"><input id="email" type="email" size="60" name="email" required></div>
                 </div>
 
                 <div class="form_item">
-                    <div class="label">Телефон (для клиентов)</div>
-                    <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone"></div>
+                    <div class="label">Ваш телефон для связи</div>
+                    <div class="input"><input id="cellPhone" type="text" size="60" name="cellPhone" required></div>
                 </div>
+
                 <div class="form_item">
-                    <div class="label">Сотовый (для sms оповещения)</div>
-                    <div class="input"><input type="text" size="20" id="cellPhone" name="cellPhone" required>
-                    </div>
+                    <div class="label">Описание заказа/ваши предпочтения</div>
+                    <div class="input"><input id="description" type="text" size="60" name="description" required></div>
                 </div>
-                <div id="verify" class="form_item" hidden>
-                    <div class="label">Введите код подтверждения</div>
-                    <div class="input"><input id="cellPhoneConfirmation" type="text" size="20" name="token">
-
-                        <input type="button" id="confirm" value="Подтвердить" class="button succes"></div>
-
-                </div>
-
 
                 <div class="form_but">
-                    <input type="submit" value="Сохранить" class="button succes">
-                    <input type="reset" value="Очистить" class="button simple">
+                    <input type="submit" value="Оплатить" class="button succes">
                 </div>
             </form>
         </div>
 
-        <div class="admin_menu" id="admin_menu">
-            <h3>Меню заведения</h3>
-            <div id="tab-container">
-                <ul class="catalog_nav etabs" data-bind="foreach: Categories">
-                    <li data-bind="attr: { class: activeText() } ">
-                        <a data-bind="click: $root.setActiveCategory  ">
-                            <span data-bind="text: Name"></span>
-                        </a>
-                    </li>
-                </ul>
-                <input type="hidden" id="newPhotoTmpUrl" />
-                <div data-bind="foreach: Categories">
-                    <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
-                        <div class="catalog_item">
 
-                            <div class="photo">
-
-                                <!--<form action="/api/upload" enctype="multipart/form-data" method="post" class="uploadForm" data-bind="attr: { id: 'newPhotoForm'+IdName() }">-->
-                                <a href="#" class="addfile">
-                                    <img src="" alt="" width="186" height="131" data-bind="attr: { id: 'newPhotoImage'+IdName() }"></img>
-                                    Фото блюда
-                                    <input class="fileupload" type="file" name="uploads" data-url="/upload" data-bind="attr: { id: 'newPhotoInput'+IdName() }"></a>
-                                <!--</form>-->
-                            </div>
-
-                            <div class="info">
-                                <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: newDishName">
-                                <textarea name="" id="" placeholder="Описание блюда" required data-bind="value: newDishDescription"></textarea>
-                                <input type="text" name="" placeholder="0" id="" class="price" required data-bind="value: newDishPrice"><span class="currency">руб</span>
-                                <div class="week">
-                                    <input type="checkbox" value="AllWeek" data-bind=" attr:{ id: 'nallWeek' + id(), name: 'nallWeek' + id(),checked: newDishDays,  } "><label data-bind="attr:{ for: 'nallweek' + id()  }" class="check">Всю неделю</label>
-                                    <input type="checkbox" value="Mon" data-bind="attr:{ id: 'nmon' + id(), name: 'nmon' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nmon' + id()  }" class="check">Пон</label>
-                                    <input type="checkbox" value="Tue" data-bind="attr:{ id: 'ntue' + id(), name:'ntue' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'ntue' + id()  }" class="check">Втр</label>
-                                    <input type="checkbox" value="Wed" data-bind="attr:{ id: 'nwed' + id(), name:'nwed' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'nwed' + id()  }" class="check">Срд</label>
-                                    <input type="checkbox" value="Thu" data-bind="attr:{ id: 'nthu' + id(), name: 'nthu' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nthu' + id()  }" class="check">Чтв</label>
-                                    <input type="checkbox" value="Fri" data-bind="attr:{ id: 'nfri' + id(), name:'nfri' + id()  },checked: newDishDays"><label data-bind="attr:{ for: 'nfri' + id()  }" class="check">Пят</label>
-                                    <input type="checkbox" value="Sat" data-bind="attr:{ id: 'nsat' + id(), name: 'nsat' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nsat' + id()  }" class="check">Суб</label>
-                                    <input type="checkbox" value="Sun" data-bind="attr:{ id: 'nsun' + id(), name: 'nsun' + id() },checked: newDishDays"><label data-bind="attr:{ for: 'nsun' + id()  }" class="check">Вск</label>
-                                </div>
-                            </div>
-                            <a href="#" class="button succes" data-bind="click: addDish">Добавить</a>
-                        </div>
-                        <div data-bind="foreach: Dishes">
-                            <div class="catalog_item">
-                                <div class="photo">
-                                    <a href="#" class="addfile">
-                                        <img width="186" height="131" data-bind="attr: { id: 'existsPhotoImage'+id(), src: Image() }"></img>
-                                        Фото блюда
-                                        <input class="existsfileupload" type="file" name="uploads" data-url="/uploadExists" data-bind="attr: { id: 'existsPhotoInput'+id() }"></a>
-                                </div>
-                                <div class="info">
-                                    <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: Name">
-                                    <textarea name="" id="" placeholder="Описание блюда" required data-bind="value: Description"></textarea>
-                                    <input type="text" name="" placeholder="0" id="" class="price" required data-bind="value: Price"><span class="currency">руб</span>
-                                    <div class="week">
-                                        <input type="checkbox" value="AllWeek" data-bind=" attr:{ id: 'allWeek' + id(), name: 'allWeek' + id()  },checked: Days"><label data-bind="attr:{ for: 'allweek' + id()  }" class="check">Всю неделю</label>
-                                        <input type="checkbox" value="Mon" data-bind="attr:{ id: 'mon' + id(),name: 'mon' + id()  },checked: Days"><label data-bind="attr:{ for: 'mon' + id()  }" class="check">Пон</label>
-                                        <input type="checkbox" value="Tue" data-bind="attr:{ id: 'tue' + id(),name: 'tue' + id()  },checked: Days"><label data-bind="attr:{ for: 'tue' + id()  }" class="check">Втр</label>
-                                        <input type="checkbox" value="Wed" data-bind="attr:{ id: 'wed' + id(),name: 'wed' + id()  },checked: Days"><label data-bind="attr:{ for: 'wed' + id()  }" class="check">Срд</label>
-                                        <input type="checkbox" value="Thu" data-bind="attr:{ id: 'thu' + id(),name: 'thu' + id()  },checked: Days"><label data-bind="attr:{ for: 'thu' + id()  }" class="check">Чтв</label>
-                                        <input type="checkbox" value="Fri" data-bind="attr:{ id: 'fri' + id(),name: 'fri' + id()  },checked: Days"><label data-bind="attr:{ for: 'fri' + id()  }" class="check">Пят</label>
-                                        <input type="checkbox" value="Sat" data-bind="attr:{ id: 'sat' + id(),name: 'sat' + id()  },checked: Days"><label data-bind="attr:{ for: 'sat' + id()  }" class="check">Суб</label>
-                                        <input type="checkbox" value="Sun" data-bind="attr:{ id: 'sun' + id(),name: 'sun' + id()  },checked: Days"><label data-bind="attr:{ for: 'sun' + id()  }" class="check">Вск</label>
-                                    </div>
-                                </div>
-                                <a href="#" class="delete" data-bind="click: $parent.removeDish"></a>
-                                <a href="#" class="button succes small" data-bind="click: updateDish">Сохранить</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
 </div>

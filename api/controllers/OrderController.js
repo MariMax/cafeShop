@@ -27,7 +27,7 @@ exports.add_routes = function (app) {
                 Dish.getDish(dishId, function (error, dish) {
                     if (error) res.send(error, 404);
                     else
-                        Order.createOrder(cafeId, dishId, count,dish.Price, function (error, order) {
+                        Order.createOrder(cafeId, dishId, count, dish.Price, function (error, order) {
                             if (error)
                                 res.send(error, 404);
                             else {
@@ -35,6 +35,34 @@ exports.add_routes = function (app) {
                             }
                         })
 
+                })
+        })
+    });
+
+    app.get("/api/order/setDish/:orderId/:cafeId/:dishId/:count", function (req, res) {
+        var orderId = req.params.orderId;
+        var cafeId = req.params.cafeId;
+        var dishId = req.params.dishId;
+        var count = req.params.count;
+        Order.getOrder(orderId, function (error, order) {
+            if (error) res.send(error, 404);
+            else if (order._cafe != cafeId) res.send("Заказ не в том кафе", 404); else
+                Cafe.getCafe(cafeId, function (error, cafe) {
+                    if (error) res.send(error, 404);
+                    else
+                        Dish.getDish(dishId, function (error, dish) {
+                            if (error || dish._cafe != cafeId) res.send("Наверное блюдо не из этого кафе", 404);
+                            else
+                                console.log("set order " + orderId + " " + dishId + " " + count)
+                            Order.setOrderDishes(orderId, dishId, count, dish.Price, function (error, order) {
+                                if (error)
+                                    res.send(error, 404);
+                                else {
+                                    res.json(order, 200);
+                                }
+                            })
+
+                        })
                 })
         })
     });
@@ -54,7 +82,7 @@ exports.add_routes = function (app) {
                             if (error || dish._cafe != cafeId) res.send("Наверное блюдо не из этого кафе", 404);
                             else
                                 console.log("set order " + orderId + " " + dishId + " " + count)
-                            Order.setOrderDishes(orderId, dishId, count,dish.Price, function (error, order) {
+                            Order.addOrderDishes(orderId, dishId, count, dish.Price, function (error, order) {
                                 if (error)
                                     res.send(error, 404);
                                 else {
@@ -85,8 +113,11 @@ exports.add_routes = function (app) {
     });
 
     app.post("/api/order/pay", forms.OrderFinalForm, function (req, res) {
+        console.log("order/pay");
         if (req.form.isValid) {
+
             var orderId = req.form.orderId;
+            console.log("form valid orderId: " + orderId);
             Order.setOrderInformation(orderId, req.form, function (error, order) {
                 if (error) res.send(error, 404);
                 else {
@@ -116,10 +147,12 @@ exports.add_routes = function (app) {
                             Dish.getDish(dishId, function (error, dish) {
                                 if (error) res.send(error, 404); else {
                                     messageText += dish.Name + " ";
-                                    if (dish.Price) messageText += dish.price + " ";
+                                    if (dish.Price) messageText += dish.Price + " ";
                                 }
                             })
                         }
+
+                        console.log(messageText+ " " + order.Description);
                         sendSMS(SMSconf, cafe.Phone, messageText + " " + order.Description);
                         sendSMS(SMSconf, order.UserPhone, messageText + " " + order.Description);
                         sendMail(order.Email, conf.site_email, conf.site_name + ': approve order', messageText + " " + order.Description);

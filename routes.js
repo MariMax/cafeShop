@@ -7,6 +7,7 @@ var orderHelper = require('./api/controllers/OrderController.js')
 
 var categoriesHelper = require('./api/controllers/CategoriesController.js')
 var siteCafeHelper = require('./site/controllers/SiteCafeController.js')
+var siteOrderHelper = require('./site/controllers/SiteOrderController.js')
 var siteCommonHelper = require('./site/controllers/SiteCommonController.js')
 
 module.exports = function (app) {
@@ -18,4 +19,5 @@ module.exports = function (app) {
     siteCafeHelper.add_routes(app);
     categoriesHelper.add_routes(app);
     orderHelper.add_routes(app);
+    siteOrderHelper.add_routes(app);
 };

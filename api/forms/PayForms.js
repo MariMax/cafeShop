@@ -8,21 +8,21 @@ OrderFinalForm = form(
         validate("email").required(null, 'please enter email')
         .isEmail('need some email'),
 
-    filter("ordeId").trim(),
-        validate("ordeId")
-        .required(null, 'please enter ordeId'),
+    filter("orderId").trim(),
+        validate("orderId")
+        .required(null, 'please enter orderId'),
 
     filter("userName").trim(),
         validate("userName")
-        .required(null, 'please enter UserName'),
+        .required(null, 'please enter userName'),
 
     filter("cellPhone").trim(),
         validate("cellPhone")
-        .required(null, "please enter CellPhone"),
+        .required(null, "please enter cellPhone"),
 
     filter("description").trim(),
         validate("description")
-        .required(null, 'please enter userId')
+        .required(null, 'please enter description')
 )
 
 
