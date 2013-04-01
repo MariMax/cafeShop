@@ -57,5 +57,6 @@ function AdminViewModel(cafeId) {
 
 if (document.getElementById("cafeId") != null) {
     var cafeId = document.getElementById("cafeId").value;
-    ko.applyBindings(new AdminViewModel(cafeId), document.getElementById("admin_menu"));
+    if (document.getElementById("admin_menu") != null)
+        ko.applyBindings(new AdminViewModel(cafeId), document.getElementById("admin_menu"));
 }
