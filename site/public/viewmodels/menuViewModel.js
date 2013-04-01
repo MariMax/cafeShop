@@ -18,7 +18,9 @@ function MenuViewModel(cafeId) {
 
 
     // Operations
-
+    self.order = function () {
+        $.post("/order/", { "data": self });
+    }
     self.buyDish = function (dish) {
         self.OrderedDishes.push(dish);
     };
@@ -82,5 +84,6 @@ function MenuViewModel(cafeId) {
 
 if (document.getElementById("cafeId") != null) {
     var cafeId = document.getElementById("cafeId").value;
-    ko.applyBindings(new MenuViewModel(cafeId), document.getElementById("cafe_menu_page"));
+    if (document.getElementById("cafe_menu_page") != null)
+        ko.applyBindings(new MenuViewModel(cafeId), document.getElementById("cafe_menu_page"));
 }

@@ -39,7 +39,7 @@
             <div class="basket">
 			Вы выбрали:
                 <a href="#" class="basket_link"><span data-bind="text: OrderedDishes().length"></span> блюда на <span data-bind="text: OrderedDishesPrices()"></span> руб.</a>
-                <a href="#" class="order button big cursiv second">Оформить</a>
+                <a href="#" class="order button big cursiv second" data-bind="click: $root.order">Оформить</a>
             </div>
             <div class="basket_block" data-bind="foreach: OrderedDishes">
                 <div class="item">
