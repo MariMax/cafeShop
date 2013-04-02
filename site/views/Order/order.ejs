@@ -1,0 +1,214 @@
+﻿<% layout('../layout') -%>
+
+<script type="text/javascript">
+    $(function () {
+
+            function postData() {
+            var jqXHR = $.post('/api/order/pay', $('form').serialize())
+            .done(function (data) {
+                //document.location.href = '/order/buy/' + order._id;
+                //Отправить на страницу оплаты как вариант
+            });
+
+
+
+        }
+
+
+        function getCafe(cafeId) {
+
+            var jqXHR = $.get('/api/cafes/' + cafeId)
+               .done(function (cafe) {
+
+
+                       if (cafe.Name)
+                           $('#name').attr('value', cafe.Name);
+                       if (cafe.Address)
+                           $('#Address').attr('value', cafe.Address);
+                       if (cafe.WorkTime)
+                           $('#WorkTime').attr('value', cafe.WorkTime);
+                       if (cafe.ClientPhone)
+                           $('#ClientPhone').attr('value', cafe.ClientPhone);
+                      
+               })
+        }
+
+        function getOrder(orderId) {
+
+            var jqXHR = $.get('/api/order/' + orderId)
+               .done(function (order) {
+                   
+                   getCafe(order._cafe);
+               })
+        }
+        orderId = $('#orderId').val();
+        getOrder(orderId);
+
+
+
+        function isValidPhoneNumber(number) {
+            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
+            return pattern.test(number);
+        }
+
+        $('#cellPhone').blur(function () {
+            var phone = $('#cellPhone').val();
+            if (!isValidPhoneNumber(phone)) {
+                var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+            } else {
+                $("#messenger").html('');
+            }
+        })
+
+        function isValidEmailAddress(emailAddress) {
+            var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+            return pattern.test(emailAddress);
+        }
+
+        $('#email').blur(function () {
+            var email = $('#email').val();
+            if (!isValidEmailAddress(email)) {
+                var err_text = "Введите правильный email";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+            } else {
+                $("#messenger").html('');
+            }
+        })
+
+
+
+        var field = new Array("userName", "cellPhone", "email", "description"); //поля обязательные 
+
+        $("form").submit(function () {// обрабатываем отправку формы  
+            var error = 0; // индекс ошибки
+            $("form").find(":input").each(function () {// проверяем каждое поле в форме
+                for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
+                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
+
+                        if (!$(this).val()) {// если в поле пустое
+                            // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
+                            error = 1; // определяем индекс ошибки       
+
+                        }
+                        else {
+                            // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
+                        }
+
+                    }
+                }
+            })
+
+            var phone = $("#cellPhone").val();
+            if (!isValidPhoneNumber(phone)) {
+                error = 2;
+            }
+             var email = $("#email").val();
+            if (!isValidEmailAddress(email)) {
+                error = 3;
+            }
+
+            debugger;
+            if (error == 0) { // если ошибок нет то отправляем данные
+                postData();
+                return false;
+            }
+            else {
+                if (error == 1) var err_text = "Необходимо ввести свое имя";
+                 if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                 if (error == 3) var err_text = "Введите правильный email";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+                return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
+            }
+
+
+
+        })
+
+    });
+
+</script>
+
+
+<div class="admin_page" id="admin_page">
+    <div class="admin_title page_title_block">
+        <h1>Оформление заказа</h1>
+        <div class="border_wave_bot"></div>
+    </div>
+
+    <div class="admin_content">
+        <div class="admin_info">
+            <h3>Информация</h3>
+            <form method="post" action="" class="horizontal">
+                <div id="messenger" class="messenger">
+                </div>
+                <div class="form_item">
+                    <div class="label">Название кафе/ресторана</div>
+                    
+                    <input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden>
+                    <div class="input"><input id="name" type="text" size="60" name="name" disabled></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Адрес</div>
+                    <div class="input"><input id="Address" type="text" size="60" name="Address" disabled></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Телефон</div>
+                    <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone" disabled></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Время работы</div>
+                    <div class="input"><input id="WorkTime" type="text" size="60" name="WorkTime" disabled></div>
+                </div>
+
+                <div class="cafe_page" id="order_page">
+                    <div class="form_item">
+                        <div class="label">Ваш Заказ</div>
+                        <div class="basket_block" data-bind="foreach: OrderedDishes">
+                            <div class="item">
+                                <h3><span data-bind="text: Name"></span></h3>
+                                <div class="price"><span data-bind="text: price"></span></div>
+                                <div class="add"><a href="#" data-bind="click: $root.addDish">+</a></div>
+                                <div class="count"><span data-bind="text: count"></span></div>
+                                <div class="dec"><a href="#" data-bind="click: $root.decDish">-</a></div>
+                                <div class="delete"><a href="#" data-bind="click: $root.delete">Удалить</a></div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form_item">
+                    <div class="label">Ваше Имя</div>
+                    <div class="input"><input id="userName" type="text" size="60" name="userName" required></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Ваш email для связи</div>
+                    <div class="input"><input id="email" type="email" size="60" name="email" required></div>
+                </div>
+
+                <div class="form_item">
+                    <div class="label">Ваш телефон для связи</div>
+                    <div class="input"><input id="cellPhone" type="text" size="60" name="cellPhone" required></div>
+                </div>
+
+                <div class="form_item">
+                    <div class="label">Описание заказа/ваши предпочтения</div>
+                    <div class="input"><input id="description" type="text" size="60" name="description" required></div>
+                </div>
+
+                <div class="form_but">
+                    <input type="submit" value="Оплатить" class="button succes">
+                </div>
+            </form>
+        </div>
+
+
+    </div>
+
+</div>
+
