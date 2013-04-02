@@ -1,68 +1,69 @@
 ﻿<% layout('../layout') -%>
 
+ <div class="content">
 <script type="text/javascript">
-      $(function () {
-    
-          $('.fileupload').fileupload({ dataType: 'json',
-              done: function (e, data) {
-                  //var newId = "#" + e.target.id.replace("newPhotoInput", "newPhoto");
-                  //$(newId).attr("style", "background:#fff url(\"" + data.result[0].url + "\") no-repeat center 25%;");
-                  var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
-                  $(newId).attr("src",  data.result[0].url);
-                  $("#newPhotoTmpUrl").val(data.result[0].url);
-              }
-          });
-    
-          //$('.fileupload').change(function (e) {
-          //    if ($(this).val() == '' || /^\s+$/.test($(this).val())) return false;
-          //    else {
-          //        var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoForm");
-          //        postImageToServer($(newId),e);
-          //    }
-          //    return false;
-          //});
-    
-    //      //function postImageToServer(form,e) {
-          //    form.ajaxSubmit({
-          //        success: function (response) {
-          //            debugger;
-          //            var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
-          //            $(newId).attr("src", "/uploads/"+response);
-          //        }
-          //    });
-          //};
-          //    $('#uploadForm').submit(function() {
-          //    status('uploading the file ...');
-          //
-          //    $(this).ajaxSubmit({                                                                                                                 
-          //
-          //        error: function(xhr) {
-          //    status('Error: ' + xhr.status);
-          //        },
-          //
-          //        success: function(response) {
-          //    //TODO: We will fill this in later
-          //        }
-          //});
-    
-          // Have to stop the form from submitting and causing                                                                                                       
-          // a page refresh - don't forget this                                                                                                                      
-    
-    
-          //$('#userPhotoInput').change(function (e) {
-          //    e.preventDefault();
-          //    //nothing to do if the upload field is null
-          //    if ($(this).val() == '' || /^\s+$/.test($(this).val())returnfalse;
-          //    else $('#uploadForm').submit();
-          //    return false;
-          //});
-    
-    
-          function getCafe() {
-              var cafeId = $('#cafeId').val();
-              var jqXHR = $.get('/api/cafes/' + cafeId)
+    $(function () {
+
+        $('.fileupload').fileupload({ dataType: 'json',
+            done: function (e, data) {
+                //var newId = "#" + e.target.id.replace("newPhotoInput", "newPhoto");
+                //$(newId).attr("style", "background:#fff url(\"" + data.result[0].url + "\") no-repeat center 25%;");
+                var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
+                $(newId).attr("src", data.result[0].url);
+                $("#newPhotoTmpUrl").val(data.result[0].url);
+            }
+        });
+
+        //$('.fileupload').change(function (e) {
+        //    if ($(this).val() == '' || /^\s+$/.test($(this).val())) return false;
+        //    else {
+        //        var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoForm");
+        //        postImageToServer($(newId),e);
+        //    }
+        //    return false;
+        //});
+
+        //      //function postImageToServer(form,e) {
+        //    form.ajaxSubmit({
+        //        success: function (response) {
+        //            debugger;
+        //            var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
+        //            $(newId).attr("src", "/uploads/"+response);
+        //        }
+        //    });
+        //};
+        //    $('#uploadForm').submit(function() {
+        //    status('uploading the file ...');
+        //
+        //    $(this).ajaxSubmit({                                                                                                                 
+        //
+        //        error: function(xhr) {
+        //    status('Error: ' + xhr.status);
+        //        },
+        //
+        //        success: function(response) {
+        //    //TODO: We will fill this in later
+        //        }
+        //});
+
+        // Have to stop the form from submitting and causing                                                                                                       
+        // a page refresh - don't forget this                                                                                                                      
+
+
+        //$('#userPhotoInput').change(function (e) {
+        //    e.preventDefault();
+        //    //nothing to do if the upload field is null
+        //    if ($(this).val() == '' || /^\s+$/.test($(this).val())returnfalse;
+        //    else $('#uploadForm').submit();
+        //    return false;
+        //});
+
+
+        function getCafe() {
+            var cafeId = $('#cafeId').val();
+            var jqXHR = $.get('/api/cafes/' + cafeId)
                  .done(function (cafe) {
-    
+
                      if (cafe) {
                          if (cafe.Name)
                              $('#name').attr('value', cafe.Name);
@@ -79,12 +80,12 @@
                          }
                      } else document.location.href = '/cafes/newcafe'; //а куда деваться если мы не нашли кафе, его надо создать
                  })
-          }
-          getCafe();
-    
-          function postData() {
-    
-              var jqXHR = $.post('/api/cafes/updateValues', $('form').serialize())
+        }
+        getCafe();
+
+        function postData() {
+
+            var jqXHR = $.post('/api/cafes/updateValues', $('form').serialize())
                  .done(function (data) {
                      if (data.status == 200) {
                          $("#messenger").html(data.message);
@@ -98,13 +99,13 @@
                          $("#messenger").fadeIn("slow");
                      }
                  });
-          }
-    
-          function updatePhone() {
-    
-              var jqXHR = $.post('/api/cafes/updateCellPhone', $('form').serialize())
+        }
+
+        function updatePhone() {
+
+            var jqXHR = $.post('/api/cafes/updateCellPhone', $('form').serialize())
                  .done(function (data) {
-    
+
                      if (data.status == 200) {
                          $("#messenger").html(data.message);
                          console.log("done " + data.message);
@@ -117,10 +118,10 @@
                          $("#messenger").fadeIn("slow");
                      }
                  });
-          }
-          function confirmCellPhone() {
-    
-              var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
+        }
+        function confirmCellPhone() {
+
+            var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
                  .done(function (data) {
                      if (data.status == 200) {
                          $("#messenger").html(data.message.message);
@@ -128,7 +129,7 @@
                          $("#messenger").fadeIn("slow");
                          var cafeId = data.message.cafeId;
                          var delay = 2000;
-                         setTimeout(document.location.href = '/cafe/'+cafeId+'/admin/', delay);
+                         setTimeout(document.location.href = '/cafe/' + cafeId + '/admin/', delay);
                      }
                      if (data.status == 500) {
                          $("#messenger").html(data.message);
@@ -136,101 +137,102 @@
                          $("#messenger").fadeIn("slow");
                      }
                  });
-    
-          }
-    
-          function isValidPhoneNumber(number) {
-              var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
-              return pattern.test(number);
-          }
-    
-          $('#cellPhone').blur(function () {
-              var phone = $('#cellPhone').val();
-              if (!isValidPhoneNumber(phone)) {
-                  var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
-                  $("#messenger").html(err_text);
-                  $("#messenger").fadeIn("slow");
-              } else {
-                  $("#messenger").html('');
-                  updatePhone();
-              }
-          })
-    
-          $('#confirm').click(function () {
-              var code = $('#cellPhoneConfirmation').val();
-              if (!code) {
-                  var err_text = "Введите код подтверждения";
-                  $("#messenger").html(err_text);
-                  $("#messenger").fadeIn("slow");
-              } else { confirmCellPhone(); }
-          })
-    
-          var field = new Array("Name", "cellPhone"); //поля обязательные 
-    
-          $("form").submit(function () {// обрабатываем отправку формы  
-              var error = 0; // индекс ошибки
-              $("form").find(":input").each(function () {// проверяем каждое поле в форме
-                  for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
-                      if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
-    
-                          if (!$(this).val()) {// если в поле пустое
-                              // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
-                              error = 1; // определяем индекс ошибки       
-    
-                          }
-                          else {
-                              // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
-                          }
-    
-                      }
-                  }
-              })
-    
-              if (error == 0) { // если ошибок нет то отправляем данные
-                  postData();
-                  return false;
-              }
-              else {
-                  if (error == 1) var err_text = "Необходимо ввести название кафе";
-                  // if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
-                  $("#messenger").html(err_text);
-                  $("#messenger").fadeIn("slow");
-                  return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
-              }
-    
-    
-    
-          })
-    
-          var longitude = $('#Longitude');
-          var latitude = $('#Latitude');
-          var addressInput = $('#Address');
-          addressInput.keyup(function () {
-              var address = addressInput.val();
-              $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
+
+        }
+
+        function isValidPhoneNumber(number) {
+            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
+            return pattern.test(number);
+        }
+
+        $('#cellPhone').blur(function () {
+            var phone = $('#cellPhone').val();
+            if (!isValidPhoneNumber(phone)) {
+                var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+            } else {
+                $("#messenger").html('');
+                updatePhone();
+            }
+        })
+
+        $('#confirm').click(function () {
+            var code = $('#cellPhoneConfirmation').val();
+            if (!code) {
+                var err_text = "Введите код подтверждения";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+            } else { confirmCellPhone(); }
+        })
+
+        var field = new Array("Name", "cellPhone"); //поля обязательные 
+
+        $("form").submit(function () {// обрабатываем отправку формы  
+            var error = 0; // индекс ошибки
+            $("form").find(":input").each(function () {// проверяем каждое поле в форме
+                for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
+                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
+
+                        if (!$(this).val()) {// если в поле пустое
+                            // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
+                            error = 1; // определяем индекс ошибки       
+
+                        }
+                        else {
+                            // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
+                        }
+
+                    }
+                }
+            })
+
+            if (error == 0) { // если ошибок нет то отправляем данные
+                postData();
+                return false;
+            }
+            else {
+                if (error == 1) var err_text = "Необходимо ввести название кафе";
+                // if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                $("#messenger").html(err_text);
+                $("#messenger").fadeIn("slow");
+                return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
+            }
+
+
+
+        })
+
+        var longitude = $('#Longitude');
+        var latitude = $('#Latitude');
+        var addressInput = $('#Address');
+        addressInput.keyup(function () {
+            var address = addressInput.val();
+            $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
                      done(function (data) {
                          var ar = data.response.GeoObjectCollection.featureMember;
-    
+
                          if (ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'house') {
                              var b = ar[0].GeoObject.Point.pos;
                              var temp = new Array();
                              temp = b.split(' ');
                              longitude.attr('value', temp[0]);
                              latitude.attr('value', temp[1]);
-                             addressInput.attr('value', ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description)
-                         }
+                             addressInput.attr('value', ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description);
+                             addressInput.attr('class', 'succes')
+                         } else {addressInput.attr('class', '') }
                          console.log(ar.length);
                          console.log("_______Start_________");
                          for (var key in ar) {
                              var val = ar[key];
-    
+
                              console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind + ' ' + val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
                          }
                          console.log("________end_________");
                      })
-          })
-      });
-    
+        })
+    });
+
 </script>
 
 
@@ -308,9 +310,9 @@
                             <div class="photo">
 
                                 <!--<form action="/api/upload" enctype="multipart/form-data" method="post" class="uploadForm" data-bind="attr: { id: 'newPhotoForm'+IdName() }">-->
-                                <a href="#" class="addfile">
+                                <a href="#" class="addfile">Фото блюда
                                     <img src="" alt="" width="186" height="131" data-bind="attr: { id: 'newPhotoImage'+IdName() }"></img>
-                                    Фото блюда
+                                    
                                     <input class="fileupload" type="file" name="uploads" data-url="/upload" data-bind="attr: { id: 'newPhotoInput'+IdName() }"></a>
                                 <!--</form>-->
                             </div>
@@ -367,3 +369,4 @@
 
 </div>
 
+</div>
