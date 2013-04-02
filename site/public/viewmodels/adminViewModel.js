@@ -1,25 +1,26 @@
 
 function AdminViewModel(cafeId) {
     var self = this;
+    self.cafeId = cafeId;
     self.Categories = ko.observableArray([]);
 
 
     // Operations
     $.ajax(
     {
-        url: "/api/cafes/" + cafeId + "/category",
+        url: "/api/cafes/" + self.cafeId + "/category",
         type: "GET",
         async: false
     }).done(function (allData) {
         var first = true;
         $.each(allData, function (index, value) {
             $.ajax({
-                url: "/api/cafe/" + cafeId + "/category/" + value._id + "/dishes",
+                url: "/api/cafe/" + self.cafeId + "/category/" + value._id + "/dishes",
                 type: "GET",
                 async: false
             }).done(function (allData) {
                 var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
-                var category = new Category(value);
+                var category = new Category(value, self.cafeId);
                 category.Dishes(mappedDishes);
                 category.active(first);
                 if (first)

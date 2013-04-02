@@ -20,7 +20,9 @@ function Dish(data) {
     }
 
     self.updateDish = function (dish) {
+        debugger;
         var url = "/api/dishes/" + this.id();
+        dish.Image = $('#newPhotoTmpUrl').val();
         var jsonData = ko.toJSON(dish);
         $.ajax(url, {
             data: jsonData,
@@ -34,6 +36,8 @@ function Dish(data) {
             }
         });
     };
+
+
 
     self.uploadImage = function () {
 

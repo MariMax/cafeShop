@@ -4,7 +4,7 @@
 
 <div class="cafe_page" id="cafe_menu_page">
     <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
-    <div class="cafe_info">
+    <div class="cafe_info page_title_block">
         <div class="cafe_name"><span data-bind="text: CafeName"></span></div>
         <div class="cafe_tip"><span data-bind="text: CafeWorkTime"></span></div>
         <div class="cafe_address"><a href="#"><span data-bind="text: CafeAddress"></span></a></div>
@@ -20,12 +20,12 @@
             </li>
         </ul>
         <div data-bind="foreach: Categories">
-            <div data-bind="attr: { id: IdName , class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
+            <div data-bind="attr: { id: IdName , class: active() ? 'catalog clearfix active':'catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
                 <div data-bind="foreach: Dishes">
                     <div class="catalog_item">
                         <div class="img"><img data-bind="attr: { src: Image(), alt: Name() }" width="186" height="131"></div>
                         <h3><span data-bind="text: Name"></span></h3>
-                        <div class="price"><span data-bind="text: Price"></span></div>
+                        <div class="price"><span data-bind="text: Price"></span> р.</div>
                         <div class="buy">
                             <a href="#" data-bind="click: $root.buyDish">заказать</a>
                         </div>
