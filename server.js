@@ -11,7 +11,9 @@ uploadsDir = __dirname + "\\site\\public\\uploads\\";
 thumbnailDir = __dirname + "\\site\\public\\uploads\\thumbnail\\";
 
 var MongoStore = require('connect-mongo')(express),
-    mongo = require('mongoose');
+    mongoose = require('mongoose');
+
+
 
 //var path = require('path');
 
@@ -62,6 +64,8 @@ else {
     console.log('Не удалось загрузить настройки');
 }
 
+
+
 // configure upload middleware
 upload.configure({
     tmpDir: __dirname + '/site/tmp',
@@ -83,21 +87,33 @@ upload.configure({
     }
 });
 
+// Connect
+// Ensure safe writes
+var mongoOptions = { db: { safe: true} };
+mongoose.connect(conf.mongoConnection, mongoOptions, function (err, res) {
+    if (err) {
+        console.log('ERROR connecting to: ' + conf.mongoConnection + '. ' + err);
+    } else {
+        console.log('Succeeded connected to: ' + conf.mongoConnection);
+    }
+});
+
 
 app.use('/upload', upload.fileHandler());
 //upload.on('end', function (fileInfo) {
-//    var src1 = __dirname + '\\site\\public\\uploads\\' + fileInfo.name;
-//    var dst1 = __dirname + '\\site\\public\\uploads\\thumbnail\\' + fileInfo.name;
-//    console.log(src1);
-//    console.log(dst1);
-//    im.resize({
-//        srcPath: src1,
-//        dstPath: dst1,
-//        width: 256
-//    }, function (err, stdout, stderr) {
-//        if (err) throw err;
-//        console.log('resized kittens.jpg to fit within 256x256px');
-//    });
+//    console.log('resized kittens.jpg to fit within 256x256px');
+//    //var src1 = __dirname + '\\site\\public\\uploads\\' + fileInfo.name;
+//    //var dst1 = __dirname + '\\site\\public\\uploads\\thumbnail\\' + fileInfo.name;
+//    //console.log(src1);
+//    //console.log(dst1);
+//    //im.resize({
+//    //    srcPath: src1,
+//    //    dstPath: dst1,
+//    //    width: 256
+//    //}, function (err, stdout, stderr) {
+//    //    if (err) throw err;
+//    //    console.log('resized kittens.jpg to fit within 256x256px');
+//    //});
 //});
 app.use(express.cookieParser());
 app.use(express.bodyParser());

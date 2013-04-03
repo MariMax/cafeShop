@@ -12,8 +12,28 @@ function Category(data, cafeId) {
             return 'active';
         return '';
     });
-    self.showAdded = ko.observable(false);
-    self.hideAdded = ko.observable(false);
+
+    self.Message = ko.observable("");
+    self.showOk = ko.observable(false);
+    self.showError = ko.observable(false);
+
+    self.hideOk = ko.computed(self.showOk).extend({ throttle: 1000 });
+    self.hideOk.subscribe(function (val) {
+        if (val) {
+            self.showOk(false);
+            self.Message("");
+
+        }
+    }, self);
+    self.hideError = ko.computed(self.showError).extend({ throttle: 1000 });
+    self.hideError.subscribe(function (val) {
+        if (val) {
+            self.showError(false);
+            self.Message("");
+
+        }
+    }, self);
+
     self.newDishName = ko.observable();
     self.newDishDescription = ko.observable();
     self.newDishPrice = ko.observable();
@@ -21,27 +41,10 @@ function Category(data, cafeId) {
 
     self.addDish = function (data) {
         var dish = new Dish({ Name: this.newDishName(), Description: this.newDishDescription(), Price: this.newDishPrice(), Days: this.newDishDays(), Image: $('#newPhotoTmpUrl').val() });
-        //var url = "/api/cafe/" + cafeId + "/category/" + this.id() + "/dishes";
-        //var jsonData = ko.toJSON(dish);
-        //$.ajax(url, {
-        //    data: jsonData,
-        //    type: "post", contentType: "application/json",
-        //    success: function (data) {
-        //        $('#newPhotoTmpUrl').val("")
-        //        $('#newPhotoImage' + self.IdName()).attr("src", "");
-        //        alert(data);
-        //    },
-        //    error: function (result) {
-        //        console.log(result);
-        //    }
-        //});
         self.Dishes.push(dish);
-        //self.newDishName("");
-        //self.newDishDescription("");
-        //self.newDishPrice("");
     };
-    self.addDishToDb = function (data) {
-        var dish = new Dish({ Name: data.Name(), Description: data.Description(), Price: data.Price(), Days: data.Days(), Image: data.Image() });
+    self.addDishToDb = function (dishData) {
+        var dish = new Dish({ Name: dishData.Name(), Description: dishData.Description(), Price: dishData.Price(), Days: dishData.Days(), Image: dishData.Image() });
         var url = "/api/cafe/" + self.cafeId + "/category/" + self.id() + "/dishes";
         var jsonData = ko.toJSON(dish);
         $.ajax(url, {
@@ -49,11 +52,14 @@ function Category(data, cafeId) {
             type: "post", contentType: "application/json",
             success: function (data) {
                 $('#newPhotoTmpUrl').val("")
-                self.showAdded(true);
-                self.showAdded(ko.computed(self.hideAdded).extend({ throttle: 500 }));
+                self.Message("Блюдо добавлено");
+                self.showOk(true);
+                dishData.id(data.id._id);
+
             },
             error: function (result) {
-                debugger;
+                self.Message("Ошибка при добавлении");
+                self.showError(true);
                 console.log(result);
             }
         });
@@ -67,9 +73,12 @@ function Category(data, cafeId) {
             data: jsonData,
             type: "delete", contentType: "application/json",
             success: function (data) {
-                alert(data);
+                self.Message("Блюдо удалено");
+                self.showOk(true);
             },
             error: function (result) {
+                self.Message("Ошибка при удалении");
+                self.showError(true);
                 console.log(result);
             }
         });
