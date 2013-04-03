@@ -57,6 +57,7 @@ dishSchema.statics.updateDish = function (dishId, data, cb) {
     if (data.Description && data.Description != '') newdata.Description = data.Description;
     if (data.Price && data.Price > 0) newdata.Price = data.Price;
     if (data.Days) newdata.Days = data.Days;
+    if (data.Image) newdata.Image = data.Image;
 
     this.findByIdAndUpdate(dishId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
         if (error) {
