@@ -4,6 +4,8 @@ function AdminViewModel(cafeId) {
     self.cafeId = cafeId;
     self.Categories = ko.observableArray([]);
 
+    
+
 
     // Operations
     $.ajax(

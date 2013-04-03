@@ -7,17 +7,6 @@ var mongoose = require('mongoose')
 mongoTypes.loadTypes(mongoose, 'email');
 
 
-// Ensure safe writes
-var mongoOptions = { db: { safe: true} };
-// Connect
-mongoose.connect(conf.mongoConnection, mongoOptions, function (err, res) {
-    if (err) {
-        console.log('ERROR connecting to: ' + conf.mongoConnection + '. ' + err);
-    } else {
-        console.log('Succeeded connected to: ' + conf.mongoConnection);
-    }
-});
-
 var Schema = mongoose.Schema
     , ObjectId = Schema.ObjectId;
 

@@ -2,18 +2,9 @@ var mongoose = require('mongoose')
     ,Schema = mongoose.Schema
     ,ObjectId = Schema.ObjectId;
 
-// Ensure safe writes
-var mongoOptions = { db: { safe: true} };
 
 
-// Connect
-mongoose.connect(conf.mongoConnection, mongoOptions, function (err, res) {
-    if (err) {
-        console.log('ERROR connecting to: ' + conf.mongoConnection + '. ' + err);
-    } else {
-        console.log('Succeeded connected to: ' + conf.mongoConnection); 
-    }
-});
+
 
 function required(val) { return val && val.length; }
 
@@ -39,7 +30,7 @@ menuSchema.statics.newMenu = function (cafeId, data, cb) {
         else {
             cb(null,instance);
         }
-        //mongoose.connection.close()
+
     });
 };
 

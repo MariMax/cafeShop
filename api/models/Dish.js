@@ -9,15 +9,6 @@ var mongoose = require('mongoose')
 //// Ensure safe writes
 //var mongoOptions = { db: { safe: true} };
 
-//// Connect
-//mongoose.connect(uristring, mongoOptions, function (err, res) {
-//    if (err) {
-//        console.log('ERROR connecting to: ' + uristring + '. ' + err);
-//    } else {
-//        console.log('Succeeded connected to: ' + uristring);
-//    }
-//});
-
 var dishSchema = new Schema({
     _cafe: ObjectId, // { type: ObjectId, ref: 'Cafe' },
     Name: String,
@@ -45,7 +36,6 @@ dishSchema.statics.newDish = function (cafeId, categoryId, data, cb, err) {
         else {
             cb(data);
         }
-        mongoose.connection.close()
     });
 };
 
