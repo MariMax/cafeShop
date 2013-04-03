@@ -1,135 +1,5 @@
 ﻿<% layout('../layout') -%>
-<script type="text/javascript">
-    $(function () {
-    
-            function postData() {
-            var jqXHR = $.post('/api/order/pay', $('form').serialize())
-            .done(function (data) {
-                //document.location.href = '/order/buy/' + order._id;
-                //Отправить на страницу оплаты как вариант
-            });
-    
-    
-    
-        }
-    
-    
-        function getCafe(cafeId) {
-    
-            var jqXHR = $.get('/api/cafes/' + cafeId)
-               .done(function (cafe) {
-    
-    
-                       if (cafe.Name)
-                           $('#name').attr('value', cafe.Name);
-                       if (cafe.Address)
-                           $('#Address').attr('value', cafe.Address);
-                       if (cafe.WorkTime)
-                           $('#WorkTime').attr('value', cafe.WorkTime);
-                       if (cafe.ClientPhone)
-                           $('#ClientPhone').attr('value', cafe.ClientPhone);
-    
-               })
-        }
-    
-        function getOrder(orderId) {
-    
-            var jqXHR = $.get('/api/order/' + orderId)
-               .done(function (order) {
-    
-                   getCafe(order._cafe);
-               })
-        }
-        orderId = $('#orderId').val();
-        getOrder(orderId);
-    
-    
-    
-        function isValidPhoneNumber(number) {
-            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
-            return pattern.test(number);
-        }
-    
-        $('#cellPhone').blur(function () {
-            var phone = $('#cellPhone').val();
-            if (!isValidPhoneNumber(phone)) {
-                var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
-                $("#messenger").html(err_text);
-                $("#messenger").fadeIn("slow");
-            } else {
-                $("#messenger").html('');
-            }
-        })
-    
-        function isValidEmailAddress(emailAddress) {
-            var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-            return pattern.test(emailAddress);
-        }
-    
-        $('#email').blur(function () {
-            var email = $('#email').val();
-            if (!isValidEmailAddress(email)) {
-                var err_text = "Введите правильный email";
-                $("#messenger").html(err_text);
-                $("#messenger").fadeIn("slow");
-            } else {
-                $("#messenger").html('');
-            }
-        })
-    
-    
-    
-        var field = new Array("userName", "cellPhone", "email", "description"); //поля обязательные 
-    
-        $("form").submit(function () {// обрабатываем отправку формы  
-            var error = 0; // индекс ошибки
-            $("form").find(":input").each(function () {// проверяем каждое поле в форме
-                for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
-                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
-    
-                        if (!$(this).val()) {// если в поле пустое
-                            // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
-                            error = 1; // определяем индекс ошибки       
-    
-                        }
-                        else {
-                            // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
-                        }
-    
-                    }
-                }
-            })
-    
-            var phone = $("#cellPhone").val();
-            if (!isValidPhoneNumber(phone)) {
-                error = 2;
-            }
-             var email = $("#email").val();
-            if (!isValidEmailAddress(email)) {
-                error = 3;
-            }
-    
-            debugger;
-            if (error == 0) { // если ошибок нет то отправляем данные
-                postData();
-                return false;
-            }
-            else {
-                if (error == 1) var err_text = "Необходимо ввести свое имя";
-                 if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
-                 if (error == 3) var err_text = "Введите правильный email";
-                $("#messenger").html(err_text);
-                $("#messenger").fadeIn("slow");
-                return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
-            }
-    
-    
-    
-        })
-    
-    });
-    
-</script>
+
 <div class="page_title_block">
     <h1>Оформление заказа</h1>
     <div class="border_wave_bot"></div>
@@ -137,21 +7,20 @@
 
 
 
-<div class="order_page">
+<div id="order_page" class="order_page">
     <div><input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
-
-    <div class="order_info">
-        <div class="info_item"><label>Название кафе</label> <input type="text" name="name" id="name" disabled></div>
-        <div class="info_item"><label>Адрес</label> <input type="text" name="Address" id="Address" disabled></div>
-        <div class="info_item"><label>Телефон</label> <input type="text" name="ClientPhone" id="ClientPhone" disabled></div>
-        <div class="info_item"><label>Время работы</label> <input type="text" name="WorkTime" id="WorkTime" disabled></div>
-
-
-
+    <div class="cafe_page" id="cafe_menu_page">
+    <div class="cafe_info page_title_block">
+        <div class="cafe_name"><span data-bind="text: CafeName"></span></div>
+        <div class="cafe_tip"><span data-bind="text: CafeWorkTime"></span></div>
+        <div class="cafe_address"><a href="#"><span data-bind="text: CafeAddress"></span></a></div>
+        <div class="cafe_tel"><span data-bind="text: CafePhone"></span></div>
+        <div class="border_wave_bot"></div>
     </div>
+        </div>
 
 
-    <div id="order_page">
+
         <div class="basket_block" data-bind="foreach: lines">
             <div class="item">
                 <div class="img"><img data-bind="attr: { src: product().Image, alt: product().Name }"></div>
@@ -167,20 +36,23 @@
             </div>
         </div>
         <div class="order_total">Итого: <b><span data-bind="text: Total()"></span> р.</b></div>
-    </div>
+    
 
 
-    <form>
-        <div id="messenger" class="messenger">
+
+        <div id="messenger" class="messenger" data-bind='text: hasErrorMessage()'>
+
         </div>
 
         <div class="order_info">
 
-            <div class="info_item"><label>Ваше имя</label> <input type="text" name="userName" id="userName"></div>
-            <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone"></div>
-            <div class="info_item"><label>Ваш e-mail для связи</label> <input type="text" name="email" id="email"></div>
-            <div class="info_item"><label>Описание заказа</label> <input type="text" name="description" id="description"></div>
-            <div class="info_item time">Приготовить заказ к <input type="text" name="" id="" value="13">:<input type="text" name="" id="" value="10"> ч</div>
+            <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'">
+            
+            </div>
+            <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'"></div>
+            <div class="info_item"><label>Ваш e-mail для связи</label> <input type="text" name="email" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'"></div>
+            <div class="info_item"><label>Описание заказа</label> <input type="text" name="" id="" data-bind="value: description,valueUpdate: 'afterkeydown'"></div>
+            <div class="info_item time">Приготовить заказ к <input type="text" name="" id="" data-bind="value: hour">:<input type="text" name="" id="" data-bind="value: minute"> ч</div>
 
 
         </div>
@@ -188,13 +60,12 @@
 
         <div class="buttons">
             <div class="form_but">
-                <input type="submit" value="Перейти к оплате" class="button big succes">
+                <input type="submit" value="Перейти к оплате" class="button big succes" data-bind="click: $root.order">
             </div>
         </div>
 
 
-    </form>
-
+    
 </div>
 
 

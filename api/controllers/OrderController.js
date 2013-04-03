@@ -51,16 +51,18 @@ exports.add_routes = function (app) {
                     if (error) res.send(error, 404);
                     else
                         Dish.getDish(dishId, function (error, dish) {
+                           
                             if (error || dish._cafe != cafeId) res.send("Наверное блюдо не из этого кафе", 404);
-                            else
-                                console.log("set order " + orderId + " " + dishId + " " + count)
-                            Order.setOrderDishes(orderId, dishId, count, dish.Price, function (error, order) {
-                                if (error)
-                                    res.send(error, 404);
-                                else {
-                                    res.json(order, 200);
-                                }
-                            })
+                            else {
+                                console.log("set order " + orderId + " " + dishId + " " + count )
+                                Order.setOrderDishes(orderId, dishId, count, dish.Price, function (error, order) {
+                                    if (error)
+                                        res.send(error, 404);
+                                    else {
+                                        res.json(order, 200);
+                                    }
+                                })
+                            }
 
                         })
                 })
@@ -152,7 +154,7 @@ exports.add_routes = function (app) {
                             })
                         }
 
-                        console.log(messageText+ " " + order.Description);
+                        console.log(messageText + " " + order.Description);
                         sendSMS(SMSconf, cafe.Phone, messageText + " " + order.Description);
                         sendSMS(SMSconf, order.UserPhone, messageText + " " + order.Description);
                         sendMail(order.Email, conf.site_email, conf.site_name + ': approve order', messageText + " " + order.Description);
