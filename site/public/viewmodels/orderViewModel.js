@@ -1,30 +1,26 @@
-
-
-function OrderViewModel(orderId) {
-
+var CartLine = function(dish, count) {
     var self = this;
-    self.OrderId = orderId
-    self.OrderedDishes = ko.observableArray([]);
-    self.Total =  ko.computed(function () {
+    
+    self.product = ko.observable(dish);
+    self.quantity = ko.observable(count);
+    self.subtotal = ko.computed(function() {
+        return self.product() ? self.product().Price * parseInt("0" + self.quantity(), 10) : 0;
+    });
+ 
+};
+var Cart = function(orderId) {
+    // Stores an array of lines, and from these, can work out the grandTotal
+    var self = this;
+    self.lines = ko.observableArray(); // Put one line in by default
+    self.Total = ko.computed(function() {
         var total = 0;
-        ko.utils.arrayForEach(self.OrderedDishes(), function (dish) {
-            
-            total += dish.price;
-        })
-
+        $.each(self.lines(), function() { total += this.subtotal() })
         return total;
     });
-    self.addDish = function (dish) {
-
-
-        debugger;
-        self.OrderedDishes[0].count++;
-
-
-    };
-    
-
-    $.getJSON('/api/order/' + orderId, function (order) {
+ 
+    // Operations
+        
+        $.getJSON('/api/order/' + orderId, function (order) {
         ko.utils.arrayForEach(order.Dishes, function (dish) {
             $.ajax({
                 url: "/api/dishes/" + dish.dishId,
@@ -32,16 +28,15 @@ function OrderViewModel(orderId) {
                 async: false
             }).done(function (b_dish) {
                 
-                self.OrderedDishes.push({ dish: b_dish, count: dish.count, price:b_dish.Price*dish.count });
+                self.lines.push(new CartLine(b_dish,dish.count));
             });
 
         });
     });
-
-}
+};
 
 if (document.getElementById("orderId") != null) {
     var orderId = document.getElementById("orderId").value;
     if (document.getElementById("order_page") != null)
-        ko.applyBindings(new OrderViewModel(orderId), document.getElementById("order_page"));
+        ko.applyBindings(new Cart(orderId), document.getElementById("order_page"));
 }

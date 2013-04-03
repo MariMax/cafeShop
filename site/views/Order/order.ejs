@@ -1,5 +1,4 @@
 ﻿<% layout('../layout') -%>
- <div class="content">
 <script type="text/javascript">
     $(function () {
     
@@ -131,74 +130,74 @@
     });
     
 </script>
+<div class="page_title_block">
+    <h1>Оформление заказа</h1>
+    <div class="border_wave_bot"></div>
+</div>
 
 
 
+<div class="order_page">
+    <div><input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
+
+    <div class="order_info">
+        <div class="info_item"><label>Название кафе</label> <input type="text" name="name" id="name" disabled></div>
+        <div class="info_item"><label>Адрес</label> <input type="text" name="Address" id="Address" disabled></div>
+        <div class="info_item"><label>Телефон</label> <input type="text" name="ClientPhone" id="ClientPhone" disabled></div>
+        <div class="info_item"><label>Время работы</label> <input type="text" name="WorkTime" id="WorkTime" disabled></div>
 
 
 
-    <!--
-    
-                                                <div class="item">
-                                                    <h3><span data-bind="text: Name"></span></h3>
-                                                    <div class="price"><span data-bind="text: price"></span></div>
-                                                    <div class="add"><a href="#" data-bind="click: $root.addDish">+</a></div>
-                                                    <div class="count"><span data-bind="text: count"></span></div>
-                                                    <div class="dec"><a href="#" data-bind="click: $root.decDish">-</a></div>
-                                                    <div class="delete"><a href="#" data-bind="click: $root.delete">Удалить</a></div>
-                                                </div>
-    
-    
-    
-                                    -->
-<div class="order_block">
-    <h1><span>Оформление заказа</span></h1>
-    <div id="messenger" class="messenger">
     </div>
-    <input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden>
-    <div class="phone">Название кафе/ресторана <input type="text" name="name" id="name" disabled></div>
-    <div class="phone">Адрес <input type="text" name="Address" id="Address" disabled></div>
-    <div class="phone">Телефон <input type="text" name="ClientPhone" id="ClientPhone" disabled></div>
-    <div class="phone">Время работы <input type="text" name="WorkTime" id="WorkTime" disabled></div>
+
 
     <div id="order_page">
-        <div class="basket_block" data-bind="foreach: OrderedDishes">
+        <div class="basket_block" data-bind="foreach: lines">
             <div class="item">
-                <div class="img"><img data-bind="attr: { src: dish.Image, alt: dish.Name }"></div>
-                <h3><span data-bind="text: dish.Name"></span></h3>
-                <div class="price"><span data-bind="text: price"></span> р.
+                <div class="img"><img data-bind="attr: { src: product().Image, alt: product().Name }"></div>
+                <h3><span data-bind="text: product().Name"></span></h3>
+                <div class="price"><span data-bind="text: subtotal()"></span> р.
                 </div>
                 <div class="count">
-                    <div class="item_price"><span data-bind="text: dish.Price"></span> р.</div>
+                    <div class="item_price"><span data-bind="text: product().Price"></span> р.</div>
 			x
-                    <a href="#" data-bind="click: $root.addDish">+</a><div class="item_count"><input type="text" name="" id="" data-bind="value: count"></div>
+                    <div class="item_count"><input type="text" name="" id="" data-bind="value: quantity, valueUpdate: 'afterkeydown'"></div>
 			=
                 </div>
             </div>
         </div>
         <div class="order_total">Итого: <b><span data-bind="text: Total()"></span> р.</b></div>
-        
     </div>
 
-    <form method="post" action="" class="horizontal">
+
+    <form>
+        <div id="messenger" class="messenger">
+        </div>
+
         <div class="order_info">
 
-            <div class="time">Приготовить заказ к <input type="text" name="" id="" value="13">:<input type="text" name="" id="" value="10"> ч</div>
-            <div class="phone">Ваше Имя <input type="text" name="userName" id="userName"></div>
-            <div class="phone">Ваш номер телефона <input type="text" name="cellPhone" id="cellPhone"></div>
-            <div class="phone">Ваш email для связи <input type="text" name="email" id="email"></div>
-            <div class="phone">Описание заказа/ваши предпочтения <input type="text" name="description" id="description"></div>
-            <div class="buttons">
-                <div class="form_but">
-                    <input type="submit" value="Оформить заказ" class="button big succes">
-                </div>
+            <div class="info_item"><label>Ваше имя</label> <input type="text" name="userName" id="userName"></div>
+            <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone"></div>
+            <div class="info_item"><label>Ваш e-mail для связи</label> <input type="text" name="email" id="email"></div>
+            <div class="info_item"><label>Описание заказа</label> <input type="text" name="description" id="description"></div>
+            <div class="info_item time">Приготовить заказ к <input type="text" name="" id="" value="13">:<input type="text" name="" id="" value="10"> ч</div>
+
+
+        </div>
+
+
+        <div class="buttons">
+            <div class="form_but">
+                <input type="submit" value="Перейти к оплате" class="button big succes">
             </div>
         </div>
 
+
     </form>
+
 </div>
 
 
 
-     </div>
+
 
