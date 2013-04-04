@@ -31,7 +31,7 @@ var cafeSchema = new Schema({
     //Dishes:[{type:ObjectId,ref:'Dish'}],
     //Menus:[{type:ObjectId,ref:'Menu'}],
     //Orders:[{type:ObjectId,ref:'Order'}],
-    CanWorkInCafeShop: { type: Boolean, 'default': true }
+    CanWorkInCafeShop: { type: Boolean, 'default': false }
 });
 
 cafeSchema.statics.newCafe = function (data, cb) {

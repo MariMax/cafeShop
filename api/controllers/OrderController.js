@@ -9,7 +9,7 @@ var User = require('../models/User.js').User;
 exports.add_routes = function (app) {
 
     app.get("/api/order/:id", function (req, res) {
-        Order.findOne({ _id: req.params.id,Approve:false }, function (err, value) {
+        Order.findOne({ _id: req.params.id }, function (err, value) {
             if (err)
                 res.send(err, 404);
             else
