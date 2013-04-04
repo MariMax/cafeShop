@@ -12,8 +12,27 @@
         <script src="/script/jquery.ui.widget.js"></script>
         <script src="/script/jquery.iframe-transport.js"></script>
         <script src="/script/jquery.fileupload.js"></script>
+        <script src="/script/jquery.cookie.js"></script>
     </head>
+
     <body>
+        <script type="text/javascript">
+            $(function () {
+                var cafeId = $.cookie("cafeId");
+                if (cafeId != undefined) {
+                    $("#link1").attr("style", "display: none");
+                    $("#link2").attr("style", "display: normal");
+                    $("#link2").attr("href", "/cafe/" + cafeId + "/menu");
+                    $("#link3").attr("style", "display: normal");
+                    $("#link3").attr("href", "/cafe/" + cafeId + "/admin");
+                }
+                else {
+                    $("#link1").attr("style", "display: normal");
+                    $("#link2").attr("style", "display: none");
+                    $("#link3").attr("style", "display: none");
+                }
+            });
+        </script>
         <header>
             <div class="wrap">
                 <a href="#" class="logo">На обед</a>
@@ -25,7 +44,16 @@
                 </div>
             </div>
         </header>
-        
+        <footer>
+            <div class="wrap">
+                <div class="admin_block">
+                    <a href="/users/login" id="link1">Вы владелец кафе или ресторана?</a>
+                    <a href="#" style="display: none" id="link2">Страница заведения</a>
+                    <a href="#" style="display: none" id="link3">Администрирование</a>
+                </div>
+            </div>
+        </footer>
+
         <div class="map">
             <div id="ymaps-map-id_13613773245519471603" style="width: 100%; height: 100%;"></div>
 

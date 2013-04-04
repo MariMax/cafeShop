@@ -12,6 +12,7 @@ exports.add_routes = function (app) {
     app.get("/cafe/:cafeId/admin", function (req, res) {
         if (req.session.user) {
 
+            res.cookie('cafeId', req.params.cafeId, { expires: new Date(Date.now() + 900000), httpOnly: true });
             res.render("Cafes/admin", { cafeId: req.params.cafeId });
 
         } else { res.redirect('users/login'); }
