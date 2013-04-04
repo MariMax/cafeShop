@@ -51,10 +51,10 @@ exports.add_routes = function (app) {
                     if (error) res.send(error, 404);
                     else
                         Dish.getDish(dishId, function (error, dish) {
-                           
+
                             if (error || dish._cafe != cafeId) res.send("Наверное блюдо не из этого кафе", 404);
                             else {
-                                console.log("set order " + orderId + " " + dishId + " " + count )
+                                console.log("set order " + orderId + " " + dishId + " " + count)
                                 Order.setOrderDishes(orderId, dishId, count, dish.Price, function (error, order) {
                                     if (error)
                                         res.send(error, 404);
@@ -142,26 +142,15 @@ exports.add_routes = function (app) {
                 Cafe.getCafe(order._cafe, function (error, cafe) {
                     if (error) res.send(error, 404);
                     else {
-                        var messageText = "Номер заказа: " + order._id;
-                        for (var key in order.Dishes) {
-                            var dishId = order.Dishes[key].dishId;
-                            var count = order.Dishes[key].dishId;
-                            Dish.getDish(dishId, function (error, dish) {
-                                if (error) res.send(error, 404); else {
-                                    messageText += dish.Name + " ";
-                                    if (dish.Price) messageText += dish.Price + " ";
-                                }
-                            })
-                        }
-
-                        console.log(messageText + " " + order.Description);
-                        sendSMS(SMSconf, cafe.Phone, messageText + " " + order.Description);
-                        sendSMS(SMSconf, order.UserPhone, messageText + " " + order.Description);
-                        sendMail(order.Email, conf.site_email, conf.site_name + ': approve order', messageText + " " + order.Description);
-                        sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': approve order', messageText + " " + order.Description);
+                        var messageText = "Номер заказа: " + order._id + " ссылка для просмотра заказа " + conf.site_url + "/order/show/" + orderId;
+                        console.log(cafe.Phone + " " + order.UserPhone);
+                        sendSMS(SMSconf, cafe.CellPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                        sendSMS(SMSconf, order.UserPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                        sendMail(order.Email, conf.site_email, conf.site_name + ': approve order', messageText);
+                        sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': approve order', messageText);
                         User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
                             if (user)
-                                sendMail(user.Email, conf.site_email, conf.site_name + ': approve order', messageText + " " + order.Description);
+                                sendMail(user.Email, conf.site_email, conf.site_name + ': approve order', messageText);
                         })
                     }
                 })

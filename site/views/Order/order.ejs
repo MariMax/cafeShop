@@ -8,16 +8,14 @@
 
 
 <div id="order_page" class="order_page">
+    	    <div class="cafe_info">
+				<div class="name"><span data-bind="text: CafeName"></span></div>
+				<div class="info_item address"><span data-bind="text: CafeAddress"></span></div>
+				<div class="info_item phone"><span data-bind="text: CafePhone"></span></div>
+				<div class="info_item time"><span data-bind="text: CafeWorkTime"></span></div>
+			</div>
     <div><input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
-    <div class="cafe_page" id="cafe_menu_page">
-    <div class="cafe_info page_title_block">
-        <div class="cafe_name"><span data-bind="text: CafeName"></span></div>
-        <div class="cafe_tip"><span data-bind="text: CafeWorkTime"></span></div>
-        <div class="cafe_address"><a href="#"><span data-bind="text: CafeAddress"></span></a></div>
-        <div class="cafe_tel"><span data-bind="text: CafePhone"></span></div>
-        <div class="border_wave_bot"></div>
-    </div>
-        </div>
+
 
 
 
@@ -49,8 +47,8 @@
             <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'">
             
             </div>
-            <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'"></div>
-            <div class="info_item"><label>Ваш e-mail для связи</label> <input type="text" name="email" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'"></div>
+            <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>
+            <div class="info_item"><label>Ваш e-mail для связи</label> <input type="text" name="email" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'" placeholder="mail@mail.ru"></div>
             <div class="info_item"><label>Описание заказа</label> <input type="text" name="" id="" data-bind="value: description,valueUpdate: 'afterkeydown'"></div>
             <div class="info_item time">Приготовить заказ к <input type="text" name="" id="" data-bind="value: hour">:<input type="text" name="" id="" data-bind="value: minute"> ч</div>
 
