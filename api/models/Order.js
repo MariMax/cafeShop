@@ -191,7 +191,7 @@ orderSchema.statics.setOrderInformation = function (orderId, data, callback) {
     if (data.description && data.description != '') newdata.Description = data.description;
     if (data.email && data.email != '') newdata.Email = data.email;
     if (data.userName && data.userName != '') newdata.UserName = data.userName;
-    if (data.userPhone && data.userPhone != '') newdata.UserPhone = data.userPhone;
+    if (data.cellPhone && data.cellPhone != '') newdata.UserPhone = data.cellPhone;
     if (data.price && data.price > 0) newdata.Price = data.price;
     this.findOne({ _id: orderId, Approved: false }, function (err, order) {
         if (err) callback(err); else
