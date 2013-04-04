@@ -9,7 +9,7 @@ var User = require('../models/User.js').User;
 exports.add_routes = function (app) {
 
     app.get("/api/order/:id", function (req, res) {
-        Order.findOne({ _id: req.params.id }, function (err, value) {
+        Order.findOne({ _id: req.params.id,Approve:false }, function (err, value) {
             if (err)
                 res.send(err, 404);
             else
@@ -134,23 +134,27 @@ exports.add_routes = function (app) {
     app.get("/api/order/paySystemAnswer/:orderId", function (req, res) {
         //Оплата Ответ платежной системы
         var orderId = req.params.orderId;
+        var messageText = conf.site_url + "/order/show/" + orderId;
+        var clientPhone = "";
+        var clientEmail = "";
         Order.approveOrder(orderId, function (error, order) {
             if (error) res.send(error, 404);
 
             else {
                 //Рассылка sms продавцу, покупателю и 3 email
+                clientPhone = order.UserPhone;
+                clientEmail = order.Email;
                 Cafe.getCafe(order._cafe, function (error, cafe) {
                     if (error) res.send(error, 404);
                     else {
-                        var messageText = "Номер заказа: " + order._id + " ссылка для просмотра заказа " + conf.site_url + "/order/show/" + orderId;
-                        console.log(cafe.Phone + " " + order.UserPhone);
                         sendSMS(SMSconf, cafe.CellPhone, messageText, function (data, response) { console.log(data + " " + response) });
-                        sendSMS(SMSconf, order.UserPhone, messageText, function (data, response) { console.log(data + " " + response) });
-                        sendMail(order.Email, conf.site_email, conf.site_name + ': approve order', messageText);
+                        sendSMS(SMSconf, clientPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                        sendMail(clientEmail, conf.site_email, conf.site_name + ': approve order', messageText);
                         sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': approve order', messageText);
                         User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
-                            if (user)
-                                sendMail(user.Email, conf.site_email, conf.site_name + ': approve order', messageText);
+                            if (user) {
+                                sendMail(user.email, conf.site_email, conf.site_name + ': approve order', messageText);
+                            }
                         })
                     }
                 })
