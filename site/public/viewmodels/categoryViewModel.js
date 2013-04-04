@@ -1,5 +1,7 @@
-function Category(data, cafeId) {
+function Category(data, cafeId, messageFunc,errorFunc) {
     var self = this;
+    self.messageFunc = messageFunc;
+    self.errorFunc = errorFunc;
     self.cafeId = cafeId;
     self.id = ko.observable(data._id);
     self.Name = ko.observable(data.Name);
@@ -13,26 +15,7 @@ function Category(data, cafeId) {
         return '';
     });
 
-    self.Message = ko.observable("");
-    self.showOk = ko.observable(false);
-    self.showError = ko.observable(false);
-
-    self.hideOk = ko.computed(self.showOk).extend({ throttle: 1000 });
-    self.hideOk.subscribe(function (val) {
-        if (val) {
-            self.showOk(false);
-            self.Message("");
-
-        }
-    }, self);
-    self.hideError = ko.computed(self.showError).extend({ throttle: 1000 });
-    self.hideError.subscribe(function (val) {
-        if (val) {
-            self.showError(false);
-            self.Message("");
-
-        }
-    }, self);
+    
 
     self.newDishName = ko.observable();
     self.newDishDescription = ko.observable();
@@ -52,14 +35,12 @@ function Category(data, cafeId) {
             type: "post", contentType: "application/json",
             success: function (data) {
                 $('#newPhotoTmpUrl').val("")
-                self.Message("Блюдо добавлено");
-                self.showOk(true);
+                self.messageFunc("Блюдо добавлено");
                 dishData.id(data.id._id);
 
             },
             error: function (result) {
-                self.Message("Ошибка при добавлении");
-                self.showError(true);
+                self.errorFunc("Ошибка при добавлении");
                 console.log(result);
             }
         });
@@ -73,16 +54,15 @@ function Category(data, cafeId) {
             data: jsonData,
             type: "delete", contentType: "application/json",
             success: function (data) {
-                self.Message("Блюдо удалено");
-                self.showOk(true);
+                self.messageFunc("Блюдо удалено");
             },
             error: function (result) {
-                self.Message("Ошибка при удалении");
-                self.showError(true);
+                self.errorFunc("Ошибка при удалении");
                 console.log(result);
             }
         });
     };
+
 
 
 

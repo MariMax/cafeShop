@@ -4,8 +4,14 @@ function AdminViewModel(cafeId) {
     self.cafeId = cafeId;
     self.Categories = ko.observableArray([]);
 
-    
-
+    var okMessage = function (message) {
+        self.Message(message);
+        self.showOk(true);
+    };
+    var errorMessage = function (message) {
+        self.Message(message);
+        self.showError(true);
+    };
 
     // Operations
     $.ajax(
@@ -21,8 +27,8 @@ function AdminViewModel(cafeId) {
                 type: "GET",
                 async: false
             }).done(function (allData) {
-                var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
-                var category = new Category(value, self.cafeId);
+                var mappedDishes = $.map(allData, function (item) { return new Dish(item, okMessage, errorMessage) });
+                var category = new Category(value, self.cafeId, okMessage, errorMessage);
                 category.Dishes(mappedDishes);
                 category.active(first);
                 if (first)
@@ -56,6 +62,29 @@ function AdminViewModel(cafeId) {
                 value.active(false);
         });
     };
+
+    self.Message = ko.observable("");
+    self.showOk = ko.observable(false);
+    self.showError = ko.observable(false);
+
+    self.hideOk = ko.computed(self.showOk).extend({ throttle: 1000 });
+    self.hideOk.subscribe(function (val) {
+        if (val) {
+            self.showOk(false);
+            self.Message("");
+
+        }
+    }, self);
+    self.hideError = ko.computed(self.showError).extend({ throttle: 1000 });
+    self.hideError.subscribe(function (val) {
+        if (val) {
+            self.showError(false);
+            self.Message("");
+
+        }
+    }, self);
+
+
 }
 
 if (document.getElementById("cafeId") != null) {
