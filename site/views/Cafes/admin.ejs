@@ -4,16 +4,16 @@
 
     $(function () {
 
-        $('#tmpfileupload').fileupload({ dataType: 'json',
-            done: function (e, data) {
-                debugger;
-                //var newId = "#" + e.target.id.replace("newPhotoInput", "newPhoto");
-                //$(newId).attr("style", "background:#fff url(\"" + data.result[0].url + "\") no-repeat center 25%;");
-                var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
-                $(newId).attr("src", data.result[0].url);
-                $("#newPhotoTmpUrl").val(data.result[0].url);
-            }
-        });
+        //$('#tmpfileupload').fileupload({ dataType: 'json',
+        //    done: function (e, data) {
+        //        debugger;
+        //        //var newId = "#" + e.target.id.replace("newPhotoInput", "newPhoto");
+        //        //$(newId).attr("style", "background:#fff url(\"" + data.result[0].url + "\") no-repeat center 25%;");
+        //        var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
+        //        $(newId).attr("src", data.result[0].url);
+        //        $("#newPhotoTmpUrl").val(data.result[0].url);
+        //    }
+        //});
 
         //$('.fileupload').change(function (e) {
         //    if ($(this).val() == '' || /^\s+$/.test($(this).val())) return false;
@@ -310,7 +310,7 @@
                                     <a href="#" class="addfile">
                                         <img width="186" height="131" data-bind="attr: { id: 'newPhotoImage'+id(), src: Image() }"></img>
                                         Фото блюда
-                                        <input class="fileupload" type="file" name="uploads" data-url="/upload" data-bind="attr: { id: 'newPhotoInput'+id() }"></a>
+                                        <input class="fileupload" type="file" name="uploads" data-url="/upload" data-bind="attr: { id: 'newPhotoInput'+id() }, uploadImage: id()" ></a>
                                 </div>
                                 <div class="info">
                                     <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: Name">
