@@ -102,14 +102,14 @@ var Cart = function (orderId) {
     self.description = ko.observable();
     self.hour = ko.observable(12);
     self.minute = ko.observable(00);
+    
+
 
     self.hasErrorMessage = ko.computed(function () {
         var text = "";
         if (self.userName.hasError() || self.cellPhone.hasError() || self.email.hasError())
         { text += "Все поля должны быть заполнены"; }
-        if (self.cellPhone.hasError()) { text += ", номер телефона должен иметь формат +79177640209"; }
-        if (self.email.hasError()) { text += ", email имеет формат ex@ex.ru"; }
-
+        
         return text;
     });
 
@@ -146,17 +146,17 @@ var Cart = function (orderId) {
             document.location.href = '/order/buy/' + self.orderId;
         }
         else {
-            debugger;
+
             var data = {};
             data.userName = self.userName();
             data.email = self.email();
             data.orderId = self.orderId;
-            data.description = self.description()+" Приготовить к "+self.hour()+":"+self.minute();
+            data.description = self.description() ? self.description() : "" + " Приготовить к " + self.hour() + ":" + self.minute();
             data.cellPhone = self.cellPhone();
-             
+
             $.post('/api/order/pay', data)
             .done(function (data) {
-                document.location.href = '/api/order/' + self.orderId;
+                document.location.href = '/order/show/' + self.orderId;
                 //document.location.href = '/order/buy/' + order._id;
                 //Отправить на страницу оплаты как вариант
             });
@@ -165,6 +165,14 @@ var Cart = function (orderId) {
     }
 
     $.getJSON('/api/order/' + orderId, function (order) {
+
+
+        if (order.UserName)
+             self.userName(order.UserName);
+        if (order.Description)
+             self.description(order.Description);
+
+
         ko.utils.arrayForEach(order.Dishes, function (dish) {
             $.ajax({
                 url: "/api/dishes/" + dish.dishId,
@@ -173,6 +181,7 @@ var Cart = function (orderId) {
             }).done(function (b_dish) {
 
                 self.lines.push(new CartLine(b_dish, dish.count));
+
             });
 
         });

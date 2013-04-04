@@ -1,7 +1,7 @@
 exports.getSiteConfig = function () {
   configValues =  {
     site_url: 'http://idiesh',
-    site_name: 'cafeShop',
+    site_name: 'idiEsh',
     site_email: 'idiEsh support <noreply@idiesh.ru>',
     db: {
     	//db: 'cafeshop',

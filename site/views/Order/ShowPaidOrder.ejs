@@ -1,0 +1,54 @@
+﻿<% layout('../layout') -%>
+
+<div class="page_title_block">
+    <h1>Оплаченный заказ</h1>
+    <div class="border_wave_bot"></div>
+</div>
+
+
+
+<div id="order_page" class="order_page">
+    <div><input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
+    <div class="cafe_page" id="cafe_menu_page">
+    <div class="cafe_info page_title_block">
+        <div class="cafe_name"><span data-bind="text: CafeName"></span></div>
+        <div class="cafe_tip"><span data-bind="text: CafeWorkTime"></span></div>
+        <div class="cafe_address"><a href="#"><span data-bind="text: CafeAddress"></span></a></div>
+        <div class="cafe_tel"><span data-bind="text: CafePhone"></span></div>
+        
+        <div class="border_wave_bot"></div>
+    </div>
+        </div>
+
+
+
+        <div class="basket_block" data-bind="foreach: lines">
+            <div class="item">
+                <div class="img"><img data-bind="attr: { src: product().Image, alt: product().Name }"></div>
+                <h3><span data-bind="text: product().Name"></span></h3>
+                <div class="price"><span data-bind="text: subtotal()"></span> р.
+                </div>
+                <div class="count">
+                    <div class="item_price"><span data-bind="text: product().Price"></span> р.</div>
+			x
+                    <div class="item_count"><input type="text" name="" id="" data-bind="value: quantity, valueUpdate: 'afterkeydown'" disabled></div>
+			=
+                </div>
+            </div>
+        </div>
+        <div class="order_total">Итого: <b><span data-bind="text: Total()"></span> р.</b></div>
+    
+        <div class="order_info">
+
+            <div class="info_item"><label>Имя клиента</label> <input type="text" name="" id="" data-bind="value: userName" disabled></div>
+           <div class="info_item"><label>Описание заказа</label> <input type="text" name="" id="" data-bind="value: description" disabled></div>
+
+        </div>
+
+    
+</div>
+
+
+
+
+
