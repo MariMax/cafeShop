@@ -1,337 +1,342 @@
 ﻿<% layout('../layout') -%>
- <div class="content">
-<script type="text/javascript">
+<div class="content">
+    <script type="text/javascript">
 
-    $(function () {
 
-        $('#tmpfileupload').fileupload({ dataType: 'json',
-            done: function (e, data) {
-                debugger;
-                //var newId = "#" + e.target.id.replace("newPhotoInput", "newPhoto");
-                //$(newId).attr("style", "background:#fff url(\"" + data.result[0].url + "\") no-repeat center 25%;");
-                var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
-                $(newId).attr("src", data.result[0].url);
-                $("#newPhotoTmpUrl").val(data.result[0].url);
+        
+        
+        $(function () {
+        
+            //$('#tmpfileupload').fileupload({ dataType: 'json',
+            //    done: function (e, data) {
+            //        debugger;
+            //        //var newId = "#" + e.target.id.replace("newPhotoInput", "newPhoto");
+            //        //$(newId).attr("style", "background:#fff url(\"" + data.result[0].url + "\") no-repeat center 25%;");
+            //        var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
+            //        $(newId).attr("src", data.result[0].url);
+            //        $("#newPhotoTmpUrl").val(data.result[0].url);
+            //    }
+            //});
+        
+            //$('.fileupload').change(function (e) {
+            //    if ($(this).val() == '' || /^\s+$/.test($(this).val())) return false;
+            //    else {
+            //        var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoForm");
+            //        postImageToServer($(newId),e);
+            //    }
+            //    return false;
+            //});
+        
+            //      //function postImageToServer(form,e) {
+            //    form.ajaxSubmit({
+            //        success: function (response) {
+            //            debugger;
+            //            var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
+            //            $(newId).attr("src", "/uploads/"+response);
+            //        }
+            //    });
+            //};
+            //    $('#uploadForm').submit(function() {
+            //    status('uploading the file ...');
+            //
+            //    $(this).ajaxSubmit({                                                                                                                 
+            //
+            //        error: function(xhr) {
+            //    status('Error: ' + xhr.status);
+            //        },
+            //
+            //        success: function(response) {
+            //    //TODO: We will fill this in later
+            //        }
+            //});
+        
+            // Have to stop the form from submitting and causing                                                                                                       
+            // a page refresh - don't forget this                                                                                                                      
+        
+        
+            //$('#userPhotoInput').change(function (e) {
+            //    e.preventDefault();
+            //    //nothing to do if the upload field is null
+            //    if ($(this).val() == '' || /^\s+$/.test($(this).val())returnfalse;
+            //    else $('#uploadForm').submit();
+            //    return false;
+            //});
+        
+        
+            function getCafe() {
+                var cafeId = $('#cafeId').val();
+                var jqXHR = $.get('/api/cafes/' + cafeId)
+                     .done(function (cafe) {
+        
+                         if (cafe) {
+                             if (cafe.Name)
+                                 $('#name').attr('value', cafe.Name);
+                             if (cafe.Address)
+                                 $('#Address').attr('value', cafe.Address);
+                             if (cafe.WorkTime)
+                                 $('#WorkTime').attr('value', cafe.WorkTime);
+                             if (cafe.ClientPhone)
+                                 $('#ClientPhone').attr('value', cafe.ClientPhone);
+                             if (cafe.CellPhone)
+                                 $('#cellPhone').attr('value', cafe.CellPhone);
+                             else {
+                                 document.location.href = '/cafes/newcafe'; //Сначала подтверди телефон, потом администрируй
+                             }
+                         } else document.location.href = '/cafes/newcafe'; //а куда деваться если мы не нашли кафе, его надо создать
+                     })
             }
-        });
-
-        //$('.fileupload').change(function (e) {
-        //    if ($(this).val() == '' || /^\s+$/.test($(this).val())) return false;
-        //    else {
-        //        var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoForm");
-        //        postImageToServer($(newId),e);
-        //    }
-        //    return false;
-        //});
-
-        //      //function postImageToServer(form,e) {
-        //    form.ajaxSubmit({
-        //        success: function (response) {
-        //            debugger;
-        //            var newId = "#" + e.target.id.replace("newPhotoInput", "newPhotoImage");
-        //            $(newId).attr("src", "/uploads/"+response);
-        //        }
-        //    });
-        //};
-        //    $('#uploadForm').submit(function() {
-        //    status('uploading the file ...');
-        //
-        //    $(this).ajaxSubmit({                                                                                                                 
-        //
-        //        error: function(xhr) {
-        //    status('Error: ' + xhr.status);
-        //        },
-        //
-        //        success: function(response) {
-        //    //TODO: We will fill this in later
-        //        }
-        //});
-
-        // Have to stop the form from submitting and causing                                                                                                       
-        // a page refresh - don't forget this                                                                                                                      
-
-
-        //$('#userPhotoInput').change(function (e) {
-        //    e.preventDefault();
-        //    //nothing to do if the upload field is null
-        //    if ($(this).val() == '' || /^\s+$/.test($(this).val())returnfalse;
-        //    else $('#uploadForm').submit();
-        //    return false;
-        //});
-
-
-        function getCafe() {
-            var cafeId = $('#cafeId').val();
-            var jqXHR = $.get('/api/cafes/' + cafeId)
-                 .done(function (cafe) {
-
-                     if (cafe) {
-                         if (cafe.Name)
-                             $('#name').attr('value', cafe.Name);
-                         if (cafe.Address)
-                             $('#Address').attr('value', cafe.Address);
-                         if (cafe.WorkTime)
-                             $('#WorkTime').attr('value', cafe.WorkTime);
-                         if (cafe.ClientPhone)
-                             $('#ClientPhone').attr('value', cafe.ClientPhone);
-                         if (cafe.CellPhone)
-                             $('#cellPhone').attr('value', cafe.CellPhone);
-                         else {
-                             document.location.href = '/cafes/newcafe'; //Сначала подтверди телефон, потом администрируй
+            getCafe();
+        
+            function postData() {
+        
+                var jqXHR = $.post('/api/cafes/updateValues', $('form').serialize())
+                     .done(function (data) {
+                         if (data.status == 200) {
+                             $("#messenger").html(data.message);
+                             console.log("done " + data.message);
+                             $("#messenger").fadeIn("slow");
+                             //$('#verify').removeAttr('hidden');
                          }
-                     } else document.location.href = '/cafes/newcafe'; //а куда деваться если мы не нашли кафе, его надо создать
-                 })
-        }
-        getCafe();
-
-        function postData() {
-
-            var jqXHR = $.post('/api/cafes/updateValues', $('form').serialize())
-                 .done(function (data) {
-                     if (data.status == 200) {
-                         $("#messenger").html(data.message);
-                         console.log("done " + data.message);
-                         $("#messenger").fadeIn("slow");
-                         //$('#verify').removeAttr('hidden');
-                     }
-                     if (data.status == 500) {
-                         $("#messenger").html(data.message);
-                         console.log("fail " + data.message);
-                         $("#messenger").fadeIn("slow");
-                     }
-                 });
-        }
-
-        function updatePhone() {
-
-            var jqXHR = $.post('/api/cafes/updateCellPhone', $('form').serialize())
-                 .done(function (data) {
-
-                     if (data.status == 200) {
-                         $("#messenger").html(data.message);
-                         console.log("done " + data.message);
-                         $("#messenger").fadeIn("slow");
-                         $('#verify').removeAttr('hidden');
-                     }
-                     if (data.status == 500) {
-                         $("#messenger").html(data.message);
-                         console.log("fail " + data.message);
-                         $("#messenger").fadeIn("slow");
-                     }
-                 });
-        }
-        function confirmCellPhone() {
-
-            var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
-                 .done(function (data) {
-                     if (data.status == 200) {
-                         $("#messenger").html(data.message.message);
-                         console.log("done " + data.message);
-                         $("#messenger").fadeIn("slow");
-                         var cafeId = data.message.cafeId;
-                         var delay = 2000;
-                         setTimeout(document.location.href = '/cafe/' + cafeId + '/admin/', delay);
-                     }
-                     if (data.status == 500) {
-                         $("#messenger").html(data.message);
-                         console.log("fail " + data.message);
-                         $("#messenger").fadeIn("slow");
-                     }
-                 });
-
-        }
-
-        function isValidPhoneNumber(number) {
-            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
-            return pattern.test(number);
-        }
-
-        $('#cellPhone').blur(function () {
-            var phone = $('#cellPhone').val();
-            if (!isValidPhoneNumber(phone)) {
-                var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
-                $("#messenger").html(err_text);
-                $("#messenger").fadeIn("slow");
-            } else {
-                $("#messenger").html('');
-                updatePhone();
+                         if (data.status == 500) {
+                             $("#messenger").html(data.message);
+                             console.log("fail " + data.message);
+                             $("#messenger").fadeIn("slow");
+                         }
+                     });
             }
-        })
-
-        $('#confirm').click(function () {
-            var code = $('#cellPhoneConfirmation').val();
-            if (!code) {
-                var err_text = "Введите код подтверждения";
-                $("#messenger").html(err_text);
-                $("#messenger").fadeIn("slow");
-            } else { confirmCellPhone(); }
-        })
-
-        var field = new Array("Name", "cellPhone"); //поля обязательные 
-
-        $("form").submit(function () {// обрабатываем отправку формы  
-            var error = 0; // индекс ошибки
-            $("form").find(":input").each(function () {// проверяем каждое поле в форме
-                for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
-                    if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
-
-                        if (!$(this).val()) {// если в поле пустое
-                            // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
-                            error = 1; // определяем индекс ошибки       
-
-                        }
-                        else {
-                            // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
-                        }
-
-                    }
+        
+            function updatePhone() {
+        
+                var jqXHR = $.post('/api/cafes/updateCellPhone', $('form').serialize())
+                     .done(function (data) {
+        
+                         if (data.status == 200) {
+                             $("#messenger").html(data.message);
+                             console.log("done " + data.message);
+                             $("#messenger").fadeIn("slow");
+                             $('#verify').removeAttr('hidden');
+                         }
+                         if (data.status == 500) {
+                             $("#messenger").html(data.message);
+                             console.log("fail " + data.message);
+                             $("#messenger").fadeIn("slow");
+                         }
+                     });
+            }
+            function confirmCellPhone() {
+        
+                var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
+                     .done(function (data) {
+                         if (data.status == 200) {
+                             $("#messenger").html(data.message.message);
+                             console.log("done " + data.message);
+                             $("#messenger").fadeIn("slow");
+                             var cafeId = data.message.cafeId;
+                             var delay = 2000;
+                             setTimeout(document.location.href = '/cafe/' + cafeId + '/admin/', delay);
+                         }
+                         if (data.status == 500) {
+                             $("#messenger").html(data.message);
+                             console.log("fail " + data.message);
+                             $("#messenger").fadeIn("slow");
+                         }
+                     });
+        
+            }
+        
+            function isValidPhoneNumber(number) {
+                var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
+                return pattern.test(number);
+            }
+        
+            $('#cellPhone').blur(function () {
+                var phone = $('#cellPhone').val();
+                if (!isValidPhoneNumber(phone)) {
+                    var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                    $("#messenger").html(err_text);
+                    $("#messenger").fadeIn("slow");
+                } else {
+                    $("#messenger").html('');
+                    updatePhone();
                 }
             })
-
-            if (error == 0) { // если ошибок нет то отправляем данные
-                postData();
-                return false;
-            }
-            else {
-                if (error == 1) var err_text = "Необходимо ввести название кафе";
-                // if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
-                $("#messenger").html(err_text);
-                $("#messenger").fadeIn("slow");
-                return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
-            }
-
-
-
-        })
-
-        var longitude = $('#Longitude');
-        var latitude = $('#Latitude');
-        var addressInput = $('#Address');
-        addressInput.keyup(function () {
-            var address = addressInput.val();
-            $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
-                     done(function (data) {
-                         var ar = data.response.GeoObjectCollection.featureMember;
-
-                         if (ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'house') {
-                             var b = ar[0].GeoObject.Point.pos;
-                             var temp = new Array();
-                             temp = b.split(' ');
-                             longitude.attr('value', temp[0]);
-                             latitude.attr('value', temp[1]);
-                             addressInput.attr('value', ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description)
-                         }
-                         console.log(ar.length);
-                         console.log("_______Start_________");
-                         for (var key in ar) {
-                             var val = ar[key];
-
-                             console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind + ' ' + val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
-                         }
-                         console.log("________end_________");
-                     })
-        })
-    });
-
-</script>
-<div class="admin_page" id="admin_page">
-    <div class="admin_title page_title_block">
-        <h1>Администрирование</h1>
-        <a href="#" class="cafe_link">Страница заведения</a>
-        <div class="border_wave_bot"></div>
-    </div>
-
-    <div class="admin_content">
-        <div class="admin_info">
-            <h3>Информация</h3>
-            <form method="post" action="" class="horizontal">
-                <div id="messenger" class="messenger">
-                </div>
-                <div class="form_item">
-
-                    <div class="label">Название кафе/ресторана</div>
-                    <input id="cafeId" type="text" size="20" name="cafeId" value="<%= cafeId %>" required hidden>
-                    <input id="Longitude" type="text" size="20" name="Longitude" hidden>
-                    <input id="Latitude" type="text" size="20" name="Latitude" hidden>
-                    <div class="input"><input id="name" type="text" size="60" name="Name" required>
-                    </div>
-                </div>
-                <div class="form_item">
-                    <div class="label">Адрес</div>
-                    <div class="input"><input id="Address" type="text" size="60" name="Address"></div>
-
-
-                </div>
-                <div class="form_item">
-                    <div class="label">Режим работы</div>
-                    <div class="input"><input id="WorkTime" type="text" size="60" name="WorkTime"></div>
-                </div>
-                <div class="form_item">
-                    <div class="label">Телефон (для клиентов)</div>
-                    <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone"></div>
-                </div>
-                <div class="form_item">
-                    <div class="label">Сотовый (для sms оповещения)</div>
-                    <div class="input"><input type="text" size="20" id="cellPhone" name="cellPhone" required>
-                    </div>
-                </div>
-                <div id="verify" class="form_item" hidden>
-                    <div class="label">Введите код подтверждения</div>
-                    <div class="input"><input id="cellPhoneConfirmation" type="text" size="20" name="token">
-
-                        <input type="button" id="confirm" value="Подтвердить" class="button succes"></div>
-
-                </div>
-
-
-                <div class="form_but">
-                    <input type="submit" value="Сохранить" class="button succes">
-                    <input type="reset" value="Очистить" class="button simple">
-                </div>
-            </form>
+        
+            $('#confirm').click(function () {
+                var code = $('#cellPhoneConfirmation').val();
+                if (!code) {
+                    var err_text = "Введите код подтверждения";
+                    $("#messenger").html(err_text);
+                    $("#messenger").fadeIn("slow");
+                } else { confirmCellPhone(); }
+            })
+        
+            var field = new Array("Name", "cellPhone"); //поля обязательные 
+        
+            $("form").submit(function () {// обрабатываем отправку формы  
+                var error = 0; // индекс ошибки
+                $("form").find(":input").each(function () {// проверяем каждое поле в форме
+                    for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
+                        if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
+        
+                            if (!$(this).val()) {// если в поле пустое
+                                // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
+                                error = 1; // определяем индекс ошибки       
+        
+                            }
+                            else {
+                                // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
+                            }
+        
+                        }
+                    }
+                })
+        
+                if (error == 0) { // если ошибок нет то отправляем данные
+                    postData();
+                    return false;
+                }
+                else {
+                    if (error == 1) var err_text = "Необходимо ввести название кафе";
+                    // if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
+                    $("#messenger").html(err_text);
+                    $("#messenger").fadeIn("slow");
+                    return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
+                }
+        
+        
+        
+            })
+        
+            var longitude = $('#Longitude');
+            var latitude = $('#Latitude');
+            var addressInput = $('#Address');
+            addressInput.keyup(function () {
+                var address = addressInput.val();
+                $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
+                         done(function (data) {
+                             var ar = data.response.GeoObjectCollection.featureMember;
+        
+                             if (ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'house') {
+                                 var b = ar[0].GeoObject.Point.pos;
+                                 var temp = new Array();
+                                 temp = b.split(' ');
+                                 longitude.attr('value', temp[0]);
+                                 latitude.attr('value', temp[1]);
+                                 addressInput.attr('value', ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description)
+                             }
+                             console.log(ar.length);
+                             console.log("_______Start_________");
+                             for (var key in ar) {
+                                 var val = ar[key];
+        
+                                 console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind + ' ' + val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
+                             }
+                             console.log("________end_________");
+                         })
+            })
+        });
+        
+    </script>
+    <div class="admin_page" id="admin_page">
+        <div class="admin_title page_title_block">
+            <h1>Администрирование</h1>
+            <a href="#" class="cafe_link">Страница заведения</a>
+            <div class="border_wave_bot"></div>
         </div>
 
-        <div class="admin_menu" id="admin_menu">
-            <h3>Меню заведения</h3>
-            <div id="tab-container">
-                <ul class="catalog_nav etabs" data-bind="foreach: Categories">
-                    <li data-bind="attr: { class: activeText() } ">
-                        <a data-bind="click: $root.setActiveCategory  ">
-                            <span data-bind="text: Name"></span>
-                        </a>
-                    </li>
-                </ul>
-                <input type="hidden" id="newPhotoTmpUrl" />
-                <div data-bind="foreach: Categories">
-                    <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
-                        <div data-bind="foreach: Dishes">
-                            <div class="catalog_item">
-                                <div class="photo">
-                                    <a href="#" class="addfile">
-                                        <img width="186" height="131" data-bind="attr: { id: 'newPhotoImage'+id(), src: Image() }"></img>
-                                        Фото блюда
-                                        <input class="fileupload" type="file" name="uploads" data-url="/upload" data-bind="attr: { id: 'newPhotoInput'+id() }"></a>
-                                </div>
-                                <div class="info">
-                                    <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: Name">
-                                    <textarea name="" id="" placeholder="Описание блюда" required data-bind="value: Description"></textarea>
-                                    <input type="text" name="" placeholder="0" id="" class="price" required data-bind="value: Price"><span class="currency">руб</span>
-                                    <a href="#" class="button " data-bind="click: id()!=null ? updateDish : $parent.addDishToDb">Сохранить</a>
-                                    <div class="week">
-                                        <input type="checkbox" value="AllWeek" data-bind=" attr:{ id: 'allWeek' + id(), name: 'allWeek' + id()  },checked: Days"><label data-bind="attr:{ for: 'allweek' + id()  }" class="check">Всю неделю</label>
-                                        <input type="checkbox" value="Mon" data-bind="attr:{ id: 'mon' + id(),name: 'mon' + id()  },checked: Days"><label data-bind="attr:{ for: 'mon' + id()  }" class="check">Пон</label>
-                                        <input type="checkbox" value="Tue" data-bind="attr:{ id: 'tue' + id(),name: 'tue' + id()  },checked: Days"><label data-bind="attr:{ for: 'tue' + id()  }" class="check">Втр</label>
-                                        <input type="checkbox" value="Wed" data-bind="attr:{ id: 'wed' + id(),name: 'wed' + id()  },checked: Days"><label data-bind="attr:{ for: 'wed' + id()  }" class="check">Срд</label>
-                                        <input type="checkbox" value="Thu" data-bind="attr:{ id: 'thu' + id(),name: 'thu' + id()  },checked: Days"><label data-bind="attr:{ for: 'thu' + id()  }" class="check">Чтв</label>
-                                        <input type="checkbox" value="Fri" data-bind="attr:{ id: 'fri' + id(),name: 'fri' + id()  },checked: Days"><label data-bind="attr:{ for: 'fri' + id()  }" class="check">Пят</label>
-                                        <input type="checkbox" value="Sat" data-bind="attr:{ id: 'sat' + id(),name: 'sat' + id()  },checked: Days"><label data-bind="attr:{ for: 'sat' + id()  }" class="check">Суб</label>
-                                        <input type="checkbox" value="Sun" data-bind="attr:{ id: 'sun' + id(),name: 'sun' + id()  },checked: Days"><label data-bind="attr:{ for: 'sun' + id()  }" class="check">Вск</label>
-                                    </div>
-                                </div>
-                                <a href="#" class="delete" data-bind="click: $parent.removeDish"></a>
-                            </div>
+        <div class="admin_content">
+            <div class="admin_info">
+                <h3>Информация</h3>
+                <form method="post" action="" class="horizontal">
+                    <div id="messenger" class="messenger">
+                    </div>
+                    <div class="form_item">
+
+                        <div class="label">Название кафе/ресторана</div>
+                        <input id="cafeId" type="text" size="20" name="cafeId" value="<%= cafeId %>" required hidden>
+                        <input id="Longitude" type="text" size="20" name="Longitude" hidden>
+                        <input id="Latitude" type="text" size="20" name="Latitude" hidden>
+                        <div class="input"><input id="name" type="text" size="60" name="Name" required>
                         </div>
-                        <a href="#" class="button succes small" data-bind="click: addDish">+ Добавить блюдо</a>
+                    </div>
+                    <div class="form_item">
+                        <div class="label">Адрес</div>
+                        <div class="input"><input id="Address" type="text" size="60" name="Address"></div>
+
+
+                    </div>
+                    <div class="form_item">
+                        <div class="label">Режим работы</div>
+                        <div class="input"><input id="WorkTime" type="text" size="60" name="WorkTime"></div>
+                    </div>
+                    <div class="form_item">
+                        <div class="label">Телефон (для клиентов)</div>
+                        <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone"></div>
+                    </div>
+                    <div class="form_item">
+                        <div class="label">Сотовый (для sms оповещения)</div>
+                        <div class="input"><input type="text" size="20" id="cellPhone" name="cellPhone" required>
+                        </div>
+                    </div>
+                    <div id="verify" class="form_item" hidden>
+                        <div class="label">Введите код подтверждения</div>
+                        <div class="input"><input id="cellPhoneConfirmation" type="text" size="20" name="token">
+
+                            <input type="button" id="confirm" value="Подтвердить" class="button succes"></div>
+
+                    </div>
+
+
+                    <div class="form_but">
+                        <input type="submit" value="Сохранить" class="button succes">
+                        <input type="reset" value="Очистить" class="button simple">
+                    </div>
+                </form>
+            </div>
+
+            <div class="admin_menu" id="admin_menu">
+                <h3>Меню заведения</h3>
+                <div id="tab-container">
+                    <ul class="catalog_nav etabs" data-bind="foreach: Categories">
+                        <li data-bind="attr: { class: activeText() } ">
+                            <a data-bind="click: $root.setActiveCategory  ">
+                                <span data-bind="text: Name"></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <input type="hidden" id="newPhotoTmpUrl" />
+                    <div data-bind="foreach: Categories">
+                        <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
+                            <div data-bind="foreach: Dishes">
+                                <div class="catalog_item">
+                                    <div class="photo">
+                                        <a href="#" class="addfile">
+                                            <img width="186" height="131" data-bind="attr: { id: 'newPhotoImage'+id(), src: Image() }"></img>
+                                        Фото блюда
+                                            <input class="fileupload" type="file" name="uploads" data-url="/upload" data-bind="attr: { id: 'newPhotoInput'+id() }, uploadImage: id()"></a>
+                                    </div>
+                                    <div class="info">
+                                        <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: Name">
+                                        <textarea name="" id="" placeholder="Описание блюда" required data-bind="value: Description"></textarea>
+                                        <input type="text" name="" placeholder="0" id="" class="price" required data-bind="value: Price"><span class="currency">руб</span>
+                                        <a href="#" class="button " data-bind="click: id()!=null ? updateDish : $parent.addDishToDb">Сохранить</a>
+                                        <div class="week">
+                                            <input type="checkbox" value="AllWeek" data-bind=" attr:{ id: 'allWeek' + id(), name: 'allWeek' + id()  },checked: Days"><label data-bind="attr:{ for: 'allweek' + id()  }" class="check">Всю неделю</label>
+                                            <input type="checkbox" value="Mon" data-bind="attr:{ id: 'mon' + id(),name: 'mon' + id()  },checked: Days"><label data-bind="attr:{ for: 'mon' + id()  }" class="check">Пон</label>
+                                            <input type="checkbox" value="Tue" data-bind="attr:{ id: 'tue' + id(),name: 'tue' + id()  },checked: Days"><label data-bind="attr:{ for: 'tue' + id()  }" class="check">Втр</label>
+                                            <input type="checkbox" value="Wed" data-bind="attr:{ id: 'wed' + id(),name: 'wed' + id()  },checked: Days"><label data-bind="attr:{ for: 'wed' + id()  }" class="check">Срд</label>
+                                            <input type="checkbox" value="Thu" data-bind="attr:{ id: 'thu' + id(),name: 'thu' + id()  },checked: Days"><label data-bind="attr:{ for: 'thu' + id()  }" class="check">Чтв</label>
+                                            <input type="checkbox" value="Fri" data-bind="attr:{ id: 'fri' + id(),name: 'fri' + id()  },checked: Days"><label data-bind="attr:{ for: 'fri' + id()  }" class="check">Пят</label>
+                                            <input type="checkbox" value="Sat" data-bind="attr:{ id: 'sat' + id(),name: 'sat' + id()  },checked: Days"><label data-bind="attr:{ for: 'sat' + id()  }" class="check">Суб</label>
+                                            <input type="checkbox" value="Sun" data-bind="attr:{ id: 'sun' + id(),name: 'sun' + id()  },checked: Days"><label data-bind="attr:{ for: 'sun' + id()  }" class="check">Вск</label>
+                                        </div>
+                                    </div>
+                                    <a href="#" class="delete" data-bind="click: $parent.removeDish"></a>
+                                </div>
+                            </div>
+                            <a href="#" class="button succes small" data-bind="click: addDish">+ Добавить блюдо</a>
+                        </div>
+
                     </div>
                     <div class="notification" data-bind="visible: showOk">
                         <span data-bind="text: Message"></span>
@@ -340,11 +345,10 @@
                         <span data-bind="text: Message"></span>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
     </div>
-</div>
 
 </div>
 </div>

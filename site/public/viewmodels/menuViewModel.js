@@ -24,9 +24,9 @@ function MenuViewModel(cafeId) {
         ko.utils.arrayForEach(self.OrderedDishes(), function (dish) {
             if (first) {
                 $.ajax({
-                        url: '/api/order/createOrder/' + self.CafeId + '/' + dish.id() + '/1',
-                        type: "GET",
-                        async: false
+                    url: '/api/order/createOrder/' + self.CafeId + '/' + dish.id() + '/1',
+                    type: "GET",
+                    async: false
                 }).done(function (order) {
                     orderId = order._id;
                     first = false;
@@ -36,14 +36,14 @@ function MenuViewModel(cafeId) {
                     url: '/api/order/addDish/' + orderId + '/' + self.CafeId + '/' + dish.id() + '/1',
                     type: "GET",
                     async: false
-                }).done(function (order) { orderId = order._id;  }
+                }).done(function (order) { orderId = order._id; }
                 )
-             }
+            }
             $.ajax({
                 url: '/api/order/calcPrice/' + orderId,
                 type: "GET",
                 async: false
-            }).done(function (order) { document.location.href = '/order/buy/' + order._id;})
+            }).done(function (order) { document.location.href = '/order/buy/' + order._id; })
 
         });
     }
@@ -75,7 +75,34 @@ function MenuViewModel(cafeId) {
                 type: "GET",
                 async: false
             }).done(function (allData) {
-                var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
+                var mappedDishes = $.map(allData, function (item) {
+                    var d = new Date();
+                    var n = d.getDay();
+                    var nStr = "";
+                    if (n === 1)
+                        nStr = "Mon";
+                    if (n === 2)
+                        nStr = "Tue";
+                    if (n === 3)
+                        nStr = "Wed";
+                    if (n === 4)
+                        nStr = "Thu";
+                    if (n === 5)
+                        nStr = "Fri";
+                    if (n === 6)
+                        nStr = "Sat";
+                    if (n === 7)
+                        nStr = "Sun";
+
+                    if ($.inArray("AllWeek", item.Days) > 0) {
+                        return new Dish(item);
+                    }
+                    else if ($.inArray(nStr, item.Days) > 0) {
+                        return new Dish(item);
+                    }
+
+
+                });
                 var category = new Category(value);
                 category.Dishes(mappedDishes);
                 category.active(first);
