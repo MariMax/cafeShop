@@ -1,4 +1,4 @@
-function Category(data, cafeId, messageFunc,errorFunc) {
+function Category(data, cafeId, messageFunc, errorFunc) {
     var self = this;
     self.messageFunc = messageFunc;
     self.errorFunc = errorFunc;
@@ -15,7 +15,7 @@ function Category(data, cafeId, messageFunc,errorFunc) {
         return '';
     });
 
-    
+
 
     self.newDishName = ko.observable();
     self.newDishDescription = ko.observable();
@@ -27,7 +27,9 @@ function Category(data, cafeId, messageFunc,errorFunc) {
         self.Dishes.push(dish);
     };
     self.addDishToDb = function (dishData) {
-        var dish = new Dish({ Name: dishData.Name(), Description: dishData.Description(), Price: dishData.Price(), Days: dishData.Days(), Image: dishData.Image() });
+        debugger;
+        var imageUrl = $('#newPhotoTmpUrl').val();
+        var dish = new Dish({ Name: dishData.Name(), Description: dishData.Description(), Price: dishData.Price(), Days: dishData.Days(), Image: imageUrl });
         var url = "/api/cafe/" + self.cafeId + "/category/" + self.id() + "/dishes";
         var jsonData = ko.toJSON(dish);
         $.ajax(url, {

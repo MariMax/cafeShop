@@ -4,6 +4,18 @@ function AdminViewModel(cafeId) {
     self.cafeId = cafeId;
     self.Categories = ko.observableArray([]);
 
+    self.Message = ko.observable("");
+    self.showOk = ko.observable(false);
+    self.showError = ko.observable(false);
+
+    self.showOkMessage = ko.computed(function () {
+        return self.showOk() && (self.Message().length > 0);
+    });
+
+    self.showErrorMessage = ko.computed(function () {
+        return self.showError() && (self.Message().length > 0);
+    });
+
     var okMessage = function (message) {
         self.Message(message);
         self.showOk(true);
@@ -63,9 +75,7 @@ function AdminViewModel(cafeId) {
         });
     };
 
-    self.Message = ko.observable("");
-    self.showOk = ko.observable(false);
-    self.showError = ko.observable(false);
+
 
     self.hideOk = ko.computed(self.showOk).extend({ throttle: 1000 });
     self.hideOk.subscribe(function (val) {
