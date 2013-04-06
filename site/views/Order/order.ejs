@@ -1,12 +1,8 @@
 ﻿<% layout('../layout') -%>
-
 <div class="page_title_block">
     <h1>Оформление заказа</h1>
     <div class="border_wave_bot"></div>
 </div>
-
-
-
 <div id="order_page" class="order_page">
     	    <div class="cafe_info">
 				<div class="name"><span data-bind="text: CafeName"></span></div>
@@ -15,10 +11,6 @@
 				<div class="info_item time"><span data-bind="text: CafeWorkTime"></span></div>
 			</div>
     <div><input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
-
-
-
-
         <div class="basket_block" data-bind="foreach: lines">
             <div class="item">
                 <div class="img"><img data-bind="attr: { src: product().Image, alt: product().Name }"></div>
@@ -34,39 +26,17 @@
             </div>
         </div>
         <div class="order_total">Итого: <b><span data-bind="text: Total()"></span> р.</b></div>
-    
-
-
-
-        <div id="messenger" class="messenger" data-bind='text: hasErrorMessage()'>
-
-        </div>
-
+    <div id="messenger" class="messenger" data-bind='text: hasErrorMessage()'></div>
         <div class="order_info">
-
-            <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'">
-            
-            </div>
+            <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
             <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>
             <div class="info_item"><label>Ваш e-mail для связи</label> <input type="text" name="email" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'" placeholder="mail@mail.ru"></div>
             <div class="info_item"><label>Описание заказа</label> <input type="text" name="" id="" data-bind="value: description,valueUpdate: 'afterkeydown'"></div>
             <div class="info_item time">Приготовить заказ к <input type="text" name="" id="" data-bind="value: hour">:<input type="text" name="" id="" data-bind="value: minute"> ч</div>
-
-
         </div>
-
-
         <div class="buttons">
             <div class="form_but">
                 <input type="submit" value="Перейти к оплате" class="button big succes" data-bind="click: $root.order">
             </div>
-        </div>
-
-
-    
+        </div>    
 </div>
-
-
-
-
-
