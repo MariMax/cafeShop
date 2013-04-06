@@ -1,5 +1,4 @@
 ﻿<% layout('../layout') -%>
-<div class="content">
     <script type="text/javascript">
 
 
@@ -223,15 +222,9 @@
                                  longitude.attr('value', temp[0]);
                                  latitude.attr('value', temp[1]);
                                  addressInput.attr('value', ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description)
-                             }
-                             console.log(ar.length);
-                             console.log("_______Start_________");
-                             for (var key in ar) {
-                                 var val = ar[key];
-        
-                                 console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind + ' ' + val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
-                             }
-                             console.log("________end_________");
+                                 addressInput.addClass('succes');
+                             }else addressInput.removeClass('succes');
+                           
                          })
             })
         });
@@ -351,4 +344,4 @@
     </div>
 
 </div>
-</div>
+
