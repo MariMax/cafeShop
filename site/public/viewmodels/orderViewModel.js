@@ -111,16 +111,19 @@ var CartLine = function(dish, count) {
  
 };
 var Cart = function (orderId) {
-    // Stores an array of lines, and from these, can work out the grandTotal
+
     var self = this;
     self.orderId = orderId;
-    self.lines = ko.observableArray(); // Put one line in by default
-    self.Total = ko.computed(function () {
-        var total = 0;
-        $.each(self.lines(), function () { total += this.subtotal() })
-        return total;
-    });
+    self.lines = ko.observableArray();
+    self.total = function () {
+        var sum = 0;
+        for (var key in self.lines()) {
+            sum += self.lines()[key].subtotal()
+        }
+        return sum;
+    };
     self.cafeId = ko.observable();
+
     self.CafeName = ko.observable();
     self.CafeAddress = ko.observable('Адрес не задан');
     self.CafePhone = ko.observable('Телефон не задан');
@@ -130,15 +133,15 @@ var Cart = function (orderId) {
     self.email = ko.observable("").extend({ requiredEmail: "Введите email" });
     self.description = ko.observable();
     self.hour = ko.observable(12).extend({ numeric: 24 });
-    self.minute = ko.observable(00).extend({ numeric: 60 });;
-    
+    self.minute = ko.observable(00).extend({ numeric: 60 }); ;
+
 
 
     self.hasErrorMessage = ko.computed(function () {
         var text = "";
         if (self.userName.hasError() || self.cellPhone.hasError() || self.email.hasError())
         { text += "Все поля должны быть заполнены"; }
-        
+
         return text;
     });
 
@@ -197,9 +200,9 @@ var Cart = function (orderId) {
 
 
         if (order.UserName)
-             self.userName(order.UserName);
+            self.userName(order.UserName);
         if (order.Description)
-             self.description(order.Description);
+            self.description(order.Description);
 
 
         ko.utils.arrayForEach(order.Dishes, function (dish) {
@@ -210,18 +213,20 @@ var Cart = function (orderId) {
             }).done(function (b_dish) {
 
                 self.lines.push(new CartLine(b_dish, dish.count));
-
+                
             });
 
         });
 
         self.cafeId = order._cafe;
+        self.orderPrice = order.Price;
 
         $.ajax({
             url: "/api/cafes/" + order._cafe,
             type: "GET",
             async: false
         }).done(function (cafe) {
+
             if (cafe.Name)
                 self.CafeName(cafe.Name);
             if (cafe.Address)

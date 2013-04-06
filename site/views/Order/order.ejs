@@ -3,10 +3,10 @@
 </div>
 <div id="order_page" class="order_page">
     	    <div class="cafe_info">
-				<div class="name"><span data-bind="text: CafeName"></span></div>
-				<div class="info_item address"><span data-bind="text: CafeAddress"></span></div>
-				<div class="info_item phone"><span data-bind="text: CafePhone"></span></div>
-				<div class="info_item time"><span data-bind="text: CafeWorkTime"></span></div>
+				<div class="name"><span data-bind="text: CafeName()"></span></div>
+				<div class="info_item address"><span data-bind="text: CafeAddress()"></span></div>
+				<div class="info_item phone"><span data-bind="text: CafePhone()"></span></div>
+				<div class="info_item time"><span data-bind="text: CafeWorkTime()"></span></div>
 			</div>
     <div><input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
         <div class="basket_block" data-bind="foreach: lines">
@@ -22,8 +22,9 @@
 			=
                 </div>
             </div>
-        </div>
-        <div class="order_total">Итого: <b><span data-bind="text: Total()"></span> р.</b></div>
+           
+        </div><div class="order_total">Итого: <b><span data-bind="text: $root.total()"></span> р.</b></div>
+         
     <div id="messenger" class="messenger" data-bind='text: hasErrorMessage()'></div>
         <div class="order_info">
             <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
