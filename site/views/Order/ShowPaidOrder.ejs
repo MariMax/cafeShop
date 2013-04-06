@@ -7,20 +7,13 @@
 
 
 <div id="order_page" class="order_page">
+        	 <div class="cafe_info">
+				<div class="name"><span data-bind="text: CafeName"></span></div>
+				<div class="info_item address"><span data-bind="text: CafeAddress"></span></div>
+				<div class="info_item phone"><span data-bind="text: CafePhone"></span></div>
+				<div class="info_item time"><span data-bind="text: CafeWorkTime"></span></div>
+			</div>
     <div><input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
-    <div class="cafe_page" id="cafe_menu_page">
-    <div class="cafe_info page_title_block">
-        <div class="cafe_name"><span data-bind="text: CafeName"></span></div>
-        <div class="cafe_tip"><span data-bind="text: CafeWorkTime"></span></div>
-        <div class="cafe_address"><a href="#"><span data-bind="text: CafeAddress"></span></a></div>
-        <div class="cafe_tel"><span data-bind="text: CafePhone"></span></div>
-        
-        <div class="border_wave_bot"></div>
-    </div>
-        </div>
-
-
-
         <div class="basket_block" data-bind="foreach: lines">
             <div class="item">
                 <div class="img"><img data-bind="attr: { src: product().Image, alt: product().Name }"></div>
