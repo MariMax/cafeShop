@@ -1,3 +1,32 @@
+ko.extenders.numeric = function (target, maxValue) {
+    //create a writeable computed observable to intercept writes to our observable
+    var result = ko.computed({
+        read: target,  //always return the original observables value
+        write: function (newValue) {
+            var current = target(),
+
+                newValueAsNum = isNaN(newValue) || newValue > maxValue || newValue < 0 ? 12 : parseFloat(+newValue);
+
+
+            //only write if it changed
+            if (newValueAsNum !== current) {
+                target(newValueAsNum);
+            } else {
+                //if the rounded value is the same, but a different value was written, force a notification for the current field
+                if (newValue !== current) {
+                    target.notifySubscribers(newValueAsNum);
+                }
+            }
+        }
+    });
+
+    //initialize with current value to make sure it is rounded appropriately
+    result(target());
+
+    //return the new computed observable
+    return result;
+};
+
 ko.extenders.required = function(target, overrideMessage) {
     //add some sub-observables to our observable
     target.hasError = ko.observable();
@@ -100,8 +129,8 @@ var Cart = function (orderId) {
     self.cellPhone = ko.observable("").extend({ requiredCellPhone: "Введите номер телефона" });
     self.email = ko.observable("").extend({ requiredEmail: "Введите email" });
     self.description = ko.observable();
-    self.hour = ko.observable(12);
-    self.minute = ko.observable(00);
+    self.hour = ko.observable(12).extend({ numeric: 24 });
+    self.minute = ko.observable(00).extend({ numeric: 60 });;
     
 
 
