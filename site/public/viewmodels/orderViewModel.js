@@ -193,7 +193,7 @@ var Cart = function (orderId) {
         }
     }
 
-    $.getJSON('/api/order/' + orderId+'/0', function (order) {
+    $.getJSON('/api/order/' + orderId, function (order) {
 
 
         if (order.UserName)
