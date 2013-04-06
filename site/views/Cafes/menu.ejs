@@ -1,72 +1,72 @@
 
 <% layout('../layout') -%>
 
-<div class="content">
-    <div class="cafe_page" id="cafe_menu_page">
-        <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
-        <div class="cafe_info page_title_block">
-            <div class="cafe_name"><span data-bind="text: CafeName"></span></div>
-            <div class="cafe_tip"><span data-bind="text: CafeWorkTime"></span></div>
-            <div class="cafe_address"><a href="#"><span data-bind="text: CafeAddress"></span></a></div>
-            <div class="cafe_tel"><span data-bind="text: CafePhone"></span></div>
-            <div class="border_wave_bot"></div>
-        </div>
-        <div class="cafe_menu" id="tab-container">
-            <ul class="catalog_nav etabs" data-bind="foreach: Categories">
-                <li data-bind="attr: { class: activeText() }">
-                    <a data-bind="click: $root.setActiveCategory  ">
-                        <span data-bind="text: Name"></span>
-                    </a>
-                </li>
-            </ul>
-            <div data-bind="foreach: Categories">
-                <div data-bind="attr: { id: IdName , class: active() ? 'catalog clearfix active':'catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
-                    <div data-bind="foreach: Dishes">
-                        <div class="catalog_item">
-                            <div class="img"><img data-bind="attr: { src: Image(), alt: Name() }" width="186" height="131"></div>
-                            <h3><span data-bind="text: Name"></span></h3>
-                            <div class="price"><span data-bind="text: Price"></span> р.</div>
-                            <div class="buy">
-                                <a href="#" data-bind="click: $root.buyDish">заказать</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <footer>
-            <div class="wrap">
-                <div class="basket">
-			Вы выбрали:
-                    <a href="#" class="basket_link"><span data-bind="text: OrderedDishes().length"></span> блюда на <span data-bind="text: OrderedDishesPrices()"></span> руб.</a>
-                    <a href="#" class="order button big cursiv second" data-bind="click: $root.order">Оформить</a>
-                </div>
-                <div class="basket_block" data-bind="foreach: OrderedDishes">
-                    <div class="item">
-                        <div class="img">
-                            <img data-bind="attr: { src: Image(), alt: Name() }"></img>
-                        </div>
-                        <h3><span data-bind="text: Name"></span></h3>
-                        <div class="price"><span data-bind="text: Price"></span></div>
-                    </div>
-                </div>
-                <div class="admin_block">
-                    <a href="/users/login" id="link1">Вы владелец кафе или ресторана?</a>
-                    <a href="#" style="display: none" id="link2">Страница заведения</a>
-                    <a href="#" style="display: none" id="link3">Администрирование</a>
-                </div>
-            </div>
-        </footer>
-    </div>
 
-    <script type="text/javascript">
-        $('.basket_link').mouseover(function () {
-            $('.basket_block').show().removeClass('fadeOutDown').addClass('animated fadeInUp')
-        }).mouseout(function () {
-            $('.basket_block').removeClass('fadeInUp').addClass('fadeOutDown');
-            setTimeout(function () {
-                $('.basket_block').hide();
-            }, 500)
-        });
-    </script>
+<div class="cafe_page" id="cafe_menu_page">
+    <input hidden="hidden" value="<%= cafeId %>" id="cafeId" />
+    <div class="cafe_info page_title_block">
+        <div class="cafe_name"><span data-bind="text: CafeName"></span></div>
+        <div class="cafe_tip"><span data-bind="text: CafeWorkTime"></span></div>
+        <div class="cafe_address"><a href="#"><span data-bind="text: CafeAddress"></span></a></div>
+        <div class="cafe_tel"><span data-bind="text: CafePhone"></span></div>
+        <div class="border_wave_bot"></div>
+    </div>
+    <div class="cafe_menu" id="tab-container">
+        <ul class="catalog_nav etabs" data-bind="foreach: Categories">
+            <li data-bind="attr: { class: activeText() }">
+                <a data-bind="click: $root.setActiveCategory  ">
+                    <span data-bind="text: Name"></span>
+                </a>
+            </li>
+        </ul>
+        <div data-bind="foreach: Categories">
+            <div data-bind="attr: { id: IdName , class: active() ? 'catalog clearfix active':'catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
+                <div data-bind="foreach: Dishes">
+                    <div class="catalog_item">
+                        <div class="img"><img data-bind="attr: { src: Image(), alt: Name() }" width="186" height="131"></div>
+                        <h3><span data-bind="text: Name"></span></h3>
+                        <div class="price"><span data-bind="text: Price"></span> р.</div>
+                        <div class="buy">
+                            <a href="#" data-bind="click: $root.buyDish">заказать</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="wrap">
+            <div class="basket">
+			Вы выбрали:
+                <a href="#" class="basket_link"><span data-bind="text: OrderedDishes().length"></span> блюда на <span data-bind="text: OrderedDishesPrices()"></span> руб.</a>
+                <a href="#" class="order button big cursiv second" data-bind="click: $root.order">Оформить</a>
+            </div>
+            <div class="basket_block" data-bind="foreach: OrderedDishes">
+                <div class="item">
+                    <div class="img">
+                        <img data-bind="attr: { src: Image(), alt: Name() }"></img>
+                    </div>
+                    <h3><span data-bind="text: Name"></span></h3>
+                    <div class="price"><span data-bind="text: Price"></span></div>
+                </div>
+            </div>
+            <div class="admin_block">
+                <a href="/users/login" id="link1">Вы владелец кафе или ресторана?</a>
+                <a href="#" style="display: none" id="link2">Страница заведения</a>
+                <a href="#" style="display: none" id="link3">Администрирование</a>
+            </div>
+        </div>
+    </footer>
 </div>
+
+<script type="text/javascript">
+    $('.basket_link').mouseover(function () {
+        $('.basket_block').show().removeClass('fadeOutDown').addClass('animated fadeInUp')
+    }).mouseout(function () {
+        $('.basket_block').removeClass('fadeInUp').addClass('fadeOutDown');
+        setTimeout(function () {
+            $('.basket_block').hide();
+        }, 500)
+    });
+</script>
+

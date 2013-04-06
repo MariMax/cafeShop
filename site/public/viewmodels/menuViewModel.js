@@ -94,7 +94,8 @@ function MenuViewModel(cafeId) {
                     if (n === 7)
                         nStr = "Sun";
 
-                    if ($.inArray("AllWeek", item.Days) >= 0) {
+                    //if ($.inArray("AllWeek", item.Days) >= 0) {
+                    if (item.Days.length == 0) {
                         return new Dish(item);
                     }
                     else if ($.inArray(nStr, item.Days) >= 0) {
