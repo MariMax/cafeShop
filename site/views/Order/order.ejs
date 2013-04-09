@@ -8,7 +8,7 @@
 				<div class="info_item phone"><span data-bind="text: CafePhone()"></span></div>
 				<div class="info_item time"><span data-bind="text: CafeWorkTime()"></span></div>
 			</div>
-    <div><input id="orderId" type="text" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
+    <div><input id="orderId" type="hidden" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
         <div class="basket_block" data-bind="foreach: lines">
             <div class="item">
                 <div class="img"><img data-bind="attr: { src: product().Image, alt: product().Name }"></div>
