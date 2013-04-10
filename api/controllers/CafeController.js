@@ -94,7 +94,7 @@ exports.add_routes = function (app) {
     app.get("/api/cafes/:cafeId", function (req, res) {
         Cafe.findOne({ _id: req.params.cafeId }, function (error, cafe) {
             if (error) res.json(null, 404); else {
-
+                console.log(cafe);
                 cafe.CellPhoneVerificationCode = '';
 
                 res.json(cafe, 200);
@@ -103,7 +103,7 @@ exports.add_routes = function (app) {
     });
 
     app.get("/api/cafes/all/:i", function (req, res) {
-        Cafe.find({ CanWorkInCafeShop: true, Longitude:{$ne: null},Latitude:{$ne: null}  }, function (error, cafes) {
+        Cafe.find({ CanWorkInCafeShop: true, Longitude: { $ne: null }, Latitude: { $ne: null} }, function (error, cafes) {
             if (error) res.json(null, 404); else {
                 res.json(cafes, 200);
             }

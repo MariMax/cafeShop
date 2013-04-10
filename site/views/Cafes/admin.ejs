@@ -117,7 +117,7 @@
                          $("#messenger").html(data.message);
                          console.log("done " + data.message);
                          $("#messenger").fadeIn("slow");
-                         $('#verify').removeAttr('hidden');
+                         $('#verify').removeAttr('style');
                      }
                      if (data.status == 500) {
                          $("#messenger").html(data.message);
@@ -275,7 +275,7 @@
                     <div class="input"><input type="text" size="20" id="cellPhone" name="cellPhone" required>
                     </div>
                 </div>
-                <div id="verify" class="form_item" hidden>
+                <div id="verify" class="form_item" style="display: none">
                     <div class="label">Введите код подтверждения</div>
                     <div class="input"><input id="cellPhoneConfirmation" type="text" size="20" name="token">
 
