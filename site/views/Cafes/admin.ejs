@@ -4,12 +4,12 @@
 
 
 
-    
-    
-    
-    
+
+
+
+
     $(function () {
-    
+
         //$('#tmpfileupload').fileupload({ dataType: 'json',
         //    done: function (e, data) {
         //        debugger;
@@ -20,7 +20,7 @@
         //        $("#newPhotoTmpUrl").val(data.result[0].url);
         //    }
         //});
-    
+
         //$('.fileupload').change(function (e) {
         //    if ($(this).val() == '' || /^\s+$/.test($(this).val())) return false;
         //    else {
@@ -29,7 +29,7 @@
         //    }
         //    return false;
         //});
-    
+
         //      //function postImageToServer(form,e) {
         //    form.ajaxSubmit({
         //        success: function (response) {
@@ -52,11 +52,11 @@
         //    //TODO: We will fill this in later
         //        }
         //});
-    
+
         // Have to stop the form from submitting and causing                                                                                                       
         // a page refresh - don't forget this                                                                                                                      
-    
-    
+
+
         //$('#userPhotoInput').change(function (e) {
         //    e.preventDefault();
         //    //nothing to do if the upload field is null
@@ -64,13 +64,13 @@
         //    else $('#uploadForm').submit();
         //    return false;
         //});
-    
-    
+
+
         function getCafe() {
             var cafeId = $('#cafeId').val();
-            var jqXHR = $.get('/api/cafes/' + cafeId)
+            var jqXHR = $.ajax({ url: '/api/cafes/' + cafeId, cache: false, async: true })
                  .done(function (cafe) {
-    
+
                      if (cafe) {
                          if (cafe.Name)
                              $('#name').attr('value', cafe.Name);
@@ -89,9 +89,9 @@
                  })
         }
         getCafe();
-    
+
         function postData() {
-    
+
             var jqXHR = $.post('/api/cafes/updateValues', $('form').serialize())
                  .done(function (data) {
                      if (data.status == 200) {
@@ -107,12 +107,12 @@
                      }
                  });
         }
-    
+
         function updatePhone() {
-    
+
             var jqXHR = $.post('/api/cafes/updateCellPhone', $('form').serialize())
                  .done(function (data) {
-    
+
                      if (data.status == 200) {
                          $("#messenger").html(data.message);
                          console.log("done " + data.message);
@@ -127,7 +127,7 @@
                  });
         }
         function confirmCellPhone() {
-    
+
             var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
                  .done(function (data) {
                      if (data.status == 200) {
@@ -144,14 +144,14 @@
                          $("#messenger").fadeIn("slow");
                      }
                  });
-    
+
         }
-    
+
         function isValidPhoneNumber(number) {
             var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
             return pattern.test(number);
         }
-    
+
         $('#cellPhone').blur(function () {
             var phone = $('#cellPhone').val();
             if (!isValidPhoneNumber(phone)) {
@@ -163,7 +163,7 @@
                 updatePhone();
             }
         })
-    
+
         $('#confirm').click(function () {
             var code = $('#cellPhoneConfirmation').val();
             if (!code) {
@@ -172,28 +172,28 @@
                 $("#messenger").fadeIn("slow");
             } else { confirmCellPhone(); }
         })
-    
+
         var field = new Array("Name", "cellPhone"); //поля обязательные 
-    
+
         $("form").submit(function () {// обрабатываем отправку формы  
             var error = 0; // индекс ошибки
             $("form").find(":input").each(function () {// проверяем каждое поле в форме
                 for (var i = 0; i < field.length; i++) { // если поле присутствует в списке обязательных
                     if ($(this).attr("name") == field[i]) { //проверяем поле формы на пустоту
-    
+
                         if (!$(this).val()) {// если в поле пустое
                             // $(this).css('border', 'red 1px solid'); // устанавливаем рамку красного цвета
                             error = 1; // определяем индекс ошибки       
-    
+
                         }
                         else {
                             // $(this).css('border', 'gray 1px solid'); // устанавливаем рамку обычного цвета
                         }
-    
+
                     }
                 }
             })
-    
+
             if (error == 0) { // если ошибок нет то отправляем данные
                 postData();
                 return false;
@@ -205,34 +205,44 @@
                 $("#messenger").fadeIn("slow");
                 return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
             }
-    
-    
-    
+
+
+
         })
-    
+
+
+
+
+    });
+
+    function GetLocation() {
         var longitude = $('#Longitude');
         var latitude = $('#Latitude');
         var addressInput = $('#Address');
-        addressInput.keyup(function () {
-            var address = addressInput.val();
-            $.get('http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address).
-                     done(function (data) {
-                         var ar = data.response.GeoObjectCollection.featureMember;
-    
-                         if (ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'house') {
-                             var b = ar[0].GeoObject.Point.pos;
-                             var temp = new Array();
-                             temp = b.split(' ');
-                             longitude.attr('value', temp[0]);
-                             latitude.attr('value', temp[1]);
-                             addressInput.attr('value', ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description)
-                             addressInput.addClass('succes');
-                         }else addressInput.removeClass('succes');
-    
-                     })
+        debugger;
+        var address = addressInput.val();
+        $.ajax({
+            url: 'http://geocode-maps.yandex.ru/1.x/?format=json&geocode=' + address,
+            cache: false,
+            async: false,
+            type: "GET"
+        }).done(function (data) {
+            var ar = data.response.GeoObjectCollection.featureMember;
+
+            if (ar[0].GeoObject.metaDataProperty.GeocoderMetaData.kind == 'house') {
+                var b = ar[0].GeoObject.Point.pos;
+                var temp = new Array();
+                temp = b.split(' ');
+                longitude.attr('value', temp[0]);
+                latitude.attr('value', temp[1]);
+                addressInput.attr('value', ar[0].GeoObject.name + ' ' + ar[0].GeoObject.description)
+                addressInput.addClass('succes');
+            } else addressInput.removeClass('succes');
+
         })
-    });
-    
+    }
+
+
 </script>
 <div class="admin_page" id="admin_page">
     <div class="admin_title page_title_block">
@@ -258,7 +268,7 @@
                 </div>
                 <div class="form_item">
                     <div class="label">Адрес</div>
-                    <div class="input"><input id="Address" type="text" size="60" name="Address" placeholder="Уфа, ул. Ленина 21"></div>
+                    <div class="input"><input id="Address" type="text" size="60" name="Address" placeholder="Уфа, ул. Ленина 21" onkeyup="GetLocation()"></div>
 
 
                 </div>

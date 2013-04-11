@@ -17,8 +17,7 @@ OrderFinalForm = form(
         .required(null, 'please enter userName'),
 
     filter("cellPhone").trim(),
-        validate("cellPhone")
-        .required(null, "please enter cellPhone"),
+        
 
     filter("description").trim(),
         validate("description")

@@ -148,7 +148,9 @@ exports.add_routes = function (app) {
                     if (error) res.send(error, 404);
                     else {
                         sendSMS(SMSconf, cafe.CellPhone, messageText, function (data, response) { console.log(data + " " + response) });
-                        sendSMS(SMSconf, clientPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                        if (clientPhone) {
+                            sendSMS(SMSconf, clientPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                        }
                         sendMail(clientEmail, conf.site_email, conf.site_name + ': approve order', messageText);
                         sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': approve order', messageText);
                         User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {

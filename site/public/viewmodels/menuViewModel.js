@@ -26,7 +26,8 @@ function MenuViewModel(cafeId) {
                 $.ajax({
                     url: '/api/order/createOrder/' + self.CafeId + '/' + dish.id() + '/1',
                     type: "GET",
-                    async: false
+                    async: false,
+                    cache: false
                 }).done(function (order) {
                     orderId = order._id;
                     first = false;
@@ -35,7 +36,8 @@ function MenuViewModel(cafeId) {
                 $.ajax({
                     url: '/api/order/addDish/' + orderId + '/' + self.CafeId + '/' + dish.id() + '/1',
                     type: "GET",
-                    async: false
+                    async: false,
+                    cache: false
                 }).done(function (order) { orderId = order._id; }
                 )
             }

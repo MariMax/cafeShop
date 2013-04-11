@@ -48,32 +48,6 @@ ko.extenders.required = function(target, overrideMessage) {
     return target;
 };
 
-ko.extenders.requiredCellPhone = function(target, overrideMessage) {
-    //add some sub-observables to our observable
-    target.hasError = ko.observable();
-    target.validationMessage = ko.observable();
- 
-    //define a function to do validation
-            function isValidPhoneNumber(number) {
-            var pattern = new RegExp(/^(\+7)[0-9]{10}$/); //валидный российский номер
-            return pattern.test(number);
-        }
-
-    function validate(newValue) {
-       target.hasError(!isValidPhoneNumber(newValue));
-       target.validationMessage(isValidPhoneNumber(newValue) ? "" : overrideMessage || "This field is required");
-    }
- 
-    //initial validation
-    validate(target());
- 
-    //validate whenever the value changes
-    target.subscribe(validate);
- 
-    //return the original observable
-    return target;
-};
-
 ko.extenders.requiredEmail = function(target, overrideMessage) {
     //add some sub-observables to our observable
     target.hasError = ko.observable();
@@ -129,7 +103,7 @@ var Cart = function (orderId) {
     self.CafePhone = ko.observable('Телефон не задан');
     self.CafeWorkTime = ko.observable('Время работы не задано');
     self.userName = ko.observable("").extend({ required: "Введите имя пользователя" });
-    self.cellPhone = ko.observable("").extend({ requiredCellPhone: "Введите номер телефона" });
+    self.cellPhone = ko.observable("");
     self.email = ko.observable("").extend({ requiredEmail: "Введите email" });
     self.description = ko.observable();
     self.hour = ko.observable(12).extend({ numeric: 24 });
@@ -139,7 +113,7 @@ var Cart = function (orderId) {
 
     self.hasErrorMessage = ko.computed(function () {
         var text = "";
-        if (self.userName.hasError() || self.cellPhone.hasError() || self.email.hasError())
+        if (self.userName.hasError() || self.email.hasError())
         { text += "Все поля должны быть заполнены"; }
 
         return text;
@@ -147,7 +121,7 @@ var Cart = function (orderId) {
 
     self.hasError = ko.computed(function () {
 
-        if (self.userName.hasError() || self.cellPhone.hasError() || self.email.hasError())
+        if (self.userName.hasError() || self.email.hasError())
             return true;
         else return false;
     });
@@ -161,7 +135,8 @@ var Cart = function (orderId) {
             $.ajax({
                 url: '/api/order/setDish/' + self.orderId + '/' + self.cafeId + '/' + line.product()._id + '/' + line.quantity(),
                 type: "GET",
-                async: false
+                async: false,
+                cache: false
             }).done(function (order) { orderId = order._id; });
 
 
@@ -170,7 +145,8 @@ var Cart = function (orderId) {
         $.ajax({
             url: '/api/order/calcPrice/' + self.orderId,
             type: "GET",
-            async: false
+            async: false,
+            cache: false
         }).done(function (order) { })
 
         if (self.hasError()) {
@@ -196,7 +172,7 @@ var Cart = function (orderId) {
         }
     }
 
-    $.getJSON('/api/order/' + orderId, function (order) {
+    $.ajax({url:'/api/order/' + orderId, cache:false, type:"GET"}).done(function(order) {
 
 
         if (order.UserName)
@@ -209,7 +185,8 @@ var Cart = function (orderId) {
             $.ajax({
                 url: "/api/dishes/" + dish.dishId,
                 type: "GET",
-                async: false
+                async: false,
+                cache:false
             }).done(function (b_dish) {
 
                 self.lines.push(new CartLine(b_dish, dish.count));
@@ -224,7 +201,8 @@ var Cart = function (orderId) {
         $.ajax({
             url: "/api/cafes/" + order._cafe,
             type: "GET",
-            async: false
+            async: false,
+            cache:false
         }).done(function (cafe) {
 
             if (cafe.Name)
