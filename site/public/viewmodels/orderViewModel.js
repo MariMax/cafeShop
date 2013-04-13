@@ -161,7 +161,7 @@ var Cart = function (orderId) {
             data.userName = self.userName();
             data.spUserEmail = self.email();
             data.orderId = self.orderId;
-            data.description = self.description() ? self.description() : "" + " Приготовить к " + self.hour() + ":" + self.minute();
+            data.description = self.description() ? self.description()+" "+ self.hour() + ":" + self.minute() : self.hour() + ":" + self.minute() ;
             data.cellPhone = self.cellPhone();
 
             $.post('/api/order/pay', data)

@@ -40,7 +40,10 @@ exports.sendSMS = function (opt, phoneTo, messageText, callback) {
                 sender = opt.sender,
                 password = opt.password,
                 body = messageText,
-                uri = '/?username=' + login + '&password=' + password + '&destination_address=' + to + '&source_address=' + sender + '&message=' + body,host = 'api.avisosms.ru/sms/get',
+                
+
+                uri = '?login=' + login + '&psw=' + password + '&phones=' + to + '&sender=' + sender + '&mes=' + body+'&translit=1',
+                host = 'smsc.ru/sys/send.php',
                 fullURL = 'http://' + host + uri;
 
                 rest.get(fullURL).addListener('complete', function (data, response) {
@@ -133,10 +136,14 @@ exports.ru2en = {
     'JA','a','b','v','g','d','e','jo','zh','z','i','j','k','l','m','n','o','p','r','s','t','u','f',
     'h','c','ch','sh','shh',String.fromCharCode(35),'i',String.fromCharCode(39),'je','ju','ja'],
 
-  translite : function (inp) {
-    var a = inp.split("");
-    for (var i=0,aL=a.length;i<aL;i++) {a[i] = ru2en.ru2en[a[i]]}
-    return a.join("");
+  translite : function(org_str) {
+    var tmp_str = [];
+    for(var i = 0, l = org_str.length; i < l; i++) {
+      var s = org_str.charAt(i), n = this.ru_str.indexOf(s);
+      if(n >= 0) { tmp_str[tmp_str.length] = this.en_str[n]; }
+      else { tmp_str[tmp_str.length] = s; }
+    }
+    return tmp_str.join("");
   }
 
 }
