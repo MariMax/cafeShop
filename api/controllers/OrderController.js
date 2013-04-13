@@ -4,6 +4,7 @@ var Cafe = require('../models/Cafe.js').Cafe;
 var forms = require('../forms/PayForms.js');
 var sendSMS = require('../models/CommonFunctions.js').sendSMS;
 var sendMail = require('../models/CommonFunctions.js').sendMail;
+var ru2en = require('../models/CommonFunctions.js').ru2en;
 var User = require('../models/User.js').User;
 
 exports.add_routes = function (app) {
@@ -134,9 +135,12 @@ exports.add_routes = function (app) {
     app.post("/api/order/paySystemAnswer", forms.OrderAnswerForm, function (req, res) {
         //Оплата Ответ платежной системы
         var orderId = req.form.spUserDataOrderId;
-        var messageText = conf.site_url + "/order/show/" + orderId;
+        var messageText = 'Vash zakaz: ';
+        var orderLink = conf.site_url + "/order/show/" + orderId;
         var clientPhone = "";
         var clientEmail = "";
+        var orderDishes = {};
+
         Order.approveOrder(orderId, function (error, order) {
             if (error) res.send("error", 404);
 
@@ -144,23 +148,93 @@ exports.add_routes = function (app) {
                 //Рассылка sms продавцу, покупателю и 3 email
                 clientPhone = order.UserPhone;
                 clientEmail = order.Email;
-                Cafe.getCafe(order._cafe, function (error, cafe) {
-                    if (error) res.send("error "+error, 404);
-                    else {
-                        sendSMS(SMSconf, cafe.CellPhone, messageText, function (data, response) { console.log(data + " " + response) });
-                        if (clientPhone) {
-                            sendSMS(SMSconf, clientPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                for (var key in order.Dishes) {
+                    orderDishes.dishIds.push(order.Dishes[key].dishId);
+                    orderDishes.dishCount.push(order.Dishes[key].count);
+                }
+                Dish.getDishes(dishIds, function (error, dishes) {
+                    if (error) res.send("error " + error, 404); else {
+                        for (var key in dishes) {
+                            var count = 0;
+                            for (var key2 in orderDishes.dishIds)
+                                if (orderDishes.dishIds[key2] == dishes[key]._id) {
+                                    count = orderDishes.dishCount[key2]; break;
+                                }
+                            messageText += ru2en.translite(dishes[key].Name) + ' ' + count + ' ';
                         }
-                        sendMail(clientEmail, conf.site_email, conf.site_name + ': approve order', messageText);
-                        sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': approve order', messageText);
-                        User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
-                            if (user) {
-                                sendMail(user.email, conf.site_email, conf.site_name + ': approve order', messageText);
-                            }else res.send("error "+error, 404);
+                        Cafe.getCafe(order._cafe, function (error, cafe) {
+                            if (error) res.send("error " + error, 404);
+                            else {
+                                sendSMS(SMSconf, cafe.CellPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                                if (clientPhone) {
+                                    sendSMS(SMSconf, clientPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                                }
+                                sendMail(clientEmail, conf.site_email, conf.site_name + ': approve order', messageText);
+                                sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': approve order', messageText);
+                                User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
+                                    if (user) {
+                                        sendMail(user.email, conf.site_email, conf.site_name + ': approve order', messageText);
+                                    } else res.send("error " + error, 404);
+                                })
+                            }
                         })
                     }
-                })
-                res.json("ok "+order, 200);
+                });
+                res.json("ok " + order, 200);
+            }
+        })
+    })
+
+    app.get("/api/order/paySystemAnswer/:orderId", function (req, res) {
+        //Оплата Ответ платежной системы
+        var orderId = req.params.orderId;
+        var messageText = 'Vash zakaz: ';
+        var orderLink = conf.site_url + "/order/show/" + orderId;
+        var clientPhone = "";
+        var clientEmail = "";
+        var orderDishes = {};
+
+        Order.approveOrder(orderId, function (error, order) {
+            if (error) res.send("error", 404);
+
+            else {
+                //Рассылка sms продавцу, покупателю и 3 email
+                clientPhone = order.UserPhone;
+                clientEmail = order.Email;
+                for (var key in order.Dishes) {
+                    orderDishes.dishIds.push(order.Dishes[key].dishId);
+                    orderDishes.dishCount.push(order.Dishes[key].count);
+                }
+                Dish.getDishes(dishIds, function (error, dishes) {
+                    if (error) res.send("error " + error, 404); else {
+                        for (var key in dishes) {
+                            var count = 0;
+                            for (var key2 in orderDishes.dishIds)
+                                if (orderDishes.dishIds[key2] == dishes[key]._id) {
+                                    count = orderDishes.dishCount[key2]; break;
+                                }
+                            messageText += ru2en.translite(dishes[key].Name) + ' ' + count + ' ';
+                        }
+                        messageText += 'order link '+orderLink;
+                        Cafe.getCafe(order._cafe, function (error, cafe) {
+                            if (error) res.send("error " + error, 404);
+                            else {
+                                sendSMS(SMSconf, cafe.CellPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                                if (clientPhone) {
+                                    sendSMS(SMSconf, clientPhone, messageText, function (data, response) { console.log(data + " " + response) });
+                                }
+                                sendMail(clientEmail, conf.site_email, conf.site_name + ': approve order', messageText);
+                                sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': approve order', messageText);
+                                User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
+                                    if (user) {
+                                        sendMail(user.email, conf.site_email, conf.site_name + ': approve order', messageText);
+                                    } else res.send("error " + error, 404);
+                                })
+                            }
+                        })
+                    }
+                });
+                res.json("ok " + order, 200);
             }
         })
     })

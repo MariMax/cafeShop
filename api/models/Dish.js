@@ -63,5 +63,9 @@ dishSchema.statics.getDish = function (dishId, callback) {
     this.findOne({ _id: dishId }, callback);
 }
 
+dishSchema.statics.getDishes = function (dishIds, callback) {
+    this.find({ _id: { $in: dishIds} }, callback);
+}
+
 Dish = mongoose.model('Dish', dishSchema);
 exports.Dish = Dish;
