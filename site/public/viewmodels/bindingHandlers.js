@@ -11,8 +11,8 @@ ko.bindingHandlers.uploadImage = {
                 //if (self.id() != null)
                 //    $("#newPhotoImage" + self.id()).attr("src", data.result[0].url);
                 //else
-                $(newId).attr("src", data.result[0].url);
-                $("#newPhotoTmpUrl").val(data.result[0].url);
+                $(newId).attr("src", data.result[0].thumbnail_url);
+                $("#newPhotoTmpUrl").val(data.result[0].thumbnail_url);
             }
         });
     },
