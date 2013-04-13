@@ -2,40 +2,53 @@
     <div class="border_wave_bot"></div>
 </div>
 <div id="order_page" class="order_page">
-    	    <div class="cafe_info">
-				<div class="name"><span data-bind="text: CafeName()"></span></div>
-				<div class="info_item address"><span data-bind="text: CafeAddress()"></span></div>
-				<div class="info_item phone"><span data-bind="text: CafePhone()"></span></div>
-				<div class="info_item time"><span data-bind="text: CafeWorkTime()"></span></div>
-			</div>
+    <div class="cafe_info">
+        <div class="name"><span data-bind="text: CafeName()"></span></div>
+        <div class="info_item address"><span data-bind="text: CafeAddress()"></span></div>
+        <div class="info_item phone"><span data-bind="text: CafePhone()"></span></div>
+        <div class="info_item time"><span data-bind="text: CafeWorkTime()"></span></div>
+    </div>
     <div><input id="orderId" type="hidden" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
-        <div class="basket_block" data-bind="foreach: lines">
-            <div class="item">
-                <div class="img"><img data-bind="attr: { src: product().Image, alt: product().Name }"></div>
-                <h3><span data-bind="text: product().Name"></span></h3>
-                <div class="price"><span data-bind="text: subtotal()"></span> р.
-                </div>
-                <div class="count">
-                    <div class="item_price"><span data-bind="text: product().Price"></span> р.</div>
-			x
-                    <div class="item_count"><input type="text" name="" id="" data-bind="value: quantity, valueUpdate: 'afterkeydown'"></div>
-			=
-                </div>
+    <div class="basket_block" data-bind="foreach: lines">
+        <div class="item">
+            <div class="img"><img data-bind="attr: { src: product().Image, alt: product().Name }"></div>
+            <h3><span data-bind="text: product().Name"></span></h3>
+            <div class="price"><span data-bind="text: subtotal()"></span> р.
             </div>
-           
-        </div><div class="order_total">Итого: <b><span data-bind="text: $root.total()"></span> р.</b></div>
-         
-    <div id="messenger" class="messenger" data-bind='text: hasErrorMessage()'></div>
+            <div class="count">
+                <div class="item_price"><span data-bind="text: product().Price"></span> р.</div>
+			x
+                <div class="item_count"><input type="text" name="" id="" data-bind="value: quantity, valueUpdate: 'afterkeydown'"></div>
+			=
+            </div>
+        </div>
+
+    </div><div class="order_total">Итого: <b><span data-bind="text: $root.total()"></span> р.</b></div>
+
+    <form data-bind="submit: $root.order">
+        <input type="hidden" name="spShopId" value="номер вашего магазина">
+        <input type="hidden" name="spShopPaymentId" data-bind="value: $root.PaymentId()">
+        <input type="hidden" name="spCurrency" value="rur">
+        <input type="hidden" name="spPurpose" value="Оплата заказа">
+        <input type="hidden" name="spAmount" data-bind="value: $root.total()">
+        <input type="hidden" name="spUserDataOrderId" value="<%= orderId %>">
+        <input type="hidden" name="spSelectedPS" value="">
+        <input type="hidden" name="spForbidden" value="">
+
+
+
+        <div id="messenger" class="messenger" data-bind="text: hasErrorMessage()"></div>
         <div class="order_info">
             <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
             <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>
-            <div class="info_item"><label>Ваш e-mail для связи</label> <input type="text" name="email" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'" placeholder="mail@mail.ru"></div>
+            <div class="info_item"><label>Ваш e-mail для связи</label> <input type="email" name="spUserEmail" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'" placeholder="mail@mail.ru"></div>
             <div class="info_item"><label>Описание заказа</label> <input type="text" name="" id="" data-bind="value: description,valueUpdate: 'afterkeydown'"></div>
             <div class="info_item time">Приготовить заказ к <input type="text" name="" id="" data-bind="value: hour">:<input type="text" name="" id="" data-bind="value: minute"> ч</div>
         </div>
         <div class="buttons">
             <div class="form_but">
-                <input type="submit" value="Перейти к оплате" class="button big succes" data-bind="click: $root.order">
+                <input type="submit" value="Перейти к оплате" class="button big succes">
             </div>
-        </div>    
+        </div>
+    </form>
 </div>

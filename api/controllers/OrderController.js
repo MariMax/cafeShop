@@ -123,7 +123,7 @@ exports.add_routes = function (app) {
             Order.setOrderInformation(orderId, req.form, function (error, order) {
                 if (error) res.send(error, 404);
                 else {
-                    res.send("Ok", 200);
+                    res.send(order, 200);
                 }
             })
         }
@@ -131,21 +131,21 @@ exports.add_routes = function (app) {
     })
 
 
-    app.get("/api/order/paySystemAnswer/:orderId", function (req, res) {
+    app.post("/api/order/paySystemAnswer", forms.OrderAnswerForm, function (req, res) {
         //Оплата Ответ платежной системы
-        var orderId = req.params.orderId;
+        var orderId = req.form.spUserDataOrderId;
         var messageText = conf.site_url + "/order/show/" + orderId;
         var clientPhone = "";
         var clientEmail = "";
         Order.approveOrder(orderId, function (error, order) {
-            if (error) res.send(error, 404);
+            if (error) res.send("error", 404);
 
             else {
                 //Рассылка sms продавцу, покупателю и 3 email
                 clientPhone = order.UserPhone;
                 clientEmail = order.Email;
                 Cafe.getCafe(order._cafe, function (error, cafe) {
-                    if (error) res.send(error, 404);
+                    if (error) res.send("error "+error, 404);
                     else {
                         sendSMS(SMSconf, cafe.CellPhone, messageText, function (data, response) { console.log(data + " " + response) });
                         if (clientPhone) {
@@ -156,11 +156,11 @@ exports.add_routes = function (app) {
                         User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
                             if (user) {
                                 sendMail(user.email, conf.site_email, conf.site_name + ': approve order', messageText);
-                            }
+                            }else res.send("error "+error, 404);
                         })
                     }
                 })
-                res.json(order, 200);
+                res.json("ok "+order, 200);
             }
         })
     })

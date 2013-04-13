@@ -12,29 +12,34 @@ var dishSchema = new Schema({
 });
 
 var orderSchema = new Schema({
-    _cafe:{type:ObjectId, ref:'Cafe'},
+    _cafe: { type: ObjectId, ref: 'Cafe' },
     //_deliveryMethod:{type:ObjectId, ref:'DeliveryMethod'},
-    UserName:String,
-    UserPhone:String,
-    Email:{
+    UserName: String,
+    UserPhone: String,
+    Email: {
         type: mongoose.SchemaTypes.Email
-       
+
     },
-    Dishes:[dishSchema],
-    Description:String,
-    Price:Number,
-    OrderDate:{type:Date, 'default' : Date.now()},
-    Approved:{type:Boolean, 'default' : false}/*оплачен ли заказ*/
+    Dishes: [dishSchema],
+    Description: String,
+    Price: Number,
+    OrderDate: { type: Date, 'default': Date.now() },
+    Approved: { type: Boolean, 'default': false }, /*оплачен ли заказ*/
+    PaymentId: { type: String },
+    PaymentAmmount: Number
     //OrderGetTime:{type:Date,'default' : Date.now()}/*Дата когда заказ должен быть выполнен*/
 
 });
 
 
 
-orderSchema.statics.createOrder = function (cafeId, dish, _quantify,_price, callback) {
+orderSchema.statics.createOrder = function (cafeId, dish, _quantify, _price, callback) {
     if (!_quantify) _quantify = 1;
     var instance = new Order();
-    var dishOrder = new OrderDish({ dishId: dish, count: _quantify, price:_price });
+    var dishOrder = new OrderDish({ dishId: dish, count: _quantify, price: _price });
+    var paymentId = '';
+    paymentId = paymentId.randomString(12);
+    instance.PaymentId = paymentId;
     instance._cafe = cafeId;
     instance.Dishes.push(dishOrder);
     instance.save(function (error, data) {
@@ -189,10 +194,12 @@ orderSchema.statics.setOrderInformation = function (orderId, data, callback) {
     console.log("UpdateOrderDescription");
     var newdata = {};
     if (data.description && data.description != '') newdata.Description = data.description;
-    if (data.email && data.email != '') newdata.Email = data.email;
+    if (data.spUserEmail && data.spUserEmail != '') newdata.Email = data.spUserEmail;
     if (data.userName && data.userName != '') newdata.UserName = data.userName;
     if (data.cellPhone && data.cellPhone != '') newdata.UserPhone = data.cellPhone;
     if (data.price && data.price > 0) newdata.Price = data.price;
+
+
     this.findOne({ _id: orderId, Approved: false }, function (err, order) {
         if (err) callback(err); else
             Order.findByIdAndUpdate(orderId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {

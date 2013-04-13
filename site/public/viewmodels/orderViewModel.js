@@ -107,7 +107,8 @@ var Cart = function (orderId) {
     self.email = ko.observable("").extend({ requiredEmail: "Введите email" });
     self.description = ko.observable();
     self.hour = ko.observable(12).extend({ numeric: 24 });
-    self.minute = ko.observable(00).extend({ numeric: 60 }); ;
+    self.minute = ko.observable(00).extend({ numeric: 60 });
+    self.PaymentId = ko.observable();
 
 
 
@@ -128,8 +129,8 @@ var Cart = function (orderId) {
 
     // Operations
 
-    self.order = function () {
-
+    self.order = function (orderParameters) {
+        debugger;
         ko.utils.arrayForEach(self.lines(), function (line) {
 
             $.ajax({
@@ -151,34 +152,36 @@ var Cart = function (orderId) {
 
         if (self.hasError()) {
 
-            document.location.href = '/order/buy/' + self.orderId;
+            return false;
+            //document.location.href = '/order/buy/' + self.orderId;
         }
         else {
 
             var data = {};
             data.userName = self.userName();
-            data.email = self.email();
+            data.spUserEmail = self.email();
             data.orderId = self.orderId;
             data.description = self.description() ? self.description() : "" + " Приготовить к " + self.hour() + ":" + self.minute();
             data.cellPhone = self.cellPhone();
 
             $.post('/api/order/pay', data)
             .done(function (data) {
-                document.location.href = '/order/show/' + self.orderId;
-                //document.location.href = '/order/buy/' + order._id;
-                //Отправить на страницу оплаты как вариант
+                debugger;
+                document.location.href = "http://sprypay.ru/sppi/?spShopId='213001'&spShopPaymentId='" + data.PaymentId + "'&spCurrency='rur'&spPurpose='Оплата заказа'&spAmount='" + data.Price + "'&spUserDataOrderId='" + data._id + "'&spSelectedPS=''&spForbidden=''&spUserEmail='" + data.Email + "'"
             });
 
         }
     }
 
-    $.ajax({url:'/api/order/' + orderId, cache:false, type:"GET"}).done(function(order) {
+    $.ajax({ url: '/api/order/' + orderId, cache: false, type: "GET" }).done(function (order) {
 
-
+        debugger;
         if (order.UserName)
             self.userName(order.UserName);
         if (order.Description)
             self.description(order.Description);
+        if (order.PaymentId)
+            self.PaymentId(order.PaymentId);
 
 
         ko.utils.arrayForEach(order.Dishes, function (dish) {
@@ -186,11 +189,11 @@ var Cart = function (orderId) {
                 url: "/api/dishes/" + dish.dishId,
                 type: "GET",
                 async: false,
-                cache:false
+                cache: false
             }).done(function (b_dish) {
 
                 self.lines.push(new CartLine(b_dish, dish.count));
-                
+
             });
 
         });
@@ -202,7 +205,7 @@ var Cart = function (orderId) {
             url: "/api/cafes/" + order._cafe,
             type: "GET",
             async: false,
-            cache:false
+            cache: false
         }).done(function (cafe) {
 
             if (cafe.Name)
