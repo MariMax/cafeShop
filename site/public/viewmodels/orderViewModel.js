@@ -167,7 +167,7 @@ var Cart = function (orderId) {
             $.post('/api/order/pay', data)
             .done(function (data) {
                 debugger;
-                document.location.href = "http://sprypay.ru/sppi/?spShopId='213001'&spShopPaymentId='" + data.PaymentId + "'&spCurrency='rur'&spPurpose='Оплата заказа'&spAmount='" + data.Price + "'&spUserDataOrderId='" + data._id + "'&spSelectedPS=''&spForbidden=''&spUserEmail='" + data.Email + "'"
+                document.location.href = "http://sprypay.ru/sppi/?spShopId=213001&spShopPaymentId=" + data.PaymentId + "&spCurrency=rur&spPurpose=Оплата заказа&spAmount=" + data.Price + "&spUserDataOrderId=" + data._id + "&spUserEmail=" + data.Email;
             });
 
         }

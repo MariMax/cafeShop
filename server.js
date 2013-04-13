@@ -59,6 +59,7 @@ if (fs.existsSync('./configDefault.js')) {
     });
     conf = configLocal.getSiteConfig();
     SMSconf = configLocal.getSMSConfig();
+    
 }
 else {
     console.log('Не удалось загрузить настройки');

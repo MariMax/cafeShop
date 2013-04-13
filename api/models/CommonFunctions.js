@@ -10,22 +10,45 @@ exports.hash =  function hash (msg, key) {
 
 exports.required = function required(val) { return val && val.length; }
 
-exports.sendSMS = function(opt, phoneTo, messageText, callback) {
-    var accountSid = opt.accountSid,
-        authToken = opt.authToken,
-        apiVersion = '2010-04-01',
-        uri = '/'+apiVersion+'/Accounts/'+accountSid+'/SMS/Messages',
-        host = 'api.twilio.com',
-        fullURL = 'https://'+accountSid+':'+authToken+'@'+host+uri,
-        from = opt.From,
-        to = phoneTo,
-        body = messageText;
+exports.sendSMS = function (opt, phoneTo, messageText, callback) {
+    switch (opt.service) {
+        case 1:
+            {
+                var accountSid = opt.accountSid, 
+                authToken = opt.authToken, 
+                apiVersion = '2010-04-01', 
+                uri = '/' + apiVersion + '/Accounts/' + accountSid + '/SMS/Messages', 
+                host = 'api.twilio.com', 
+                fullURL = 'https://' + accountSid + ':' + authToken + '@' + host + uri, 
+                from = opt.From, 
+                to = phoneTo, 
+                body = messageText;
 
-    rest.post(fullURL, {
-        data: { From:from, To:to, Body:body }
-    }).addListener('complete', function(data, response) {
-        callback(data,response);
-    });
+                rest.post(fullURL, {
+                    data: { From: from, To: to, Body: body }
+                }).addListener('complete', function (data, response) {
+                    callback(data, response);
+                });
+            } break;
+        case 2:
+            {
+                var to = phoneTo;
+                while (to.charAt(0) === '+')
+                    to = to.substr(1);
+
+                var login = opt.login, 
+                sender = opt.sender,
+                password = opt.password,
+                body = messageText,
+                uri = '/?username=' + login + '&password=' + password + '&destination_address=' + to + '&source_address=' + sender + '&message=' + body,host = 'api.avisosms.ru/sms/get',
+                fullURL = 'http://' + host + uri;
+
+                rest.get(fullURL).addListener('complete', function (data, response) {
+                    callback(data, response);
+                });
+
+            } break;
+    }
 }
 
 exports.sendMail = function sendMail(mailTo, mailFrom, subject, body, fn) {

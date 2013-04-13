@@ -6,14 +6,8 @@ exports.getSiteConfig = function () {
     db: {    	
         db: 'cafeShop',
     	host: 'localhost'
-    	//db: 'cafeshop',
-    	//host: 'ds049997.mongolab.com',
-        //port:'49997',
-        //username: 'cafeShop',
-        //password: 'XSWzaq'
        },
     secret: 'cafeShop',
-    //mongoConnection: 'mongodb://cafeShop:XSWzaq@ds049997.mongolab.com:49997/cafeshop'
     mongoConnection: 'mongodb://localhost/cafeShop'
   }
 
@@ -31,9 +25,16 @@ exports.getMailConfig = function () {
 
 exports.getSMSConfig = function () {
     configValues = {
+
+        service : 2,//1 - twilio, 2 - avisio
+        //options for 1
         accountSid:'AC26a253b30671ca908581ad0d64746241',
         authToken: 'b0cf25f4e9d41a5f3adad56386ce14df',
-        From:'+16572153237'
+        From:'+16572153237',
+        //options for 2
+        login:'MariMax',
+        password: 'XSWzaq',
+        sender:'idiEsh'
     }
      return configValues;
 }
