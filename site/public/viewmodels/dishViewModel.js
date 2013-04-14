@@ -22,7 +22,6 @@ function Dish(data, messageFunc,errorFunc) {
     }
 
     self.updateDish = function (dish) {
-        debugger;
         var url = "/api/dishes/" + this.id();
         dish.Image($('#newPhotoTmpUrl').val());
         var jsonData = ko.toJSON(dish);
