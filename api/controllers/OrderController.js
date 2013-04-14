@@ -136,9 +136,9 @@ exports.add_routes = function (app) {
     app.post("/api/order/paySystemAnswer", forms.OrderAnswerForm, function (req, res) {
         //Оплата Ответ платежной системы
         var orderId = req.form.spUserDataOrderId;
-        var messageText = 'Ваш заказ: ';
-        var cafeMessage = 'Вам заказ: '
-        var cafeSMSMessage = ''
+        var messageText = '';
+        var cafeMessage = '';
+        var cafeSMSMessage = '';
         var smsMessage = '';
         var orderLink = conf.site_url + "/order/show/" + orderId;
         var clientPhone = "";
@@ -147,12 +147,12 @@ exports.add_routes = function (app) {
         var myOrder = {};
         var hash = '';
         console.log(orderDishes);
-        try{
-        hash = md5(req.form.spPaymentId+req.form.spShopId+req.form.spShopPaymentId+req.form.spBalanceAmount+req.form.spAmount+req.form.spCurrency+req.form.spCustomerEmail+req.form.spPurpose+req.form.spPaymentSystemId+req.form.spPaymentSystemAmount+req.form.spPaymentSystemPaymentId+req.form.spEnrollDateTime+conf.sprySecret);
-        }catch(err)
-        {console.log(err+' wrong hash')}
+        try {
+            hash = md5(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
+        } catch (err)
+        { console.log(err + ' wrong hash') }
         Order.approveOrder(orderId, req.form, hash, function (error, order) {
-            if (error) res.send("error "+error, 404);
+            if (error) res.send("error " + error, 404);
 
             else {
                 myOrder = order;
@@ -178,14 +178,16 @@ exports.add_routes = function (app) {
                             messageText += dishes[key].Name + ' ' + count + '; ';
                             cafeMessage += dishes[key].Name + ' ' + count + '; ';
                         }
-                        messageText += orderLink + ' ' + myOrder.Description + ' Приятного аппетита!';
-                        cafeMessage += orderLink + ' ' + myOrder.Description;
-                        smsMessage = ru2en.translite(messageText);
+                        messageText += orderLink + ' ' + myOrder.Description;
+                        cafeMessage += orderLink + ' ' + myOrder.Description + ' оплачено: ' + myOrder.PaymentAmmount + ' клиент: ' + myOrder.UserName;
+//                        if (clientPhone) cafeMessage += ' тел.: ' + clientPhone;
                         cafeSMSMessage = ru2en.translite(cafeMessage);
-                        console.log(messageText);
                         Cafe.getCafe(order._cafe, function (error, cafe) {
                             if (error) res.send("error " + error, 404);
                             else {
+                                messageText += ' кафе: ' + cafe.Name + ' ' + cafe.WorkTime + ' ' + cafe.Address + ' Приятного аппетита!'
+                                smsMessage = ru2en.translite(messageText);
+                                console.log(messageText);
                                 sendSMS(SMSconf, cafe.CellPhone, cafeSMSMessage, function (data, response) { console.log(data + " " + response) });
                                 if (clientPhone) {
                                     sendSMS(SMSconf, clientPhone, smsMessage, function (data, response) { console.log(data + " " + response) });
