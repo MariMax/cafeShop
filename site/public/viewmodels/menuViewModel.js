@@ -93,7 +93,7 @@ function MenuViewModel(cafeId) {
                         nStr = "Fri";
                     if (n === 6)
                         nStr = "Sat";
-                    if (n === 7)
+                    if (n === 0)
                         nStr = "Sun";
 
                     //if ($.inArray("AllWeek", item.Days) >= 0) {
