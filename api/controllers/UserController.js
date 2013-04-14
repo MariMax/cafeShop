@@ -275,7 +275,7 @@ exports.add_routes = function (app) {
                             console.log(Date.now() + ' cant find user or he does not approve');
                             if (!req.session.errors)
                                 req.session.errors = [];
-                            ShowMessage(res, "Не удалось найти пользователя или он не подтвержден", 500)
+                            ShowMessage(res, "Введено неправильное имя пользователя или пароль", 500)
                         }
                     });
         } else {
