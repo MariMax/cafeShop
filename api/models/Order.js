@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
     ,Schema = mongoose.Schema
     ,ObjectId = Schema.ObjectId
-    , mongoTypes = require('mongoose-types');
+    ,mongoTypes = require('mongoose-types');
 
 mongoTypes.loadTypes(mongoose, 'email');
 
@@ -26,7 +26,10 @@ var orderSchema = new Schema({
     OrderDate: { type: Date, 'default': Date.now() },
     Approved: { type: Boolean, 'default': false }, /*оплачен ли заказ*/
     PaymentId: { type: String },
-    PaymentAmmount: Number
+    PaymentAmmount: Number,//сколько оплатили
+    BalanceAmmount: Number,//сколько зачисленно
+    myHash:String,
+    paySystemHash:String
     //OrderGetTime:{type:Date,'default' : Date.now()}/*Дата когда заказ должен быть выполнен*/
 
 });
@@ -226,21 +229,26 @@ orderSchema.statics.getOrder = function (orderId, callback) {
          });
      }
 
-orderSchema.statics.approveOrder = function (orderId, callback) {     console.log("UpdateOrderDescription");
-    var newdata = {};
-    newdata.Approved = true;
+     orderSchema.statics.approveOrder = function (orderId, data, hash, callback) {
+         console.log("UpdateOrderDescription");
+         var newdata = {};
+         newdata.Approved = true;
+         if (data.spBalanceAmount && data.spBalanceAmount > 0) newdata.BalanceAmmount = data.spBalanceAmount;
+         if (data.spAmount && data.spAmount > 0) newdata.PaymentAmmount = data.spAmount;
+         if (data.spHashString && data.spHashString !='') newdata.paySystemHash = data.spHashString;
+         if (hash&&hash!='') newdata.myHash = hash;
 
-    this.findByIdAndUpdate(orderId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
-        if (error) {
-            callback(error);
-        }
-        else {
-            Order.findOne({ _id: orderId }, callback)
-        }
-    })
+         this.findByIdAndUpdate(orderId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
+             if (error) {
+                 callback(error);
+             }
+             else {
+                 Order.findOne({ _id: orderId }, callback)
+             }
+         })
 
-    
-};
+
+     };
 
 OrderDish = mongoose.model('orderDish', dishSchema);
 Order = mongoose.model('Order', orderSchema);

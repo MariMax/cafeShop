@@ -6,6 +6,7 @@ var sendSMS = require('../models/CommonFunctions.js').sendSMS;
 var sendMail = require('../models/CommonFunctions.js').sendMail;
 var ru2en = require('../models/CommonFunctions.js').ru2en;
 var User = require('../models/User.js').User;
+var md5 = require('../models/CommonFunctions.js').md5;
 
 exports.add_routes = function (app) {
 
@@ -144,9 +145,14 @@ exports.add_routes = function (app) {
         var clientEmail = "";
         var orderDishes = { dishIds: [], dishCount: [] };
         var myOrder = {};
+        var hash = '';
         console.log(orderDishes);
-        Order.approveOrder(orderId, function (error, order) {
-            if (error) res.send("error", 404);
+        try{
+        hash = md5(req.form.spPaymentId+req.form.spShopId+req.form.spShopPaymentId+req.form.spBalanceAmount+req.form.spAmount+req.form.spCurrency+req.form.spCustomerEmail+req.form.spPurpose+req.form.spPaymentSystemId+req.form.spPaymentSystemAmount+req.form.spPaymentSystemPaymentId+req.form.spEnrollDateTime+conf.sprySecret);
+        }catch(err)
+        {console.log(err+' wrong hash')}
+        Order.approveOrder(orderId, req.form, hash, function (error, order) {
+            if (error) res.send("error "+error, 404);
 
             else {
                 myOrder = order;
@@ -172,8 +178,8 @@ exports.add_routes = function (app) {
                             messageText += dishes[key].Name + ' ' + count + '; ';
                             cafeMessage += dishes[key].Name + ' ' + count + '; ';
                         }
-                        messageText += orderLink+' ' +myOrder.Description+' Приятного аппетита!';
-                        cafeMessage += orderLink+' '+myOrder.Description;
+                        messageText += orderLink + ' ' + myOrder.Description + ' Приятного аппетита!';
+                        cafeMessage += orderLink + ' ' + myOrder.Description;
                         smsMessage = ru2en.translite(messageText);
                         cafeSMSMessage = ru2en.translite(cafeMessage);
                         console.log(messageText);

@@ -8,6 +8,10 @@ exports.hash =  function hash (msg, key) {
     return crypto.createHmac('sha256', key).update(msg).digest('hex');
 };
 
+exports.md5 = function md5 (msg) {
+    return crypto.createHash('md5').update(msg).digest("hex");
+};
+
 exports.required = function required(val) { return val && val.length; }
 
 exports.sendSMS = function (opt, phoneTo, messageText, callback) {

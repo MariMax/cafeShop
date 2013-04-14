@@ -77,6 +77,7 @@
     <div class="admin_info">
         <h3>Вход</h3>
         <form method="post" action="" class="horizontal">
+            <div id ="messenger" class="messenger"> </div>
             <div class="form_item">
                 <div class="label">email</div>
                 <div class="input"><input id="email" type="email" size="60" name="email" required></div>
@@ -84,6 +85,9 @@
             <div class="form_item">
                 <div class="label">Пароль</div>
                 <div class="input"><input type="password" size="60" name="password" required></div>
+            </div>
+            <div class="form_item">
+                <a href="/users/newuser">Регистрация</a>/<a href="/users/forgot-password">Забыли пароль?</a>
             </div>
             <div class="form_but">
                 <input type="submit" value="Войти" class="button succes">
