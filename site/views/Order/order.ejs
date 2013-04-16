@@ -25,15 +25,14 @@
 
     </div><div class="order_total">Итого: <b><span data-bind="text: $root.total()"></span> р.</b></div>
 
-    <form data-bind="submit: $root.order">
+    <form data-bind="submit: order">
         <input type="hidden" name="spShopId" value="номер вашего магазина">
         <input type="hidden" name="spShopPaymentId" data-bind="value: $root.PaymentId()">
         <input type="hidden" name="spCurrency" value="rur">
         <input type="hidden" name="spPurpose" value="Оплата заказа">
         <input type="hidden" name="spAmount" data-bind="value: $root.total()">
         <input type="hidden" name="spUserDataOrderId" value="<%= orderId %>">
-        <input type="hidden" name="spSelectedPS" value="">
-        <input type="hidden" name="spForbidden" value="">
+
 
 
 

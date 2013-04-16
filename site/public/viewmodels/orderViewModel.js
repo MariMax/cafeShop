@@ -129,8 +129,25 @@ var Cart = function (orderId) {
 
     // Operations
 
+    function post(URL, PARAMS) {
+        var temp = document.createElement("form");
+        temp.action = URL;
+        temp.method = "POST";
+        temp.style.display = "none";
+        for (var x in PARAMS) {
+            var opt = document.createElement("input");
+            opt.name = x;
+            opt.value = PARAMS[x];
+            temp.appendChild(opt);
+        }
+        document.body.appendChild(temp);
+        temp.submit();
+        return temp;
+    }
+
+
     self.order = function (orderParameters) {
-        debugger;
+
         ko.utils.arrayForEach(self.lines(), function (line) {
 
             $.ajax({
@@ -161,13 +178,24 @@ var Cart = function (orderId) {
             data.userName = self.userName();
             data.spUserEmail = self.email();
             data.orderId = self.orderId;
-            data.description = self.description() ? self.description()+" "+ self.hour() + ":" + self.minute() : self.hour() + ":" + self.minute() ;
+            data.description = self.description() ? self.description() + " " + self.hour() + ":" + self.minute() : self.hour() + ":" + self.minute();
             data.cellPhone = self.cellPhone();
 
             $.post('/api/order/pay', data)
             .done(function (data) {
-                debugger;
-                document.location.href = "http://sprypay.ru/sppi/?spShopId=213001&spShopPaymentId=" + data.PaymentId + "&spCurrency=rur&spPurpose=Оплата заказа&spAmount=" + data.Price + "&spUserDataOrderId=" + data._id + "&spUserEmail=" + data.Email;
+                
+               post("http://sprypay.ru/sppi/", {
+                        spShopId: 213001,
+                        spShopPaymentId: data.PaymentId,
+                        spCurrency: "rur",
+                        spPurpose:'Оплата заказа '+data._id,
+                        spAmount:data.Price,
+                        spUserDataOrderId:data._id,
+                        spUserEmail:data.Email
+
+                })
+                //return (true);
+                // document.location.href = "http://sprypay.ru/sppi/?spShopId=213001&spShopPaymentId=" + data.PaymentId + "&spCurrency=rur&spPurpose=Оплата заказа&spAmount=" + data.Price + "&spUserDataOrderId=" + data._id + "&spUserEmail=" + data.Email;
             });
 
         }
@@ -175,7 +203,7 @@ var Cart = function (orderId) {
 
     $.ajax({ url: '/api/order/' + orderId, cache: false, type: "GET" }).done(function (order) {
 
-        debugger;
+
         if (order.UserName)
             self.userName(order.UserName);
         if (order.Description)

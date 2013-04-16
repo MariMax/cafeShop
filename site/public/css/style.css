@@ -77,7 +77,7 @@ footer .admin_block a:hover{color:#a6adb9}
 .order_page .order_total{text-align:right;font-family:'Lobster',Arial;font-size:18px;padding:10px 0 0;}
 .order_page .order_total b{display:inline-block;padding:0 0 0 10px;color:#f17517;font-size:24px}
 .order_page .order_info{display:inline-block;padding:35px 0 15px;font-size:15px;font-style:italic;}
-.order_page .order_info input[type="text"],.order_page .order_info input[type="password"],.order_page .order_info input[type="number"]{background:#f2f2f2;-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,0.1);box-shadow:inset 1px 1px 0 rgba(0,0,0,0.1);height:28px;border:none;margin:0 5px}
+.order_page .order_info input[type="email"],.order_page .order_info input[type="text"],.order_page .order_info input[type="password"],.order_page .order_info input[type="number"]{background:#f2f2f2;-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,0.1);box-shadow:inset 1px 1px 0 rgba(0,0,0,0.1);height:28px;border:none;margin:0 5px}
 .order_page .order_info .info_item{padding:0 0 10px;width:50%;float:left;}
 .order_page .order_info .info_item label{width:137px;display:inline-block}
 .order_page .order_info .info_item input{width:200px}
