@@ -132,10 +132,8 @@ exports.add_routes = function (app) {
         else { res.send("Неверно заполнена форма", 404); }
     })
 
-
-    app.post("/api/order/paySystemAnswer", forms.OrderAnswerForm, function (req, res) {
-        //Оплата Ответ платежной системы
-        var orderId = req.form.spUserDataOrderId;
+    function PaySystemAnswer(data, hash, callback) {
+        var orderId = data.orderId//req.form.spUserDataOrderId;
         var messageText = '';
         var cafeMessage = '';
         var cafeSMSMessage = '';
@@ -145,18 +143,9 @@ exports.add_routes = function (app) {
         var clientEmail = "";
         var orderDishes = { dishIds: [], dishCount: [] };
         var myOrder = {};
-        var hash = '';
-        //console.log(orderDishes);
-        try {
-            hash = md5(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
-            console.log('--------------------------------------------');
-            console.log(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
-            console.log(req.form)
-            console.log('--------------------------------------------');
-        } catch (err)
-        { console.log(err + ' wrong hash') }
-        Order.approveOrder(orderId, req.form, hash, function (error, order) {
-            if (error) res.send("error");
+
+        Order.approveOrder(orderId, data.BalanceAmount, data.Amount, data.paySystemHash, hash, function (error, order) {
+            if (error) callback(error);
 
             else {
                 myOrder = order;
@@ -171,7 +160,7 @@ exports.add_routes = function (app) {
                 }
                 console.log(orderDishes);
                 Dish.getDishes(orderDishes.dishIds, function (error, dishes) {
-                    if (error) res.send("error"); else {
+                    if (error) callback(error); else {
                         console.log(dishes);
                         for (var key in dishes) {
                             var count = 0;
@@ -187,7 +176,7 @@ exports.add_routes = function (app) {
                         //                        if (clientPhone) cafeMessage += ' тел.: ' + clientPhone;
                         cafeSMSMessage = ru2en.translite(cafeMessage);
                         Cafe.getCafe(order._cafe, function (error, cafe) {
-                            if (error) res.send("error");
+                            if (error) callback(error);
                             else {
                                 messageText += ' кафе: ' + cafe.Name + ' ' + cafe.WorkTime + ' ' + cafe.Address + ' Приятного аппетита!'
                                 smsMessage = ru2en.translite(messageText);
@@ -201,8 +190,8 @@ exports.add_routes = function (app) {
                                 User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
                                     if (user) {
                                         sendMail(user.email, conf.site_email, conf.site_name + ': Заказ оплачен', cafeMessage);
-                                        res.send("ok");
-                                    } else res.send("error");
+                                        callback(null, "ok");
+                                    } else callback(error);
                                 })
 
                             }
@@ -212,7 +201,56 @@ exports.add_routes = function (app) {
 
             }
         })
+    }
+
+    app.post("/api/order/paySystemAnswer", forms.OrderAnswerForm, function (req, res) {
+        //Оплата Ответ платежной системы
+        var hash = '';
+        console.log('ver 17/04');
+        try {
+            hash = md5(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
+            console.log('--------------------------------------------');
+            console.log(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
+            console.log(req.form)
+            console.log('--------------------------------------------');
+        } catch (err)
+        { console.log(err + ' wrong hash') }
+
+        var data = {};
+        data.BalanceAmount = req.form.spBalanceAmount;
+        data.Amount = req.form.spAmount;
+        data.paySystemHash = req.form.spHashString;
+        data.orderId = req.form.spUserDataOrderId;
+
+        PaySystemAnswer(data, hash, function (error, answer) {
+            if (error) res.send("error"); else res.send(answer);
+        })
     })
+
+     app.post("/api/order/w1", forms.OrderW1AnswerForm, function (req, res) {
+        //Оплата Ответ платежной системы
+        var hash = '';
+        console.log('ver w1 17/04');
+      /*  try {
+            hash = md5(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
+            console.log('--------------------------------------------');
+            console.log(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
+            console.log(req.form)
+            console.log('--------------------------------------------');
+        } catch (err)
+        { console.log(err + ' wrong hash') }
+        */
+        var data = {};
+        data.BalanceAmount = req.form.spBalanceAmount;
+        data.Amount = req.form.spAmount;
+        data.paySystemHash = req.form.WMI_SIGNATURE;
+        data.orderId = req.form.spUserDataOrderId;
+
+        PaySystemAnswer(data, hash, function (error, answer) {
+            if (error) res.send("WMI_RESULT=RETRY&WMI_DESCRIPTION=Сервер временно недоступен"); else res.send("WMI_RESULT=OK");
+        })
+    })
+
     //Для тестов
     //app.get("/api/order/paySystemAnswer/:orderId", function (req, res) {
     //    //Оплата Ответ платежной системы

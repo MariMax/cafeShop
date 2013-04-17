@@ -130,6 +130,7 @@ var Cart = function (orderId) {
     // Operations
 
     function post(URL, PARAMS) {
+        debugger;
         var temp = document.createElement("form");
         temp.action = URL;
         temp.method = "POST";
@@ -183,17 +184,42 @@ var Cart = function (orderId) {
 
             $.post('/api/order/pay', data)
             .done(function (data) {
-                
-               post("http://sprypay.ru/sppi/", {
-                        spShopId: 213001,
-                        spShopPaymentId: data.PaymentId,
-                        spCurrency: "rur",
-                        spPurpose:'Оплата заказа '+data._id,
-                        spAmount:data.Price,
-                        spUserDataOrderId:data._id,
-                        spUserEmail:data.Email
+                //sprypay.ru
+                /*  post("http://sprypay.ru/sppi/", {
+                spShopId: 213001,
+                spShopPaymentId: data.PaymentId,
+                spCurrency: "rur",
+                spPurpose: 'Оплата заказа ' + data._id,
+                spAmount: data.Price,
+                spUserDataOrderId: data._id,
+                spUserEmail: data.Email
 
                 })
+                */
+                //w1.ru
+                var PARAMS = {
+                    WMI_MERCHANT_ID: 174743083272,
+                    WMI_PAYMENT_AMOUNT: data.Price.toString() + '.00',
+                    WMI_CURRENCY_ID: 643,
+                    WMI_DESCRIPTION: 'Оплата заказа ' + data._id,
+                    WMI_SUCCESS_URL: "http://idiesh.ru/order/success/1",
+                    WMI_FAIL_URL: "http://idiesh.ru/order/fail/1",
+                    spUserDataOrderId: data._id,
+                    spBalanceAmount: data.Price,
+                    spAmount: data.Price,
+                    WMI_PAYMENT_NO: data._id
+
+                }
+                var s = '';
+                for (var x in PARAMS) {
+                    s += PARAMS[x];
+                }
+
+                //s += 'SGlzOTBGdDZuYndYdUJtZ3IxWXJdYGJyVlZe';
+                //PARAMS.WMI_SIGNATURE = hex_md5(s);
+
+                post("https://merchant.w1.ru/checkout/default.aspx", PARAMS);
+
                 //return (true);
                 // document.location.href = "http://sprypay.ru/sppi/?spShopId=213001&spShopPaymentId=" + data.PaymentId + "&spCurrency=rur&spPurpose=Оплата заказа&spAmount=" + data.Price + "&spUserDataOrderId=" + data._id + "&spUserEmail=" + data.Email;
             });

@@ -229,13 +229,13 @@ orderSchema.statics.getOrder = function (orderId, callback) {
          });
      }
 
-     orderSchema.statics.approveOrder = function (orderId, data, hash, callback) {
+     orderSchema.statics.approveOrder = function (orderId, BalanceAmount,Amount,paySystemHash, hash, callback) {
          console.log("UpdateOrderDescription");
          var newdata = {};
          newdata.Approved = true;
-         if (data.spBalanceAmount && data.spBalanceAmount > 0) newdata.BalanceAmmount = data.spBalanceAmount;
-         if (data.spAmount && data.spAmount > 0) newdata.PaymentAmmount = data.spAmount;
-         if (data.spHashString && data.spHashString !='') newdata.paySystemHash = data.spHashString;
+         if (BalanceAmount && BalanceAmount > 0) newdata.BalanceAmmount = BalanceAmount;
+         if (Amount && Amount > 0) newdata.PaymentAmmount = Amount;
+         if (paySystemHash && paySystemHash !='') newdata.paySystemHash = paySystemHash;
          if (hash&&hash!='') newdata.myHash = hash;
 
          this.findByIdAndUpdate(orderId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {

@@ -43,7 +43,29 @@ OrderAnswerForm = form(
 
 )
 
+OrderW1AnswerForm = form(
+    filter("WMI_MERCHANT_ID").trim(),
+        filter("WMI_PAYMENT_AMOUNT").trim(),
+             filter("WMI_CURRENCY_ID").trim(),
+              filter("WMI_TO_USER_ID").trim(),
+              filter("WMI_PAYMENT_NO").trim(),
+              filter("WMI_ORDER_ID").trim(),
+              filter("WMI_DESCRIPTION").trim(),
+              filter("WMI_SUCCESS_URL").trim(),
+              filter("WMI_FAIL_URL").trim(),
+              filter("WMI_EXPIRED_DATE").trim(),
+              filter("WMI_CREATE_DATE").trim(),
+              filter("WMI_UPDATE_DATE").trim(),
+              filter("WMI_ORDER_STATE").trim(),
+              filter("WMI_SIGNATURE").trim()
+              ,filter("spUserDataOrderId").trim()
+              ,filter("spBalanceAmount").trim()
+              ,filter("spAmount").trim()
+
+)
+
 
 
 exports.OrderFinalForm = OrderFinalForm;
 exports.OrderAnswerForm = OrderAnswerForm;
+exports.OrderW1AnswerForm = OrderW1AnswerForm;

@@ -9,6 +9,7 @@ exports.getSiteConfig = function () {
        },
     secret: 'cafeShop',
     sprySecret: '5ea718ccef446330dcfe961b6523a6fc',
+    w1Secret:'YUZCOWZSUFlUOGd4dnxCVl97S3RfQmxNam1H',
     mongoConnection: 'mongodb://localhost/cafeShop'
   }
 
