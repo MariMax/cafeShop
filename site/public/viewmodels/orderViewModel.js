@@ -84,53 +84,9 @@ var CartLine = function(dish, count) {
     });
  
 };
-var Cart = function (orderId) {
 
-    var self = this;
-    self.orderId = orderId;
-    self.lines = ko.observableArray();
-    self.total = function () {
-        var sum = 0;
-        for (var key in self.lines()) {
-            sum += self.lines()[key].subtotal()
-        }
-        return sum;
-    };
-    self.cafeId = ko.observable();
+    function post(URL, PARAMS, enabledW1) {
 
-    self.CafeName = ko.observable();
-    self.CafeAddress = ko.observable('Адрес не задан');
-    self.CafePhone = ko.observable('Телефон не задан');
-    self.CafeWorkTime = ko.observable('Время работы не задано');
-    self.userName = ko.observable("").extend({ required: "Введите имя пользователя" });
-    self.cellPhone = ko.observable("");
-    self.email = ko.observable("").extend({ requiredEmail: "Введите email" });
-    self.description = ko.observable();
-    self.hour = ko.observable(12).extend({ numeric: 24 });
-    self.minute = ko.observable(00).extend({ numeric: 60 });
-    self.PaymentId = ko.observable();
-
-
-
-    self.hasErrorMessage = ko.computed(function () {
-        var text = "";
-        if (self.userName.hasError() || self.email.hasError())
-        { text += "Все поля должны быть заполнены"; }
-
-        return text;
-    });
-
-    self.hasError = ko.computed(function () {
-
-        if (self.userName.hasError() || self.email.hasError())
-            return true;
-        else return false;
-    });
-
-    // Operations
-
-    function post(URL, PARAMS) {
-        debugger;
         var temp = document.createElement("form");
         temp.action = URL;
         temp.method = "POST";
@@ -141,14 +97,19 @@ var Cart = function (orderId) {
             opt.value = PARAMS[x];
             temp.appendChild(opt);
         }
+        for (var x in enabledW1) {
+            var opt = document.createElement("input");
+            opt.name = 'WMI_PTENABLED';
+            opt.value = enabledW1[x];
+            temp.appendChild(opt);
+        }
         document.body.appendChild(temp);
         temp.submit();
         return temp;
     }
 
-
-    self.order = function (orderParameters) {
-
+    function orderCommon(self,orderParameters) {
+       
         ko.utils.arrayForEach(self.lines(), function (line) {
 
             $.ajax({
@@ -185,41 +146,44 @@ var Cart = function (orderId) {
             $.post('/api/order/pay', data)
             .done(function (data) {
                 //sprypay.ru
-                /*  post("http://sprypay.ru/sppi/", {
-                spShopId: 213001,
-                spShopPaymentId: data.PaymentId,
-                spCurrency: "rur",
-                spPurpose: 'Оплата заказа ' + data._id,
-                spAmount: data.Price,
-                spUserDataOrderId: data._id,
-                spUserEmail: data.Email
+                if (orderParameters === 'sprypay') {
+                    post("http://sprypay.ru/sppi/", {
+                        spShopId: 213001,
+                        spShopPaymentId: data.PaymentId,
+                        spCurrency: "rur",
+                        spPurpose: 'Оплата заказа ' + data._id,
+                        spAmount: data.Price,
+                        spUserDataOrderId: data._id,
+                        spUserEmail: data.Email
 
-                })
-                */
-                //w1.ru
-                var PARAMS = {
-                    WMI_MERCHANT_ID: 174743083272,
-                    WMI_PAYMENT_AMOUNT: data.Price.toString() + '.00',
-                    WMI_CURRENCY_ID: 643,
-                    WMI_DESCRIPTION: 'Оплата заказа ' + data._id,
-                    WMI_SUCCESS_URL: "http://idiesh.ru/order/success/1",
-                    WMI_FAIL_URL: "http://idiesh.ru/order/fail/1",
-                    spUserDataOrderId: data._id,
-                    spBalanceAmount: data.Price,
-                    spAmount: data.Price,
-                    WMI_PAYMENT_NO: data._id
+                    })
+                } else {
+                    //w1.ru
+                    var enabled = ['WalletOneRUB', 'YandexMoneyRUB', 'RbkMoneyRUB', 'BeelineRUB', 'MtsRUB', 'MegafonRUB', 'CashTerminalRUB', 'EurosetRUB', 'SvyaznoyRUB', 'CifrogradRUB', 'AlfaclickRUB', 'PsbRetailRUB', 'SvyaznoyBankRUB', 'SberOnlineRUB'];
 
+                    var PARAMS = {
+                        WMI_MERCHANT_ID: 174743083272,
+                        WMI_PAYMENT_AMOUNT: data.Price.toString() + '.00',
+                        WMI_CURRENCY_ID: 643,
+                        WMI_DESCRIPTION: 'Оплата заказа ' + data._id,
+                        WMI_SUCCESS_URL: "http://idiesh.ru/order/success/1",
+                        WMI_FAIL_URL: "http://idiesh.ru/order/fail/1",
+                        spUserDataOrderId: data._id,
+                        spBalanceAmount: data.Price,
+                        spAmount: data.Price,
+                        WMI_PAYMENT_NO: data._id,
+                        WMI_PTDISABLED: 'LiqPayMoney'
+                    }
+                    var s = '';
+                    for (var x in PARAMS) {
+                        s += PARAMS[x];
+                    }
+
+                    //s += 'SGlzOTBGdDZuYndYdUJtZ3IxWXJdYGJyVlZe';
+                    //PARAMS.WMI_SIGNATURE = hex_md5(s);
+
+                    post("https://merchant.w1.ru/checkout/default.aspx", PARAMS, enabled);
                 }
-                var s = '';
-                for (var x in PARAMS) {
-                    s += PARAMS[x];
-                }
-
-                //s += 'SGlzOTBGdDZuYndYdUJtZ3IxWXJdYGJyVlZe';
-                //PARAMS.WMI_SIGNATURE = hex_md5(s);
-
-                post("https://merchant.w1.ru/checkout/default.aspx", PARAMS);
-
                 //return (true);
                 // document.location.href = "http://sprypay.ru/sppi/?spShopId=213001&spShopPaymentId=" + data.PaymentId + "&spCurrency=rur&spPurpose=Оплата заказа&spAmount=" + data.Price + "&spUserDataOrderId=" + data._id + "&spUserEmail=" + data.Email;
             });
@@ -227,56 +191,110 @@ var Cart = function (orderId) {
         }
     }
 
-    $.ajax({ url: '/api/order/' + orderId, cache: false, type: "GET" }).done(function (order) {
+    var Cart = function (orderId) {
+
+        var self = this;
+        self.orderId = orderId;
+        self.lines = ko.observableArray();
+        self.total = function () {
+            var sum = 0;
+            for (var key in self.lines()) {
+                sum += self.lines()[key].subtotal()
+            }
+            return sum;
+        };
+        self.cafeId = ko.observable();
+
+        self.CafeName = ko.observable();
+        self.CafeAddress = ko.observable('Адрес не задан');
+        self.CafePhone = ko.observable('Телефон не задан');
+        self.CafeWorkTime = ko.observable('Время работы не задано');
+        self.userName = ko.observable("").extend({ required: "Введите имя пользователя" });
+        self.cellPhone = ko.observable("");
+        self.email = ko.observable("").extend({ requiredEmail: "Введите email" });
+        self.description = ko.observable();
+        self.hour = ko.observable(12).extend({ numeric: 24 });
+        self.minute = ko.observable(00).extend({ numeric: 60 });
+        self.PaymentId = ko.observable();
 
 
-        if (order.UserName)
-            self.userName(order.UserName);
-        if (order.Description)
-            self.description(order.Description);
-        if (order.PaymentId)
-            self.PaymentId(order.PaymentId);
+
+        self.hasErrorMessage = ko.computed(function () {
+            var text = "";
+            if (self.userName.hasError() || self.email.hasError())
+            { text += "Все поля должны быть заполнены"; }
+
+            return text;
+        });
+
+        self.hasError = ko.computed(function () {
+
+            if (self.userName.hasError() || self.email.hasError())
+                return true;
+            else return false;
+        });
+
+        // Operations
 
 
-        ko.utils.arrayForEach(order.Dishes, function (dish) {
+
+
+        self.orderSpryPay = function (cart) {
+            orderCommon(cart,'sprypay');
+        }
+
+        self.orderW1= function(cart){orderCommon(cart,'w1');}
+
+        $.ajax({ url: '/api/order/' + orderId, cache: false, type: "GET" }).done(function (order) {
+
+
+            if (order.UserName)
+                self.userName(order.UserName);
+            if (order.Description)
+                self.description(order.Description);
+            if (order.PaymentId)
+                self.PaymentId(order.PaymentId);
+
+
+            ko.utils.arrayForEach(order.Dishes, function (dish) {
+                $.ajax({
+                    url: "/api/dishes/" + dish.dishId,
+                    type: "GET",
+                    async: false,
+                    cache: false
+                }).done(function (b_dish) {
+
+                    self.lines.push(new CartLine(b_dish, dish.count));
+
+                });
+
+            });
+
+            self.cafeId = order._cafe;
+            self.orderPrice = order.Price;
+
             $.ajax({
-                url: "/api/dishes/" + dish.dishId,
+                url: "/api/cafes/" + order._cafe,
                 type: "GET",
                 async: false,
                 cache: false
-            }).done(function (b_dish) {
+            }).done(function (cafe) {
 
-                self.lines.push(new CartLine(b_dish, dish.count));
+                if (cafe.Name)
+                    self.CafeName(cafe.Name);
+                if (cafe.Address)
+                    self.CafeAddress(cafe.Address);
+                if (cafe.WorkTime)
+                    self.CafeWorkTime(cafe.WorkTime);
+                if (cafe.ClientPhone)
+                    self.CafePhone(cafe.ClientPhone);
 
             });
 
         });
 
-        self.cafeId = order._cafe;
-        self.orderPrice = order.Price;
 
-        $.ajax({
-            url: "/api/cafes/" + order._cafe,
-            type: "GET",
-            async: false,
-            cache: false
-        }).done(function (cafe) {
-
-            if (cafe.Name)
-                self.CafeName(cafe.Name);
-            if (cafe.Address)
-                self.CafeAddress(cafe.Address);
-            if (cafe.WorkTime)
-                self.CafeWorkTime(cafe.WorkTime);
-            if (cafe.ClientPhone)
-                self.CafePhone(cafe.ClientPhone);
-
-        });
-
-    });
-
-
-};
+    };
 
 if (document.getElementById("orderId") != null) {
     var orderId = document.getElementById("orderId").value;
