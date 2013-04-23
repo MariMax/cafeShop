@@ -9,18 +9,18 @@ function fid_13613773245519471603(ymaps) {
                                         .add("zoomControl")
                                         .add("mapTools")
                                         .add(new ymaps.control.TypeSelector(["yandex#map", "yandex#satellite", "yandex#hybrid", "yandex#publicMap"]));
-            
+
                     $.get('/api/cafes/All/1')
         .done(function (data) {
-           
+            debugger;
             for (var key in data) {
                 var cafe = data[key];
 
                 //console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind + ' ' + val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
 
                 map.geoObjects
-                                        .add(new ymaps.Placemark([cafe.Longitude,cafe.Latitude], {
-                                            balloonContent: '<div class="baloon_content"><b>' + cafe.Name + '</b> <a href="/cafe/'+cafe._id+'/menu">Меню</a></div>',
+                                        .add(new ymaps.Placemark([cafe.Longitude, cafe.Latitude], {
+                                            balloonContent: '<div class="baloon_content"><b>' + cafe.Name + '</b> <a href="/cafe/' + cafe._id + '/menu">Меню</a></div>',
                                             autoPan: false
                                         }, {
                                             iconImageHref: '/images/baloon.png',
