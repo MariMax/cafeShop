@@ -20,7 +20,7 @@
                 <div data-bind="attr: { id: IdName , class: active() ? 'catalog clearfix active':'catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
                     <div data-bind="foreach: Dishes">
                         <div class="catalog_item">
-                            <div class="img"><img data-bind="attr: { src: Image(), alt: Name() }" width="186" height="131"></div>
+                            <div class="img"><img data-bind="attr: { src: Image(), alt: Name(), title: Description() }" width="186" height="131"></div>
                             <h3><span data-bind="text: Name"></span></h3>
                             <div class="price"><span data-bind="text: Price"></span> р.</div>
                             <div class="buy">
