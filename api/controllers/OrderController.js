@@ -132,6 +132,13 @@ exports.add_routes = function (app) {
         else { res.send("Неверно заполнена форма", 404); }
     })
 
+    function PayError(order) {
+        sendMail(order.Email, conf.site_email, conf.site_name + ': Ошибка платежа', "По всем вопросам вы можете обратиться в службу поддержки http://idiesh.ru/contacts необходимо указать номер заказа " + order._id);
+        if (order.UserPhone) {
+            sendSMS(SMSconf, order.UserPhone, "Ошибка платежа, по всем вопросам вы можете обратиться в службу поддержки http://idiesh.ru/contacts номер заказа " + order._id, function (data, response) { console.log(data + " " + response) });
+        }
+    }
+
     function PaySystemAnswer(data, hash, callback) {
         var orderId = data.orderId//req.form.spUserDataOrderId;
         var messageText = '';
@@ -146,6 +153,10 @@ exports.add_routes = function (app) {
 
         Order.approveOrder(orderId, data.BalanceAmount, data.Amount, data.paySystemHash, hash, function (error, order) {
             if (error) callback(error);
+            else if (data.Amount != order.Price) {
+                PayError(order);
+                callback("Неверная сумма");
+            }
 
             else {
                 myOrder = order;
@@ -204,15 +215,22 @@ exports.add_routes = function (app) {
     }
 
     app.post("/api/order/paySystemAnswer", forms.OrderAnswerForm, function (req, res) {
-        //Оплата Ответ платежной системы
+        //Оплата Ответ платежной системы spryPay
         var hash = '';
-        console.log('ver 17/04');
+        console.log('ver 26/04');
         try {
             hash = md5(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
-            console.log('--------------------------------------------');
-            console.log(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
-            console.log(req.form)
-            console.log('--------------------------------------------');
+            if (hash != req.form.spHashString) {//Если не совпал хеш, то считаем что все плохо
+                console.log("Hash error order Id " + req.form.spUserDataOrderId);
+                Order.getOrder(req.form.spUserDataOrderId, function (error, order) {
+                    if (error) { res.send("error"); return }
+                    PayError(order);
+                    res.send("error");
+                    return;
+                })
+                res.send("error");
+                return;
+            }
         } catch (err)
         { console.log(err + ' wrong hash') }
 
@@ -227,19 +245,11 @@ exports.add_routes = function (app) {
         })
     })
 
-     app.post("/api/order/w1", forms.OrderW1AnswerForm, function (req, res) {
+    app.post("/api/order/w1", forms.OrderW1AnswerForm, function (req, res) {
         //Оплата Ответ платежной системы
         var hash = '';
-        console.log('ver w1 17/04');
-      /*  try {
-            hash = md5(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
-            console.log('--------------------------------------------');
-            console.log(req.form.spPaymentId + req.form.spShopId + req.form.spShopPaymentId + req.form.spBalanceAmount + req.form.spAmount + req.form.spCurrency + req.form.spCustomerEmail + req.form.spPurpose + req.form.spPaymentSystemId + req.form.spPaymentSystemAmount + req.form.spPaymentSystemPaymentId + req.form.spEnrollDateTime + conf.sprySecret);
-            console.log(req.form)
-            console.log('--------------------------------------------');
-        } catch (err)
-        { console.log(err + ' wrong hash') }
-        */
+        console.log('ver w1 26/04');
+
         var data = {};
         data.BalanceAmount = req.form.spBalanceAmount;
         data.Amount = req.form.spAmount;
