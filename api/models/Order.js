@@ -1,6 +1,8 @@
 var mongoose = require('mongoose')
     ,Schema = mongoose.Schema
     ,ObjectId = Schema.ObjectId
+    , commonFunctions = require('./CommonFunctions')
+    , hash =commonFunctions.hash
     ,mongoTypes = require('mongoose-types');
 
 mongoTypes.loadTypes(mongoose, 'email');
@@ -29,7 +31,8 @@ var orderSchema = new Schema({
     PaymentAmmount: Number,//сколько оплатили
     BalanceAmmount: Number,//сколько зачисленно
     myHash:String,
-    paySystemHash:String
+    paySystemHash:String,
+    hash:String
     //OrderGetTime:{type:Date,'default' : Date.now()}/*Дата когда заказ должен быть выполнен*/
 
 });
@@ -193,15 +196,15 @@ orderSchema.statics.deleteOrderDish = function (orderId, dish, callback) {
     })
 }
 
-orderSchema.statics.setOrderInformation = function (orderId, data, callback) {
+orderSchema.statics.setOrderInformation = function (orderId, data,price, callback) {
     console.log("UpdateOrderDescription");
     var newdata = {};
     if (data.description && data.description != '') newdata.Description = data.description;
     if (data.spUserEmail && data.spUserEmail != '') newdata.Email = data.spUserEmail;
     if (data.userName && data.userName != '') newdata.UserName = data.userName;
     if (data.cellPhone && data.cellPhone != '') newdata.UserPhone = data.cellPhone;
-    if (data.price && data.price > 0) newdata.Price = data.price;
-
+    if (price && price > 0) newdata.Price = price;
+    newdata.hash = hash(price.toString(),conf.secret);
 
     this.findOne({ _id: orderId, Approved: false }, function (err, order) {
         if (err) callback(err); else

@@ -86,7 +86,7 @@ var CartLine = function(dish, count) {
 };
 
     function post(URL, PARAMS, enabledW1) {
-
+        
         var temp = document.createElement("form");
         temp.action = URL;
         temp.method = "POST";
@@ -103,7 +103,7 @@ var CartLine = function(dish, count) {
             opt.value = enabledW1[x];
             temp.appendChild(opt);
         }
-        document.body.appendChild(temp);
+        temp.appendChild(opt);
         temp.submit();
         return temp;
     }
@@ -121,13 +121,6 @@ var CartLine = function(dish, count) {
 
 
         });
-
-        $.ajax({
-            url: '/api/order/calcPrice/' + self.orderId,
-            type: "GET",
-            async: false,
-            cache: false
-        }).done(function (order) { })
 
         if (self.hasError()) {
 
@@ -151,9 +144,10 @@ var CartLine = function(dish, count) {
                         spShopId: 213001,
                         spShopPaymentId: data.PaymentId,
                         spCurrency: "rur",
-                        spPurpose: 'Оплата заказа ' + data._id,
+                        spPurpose: data._id,
                         spAmount: data.Price,
                         spUserDataOrderId: data._id,
+                        
                         spUserEmail: data.Email
 
                     })
@@ -165,23 +159,16 @@ var CartLine = function(dish, count) {
                         WMI_MERCHANT_ID: 174743083272,
                         WMI_PAYMENT_AMOUNT: data.Price.toString() + '.00',
                         WMI_CURRENCY_ID: 643,
-                        WMI_DESCRIPTION: 'Оплата заказа ' + data._id,
+                        WMI_DESCRIPTION: data._id,
                         WMI_SUCCESS_URL: "http://idiesh.ru/order/success/1",
                         WMI_FAIL_URL: "http://idiesh.ru/order/fail/1",
                         spUserDataOrderId: data._id,
                         spBalanceAmount: data.Price,
                         spAmount: data.Price,
-                        WMI_PAYMENT_NO: data._id,
-                        WMI_PTDISABLED: 'LiqPayMoney'
+                        
+                        WMI_PAYMENT_NO: data._id
+                        
                     }
-                    var s = '';
-                    for (var x in PARAMS) {
-                        s += PARAMS[x];
-                    }
-
-                    //s += 'SGlzOTBGdDZuYndYdUJtZ3IxWXJdYGJyVlZe';
-                    //PARAMS.WMI_SIGNATURE = hex_md5(s);
-
                     post("https://merchant.w1.ru/checkout/default.aspx", PARAMS, enabled);
                 }
                 //return (true);

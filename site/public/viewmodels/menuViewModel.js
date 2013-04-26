@@ -41,11 +41,12 @@ function MenuViewModel(cafeId) {
                 }).done(function (order) { orderId = order._id; }
                 )
             }
-            $.ajax({
-                url: '/api/order/calcPrice/' + orderId,
-                type: "GET",
-                async: false
-            }).done(function (order) { document.location.href = '/order/buy/' + order._id; })
+            document.location.href = '/order/buy/' + orderId;
+            //$.ajax({
+            //    url: '/api/order/calcPrice/' + orderId,
+            //    type: "GET",
+            //    async: false
+            //}).done(function (order) { document.location.href = '/order/buy/' + order._id; })
 
         });
     }

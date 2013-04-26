@@ -8,8 +8,8 @@ exports.getSiteConfig = function () {
     	host: 'localhost'
        },
     secret: 'cafeShop',
-    sprySecret: '5ea718ccef446330dcfe961b6523a6fc',
-    w1Secret:'YUZCOWZSUFlUOGd4dnxCVl97S3RfQmxNam1H',
+    sprySecret: 'b0cf25f4e9d41a5f3adad56386ce14df',
+    w1Secret:'WUVDVXNRQ21nMWxheUg0UmJoQzdjbG1iRHNY',
     mongoConnection: 'mongodb://localhost/cafeShop'
   }
 
