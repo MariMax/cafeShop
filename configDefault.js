@@ -10,7 +10,9 @@ exports.getSiteConfig = function () {
     secret: 'cafeShop',
     sprySecret: 'b0cf25f4e9d41a5f3adad56386ce14df',
     w1Secret:'WUVDVXNRQ21nMWxheUg0UmJoQzdjbG1iRHNY',
-    mongoConnection: 'mongodb://localhost/cafeShop'
+    mongoConnection: 'mongodb://localhost/cafeShop',
+    myPhone:'+79177640209',
+    infoEmail:'info@idiesh.ru'
   }
 
   return configValues;

@@ -161,27 +161,29 @@ exports.add_routes = function (app) {
     });
 
     app.post('/api/cafes/approve-CellPhone', forms.ConfirmCafeCellPhoneForm, function (req, res, next) {
-        logError("hello");
+        //logError("hello");
         if (req.form.isValid) {
-            logError("approve cellPhoneForm Valid");
+            //logError("approve cellPhoneForm Valid");
             var cafeId = req.form.cafeId;
             var token = req.form.token;
             var cellPhone = req.form.cellPhone;
-            logError(cafeId);
-            logError(token);
-            logError(cellPhone);
+            //logError(cafeId);
+            //logError(token);
+            //logError(cellPhone);
             Cafe.findOne({ CellPhone: cellPhone }, function (error, cafeApprovedCellPhone) {
                 if (!cafeApprovedCellPhone) {
                     Cafe.findOne({ _id: cafeId, tempCellPhone: cellPhone.toString(), CellPhoneVerificationCode: token }, function (error, cafe) {
                         if (cafe && cafe.CellPhoneVerificationCode == token) {
-                            logError("We find cafe and token is right");
+                            //logError("We find cafe and token is right");
+                            //Отправляем мне смс о новом кафе в нашей системе
+                            if (cafe.CellPhone == null) sendSMS(SMSconf, conf.myPhone, "new cafe registration: "+cafe.Name+" "+cellPhone, function (data, response) {console.log(data+" "+response) });
                             Cafe.approveCellPhone(cafeId, cellPhone, function (error, result) {
                                 if (error) {
                                     ShowMessage(res, "Не удалось подтвердить номер телефона, попробуйте зарегистрироваться еще раз ", 500);
                                 }
                                 else {
                                     Cafe.dropToken(cafeId, function (error, result) { if (result) console.log(Date.now().toString() + ' token dropped ' + cafe.CellPhone); });
-                                    console.log(Date.now().toString() + ' Cafe CellPhone is approved ' + result.CellPhone);
+                                    //console.log(Date.now().toString() + ' Cafe CellPhone is approved ' + result.CellPhone);
                                     //res.render("cafes/admin", { cafe: cafe });
                                     ShowMessage(res, { message: "Номер телефона подтвержден", cafeId: cafeId }, 200);
                                 }

@@ -144,8 +144,9 @@ exports.add_routes = function (app) {
                 if (!approvedUser) {
                     User.findOne({ _id: userId, tempemail: email }, function (error, user) {
                         if (user && user.token == token) {
-                            logError("We find User and token is right");
-
+                            //logError("We find User and token is right");
+                            //отсылаем емаил на info@idiesh.ru о регистрации нового пользователя
+                            if (user.email == null) sendMail(conf.infoEmail, conf.site_email, "newUser registration " + user.UserName + " " + email, "newUser registration " + user.UserName + " " + email, function (error, response) {console.log(error+" "+response) })
                             User.approveEmail(userId, email, function (error, result) {
                                 if (error) {
                                     ShowMessage(res, "По каким-то причинам не удалось подтвердить email попробуйте позже", 500);
