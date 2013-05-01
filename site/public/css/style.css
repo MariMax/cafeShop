@@ -6,6 +6,7 @@
 html{min-height:100%}
 body{position:relative;font-family:'PT Sans',Arial;font-size:14px;height:100%;min-height:100%;color:#55524c;padding:0 0 220px}
 div{position:relative}
+a{color:#7ab10b}
 a img{border:none}
 ul{list-style:none}
 ::-webkit-input-placeholder{color:#cfcdc5 !important}
@@ -14,10 +15,13 @@ ul{list-style:none}
 input[type='text'],input[type='password'],input[type='email'],textarea{-webkit-border-radius:5px;border-radius:5px;background:#fff;border:1px solid #deddda;-webkit-box-shadow:inset 0 1px 2px rgba(0,0,0,0.07);box-shadow:inset 0 1px 2px rgba(0,0,0,0.07);font-family:'PT Sans',Arial;font-size:16px;padding:6px 10px;color:#55524c;-webkit-transition:all .3s ease;-moz-transition:all .3s ease;transition:all .3s ease;-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;}
 input[type='text']:focus,input[type='password']:focus,input[type='email']:focus,textarea:focus{border-color:#ffd11b;-webkit-box-shadow:none;box-shadow:none}
 input[type='text'].succes,input[type='password'].succes,input[type='email'].succes,textarea.succes{border-color:#7ab10b;background:url("../images/icon_succes.png") no-repeat 98% center}
+textarea{height:70px}
 .form_item{margin:0 0 10px}
-.horizontal div.label{display:inline-block;width:230px;padding:0 10px 0 0}
-.horizontal div.input{display:inline-block}
-.horizontal .form_but{padding:20px 0 0 244px}
+form.horizontal div.label{display:inline-block;width:220px;padding:6px 10px 0 0;vertical-align:top}
+form.horizontal div.input{display:inline-block;vertical-align:top}
+form.horizontal .form_but{padding:10px 0 0 234px}
+form.vertical div.label{display:block;padding:0 0 3px}
+form.vertical .form_but{padding:10px 0 0 0}
 input[type="file"]{border:none;padding:0;-webkit-box-shadow:none;box-shadow:none}
 .addfile{cursor:pointer !important;overflow:hidden !important;position:relative;}
 .addfile input[type='file']{position:absolute;top:0;right:0;margin:0;border:solid transparent;border-width:0 0 100px 200px;opacity:0;filter:alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";-webkit-transform:translate(-300px,0) scale(4);-moz-transform:translate(-300px,0) scale(4);-o-transform:translate(-300px,0) scale(4);-ms-transform:translate(-300px,0) scale(4);transform:translate(-300px,0) scale(4);direction:ltr;cursor:pointer}
@@ -76,11 +80,12 @@ footer .admin_block a:hover{color:#a6adb9}
 .order_page .item .price{margin:0 0 0;float:right;font-family:'Lobster',Arial;color:#f17517;font-size:22px;width:60px;text-align:right}
 .order_page .order_total{text-align:right;font-family:'Lobster',Arial;font-size:18px;padding:10px 0 0;}
 .order_page .order_total b{display:inline-block;padding:0 0 0 10px;color:#f17517;font-size:24px}
-.order_page .order_info{display:inline-block;padding:35px 0 15px;font-size:15px;font-style:italic;}
-.order_page .order_info input[type="email"],.order_page .order_info input[type="text"],.order_page .order_info input[type="password"],.order_page .order_info input[type="number"]{background:#f2f2f2;-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,0.1);box-shadow:inset 1px 1px 0 rgba(0,0,0,0.1);height:28px;border:none;margin:0 5px}
+.order_page .order_info{display:block;overflow:hidden;padding:35px 0 15px;font-size:15px;font-style:italic;}
+.order_page .order_info input[type="text"],.order_page .order_info input[type="password"],.order_page .order_info input[type="number"],.order_page .order_info input[type="email"],.order_page .order_info textarea{background:#f2f2f2;-webkit-box-shadow:inset 1px 1px 0 rgba(0,0,0,0.1);box-shadow:inset 1px 1px 0 rgba(0,0,0,0.1);height:28px;border:none;margin:0 5px}
+.order_page .order_info textarea{height:70px;line-height:14px;resize:none}
 .order_page .order_info .info_item{padding:0 0 10px;width:50%;float:left;}
 .order_page .order_info .info_item label{width:137px;display:inline-block}
-.order_page .order_info .info_item input{width:200px}
+.order_page .order_info .info_item input,.order_page .order_info .info_item textarea{width:230px;vertical-align:top}
 .order_page .order_info .time input{width:30px;padding:0;text-align:center}
 .order_page .buttons{text-align:center;padding:10px 0}
 .order_page .cafe_info{padding:0 0 20px;margin:0 0 10px;border-bottom:1px solid #eee;}
@@ -150,3 +155,21 @@ footer .admin_block a:hover{color:#a6adb9}
 .notice.error{background:#f04949;border:1px solid #ec1a1a;color:#fff}
 .notification{position:fixed;top:50%;left:50%;text-align:center;background:#7ab10b;border:1px solid #598108;padding:20px 40px;width:270px;margin:-40px 0 0 -175px;font-size:24px;-webkit-border-radius:5px;border-radius:5px;font-family:'Lobster',Arial;color:#fff;-webkit-box-shadow:0 5px 25px rgba(0,0,0,0.4);box-shadow:0 5px 25px rgba(0,0,0,0.4);}
 .notification.error{background:#f04949;border:1px solid #ec1a1a}
+.page_content{padding:30px 45px;}
+.page_content h3{font-size:22px;font-weight:normal;color:#f17517;padding:0 0 12px;margin:0 0 30px;border-bottom:1px solid #ebeae9}
+.contacts_info{padding:0 0 40px;}
+.contacts_info .info_item{display:inline-block;padding-left:20px;margin-right:30px;}
+.contacts_info .info_item.address{background:url("../images/icon_point_small.png") no-repeat 0 1px}
+.contacts_info .info_item.phone{background:url("../images/icon_phone.png") no-repeat 0 0;padding-left:25px}
+.contacts_info .info_item.time{background:url("../images/icon_time.png") no-repeat 0 1px;padding-left:25px}
+.order_succes,.order_error{padding:60px 20px 70px 350px;background:url("../images/order_succes_bg.png") no-repeat 50px 0;border:1px dashed #7ab10b;-webkit-border-radius:40px;border-radius:40px;margin:80px 50px;}
+.order_succes h3,.order_error h3{font-family:'Lobster',Arial;border:none;margin-bottom:10px;font-size:32px;color:#7ab10b}
+.order_succes h4,.order_error h4{font-size:16px;padding:0 0 20px}
+.order_succes p,.order_error p{padding:0 0 15px}
+.order_error{border-color:#f17517;background:url("../images/order_error_bg.png") no-repeat 60px -10px;}
+.order_error h3{color:#f17517}
+.login{padding:60px 20px 70px 380px;background:url("../images/login_bg.jpg") no-repeat 120px 50px;}
+.login .login_content{background:#fffae7;border:1px dashed #ffd11b;padding:30px;display:inline-block;-webkit-border-radius:20px;border-radius:20px}
+.login h3{font-family:'Lobster',Arial;border:none;padding-bottom:0;font-size:26px;color:#f17517}
+.login a:not(.button){color:#f7ae77;display:inline-block;margin-right:10px;-webkit-transition:color .3s ease;-moz-transition:color .3s ease;transition:color .3s ease;}
+.login a:not(.button):hover{color:#f17517}

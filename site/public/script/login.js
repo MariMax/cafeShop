@@ -5,12 +5,14 @@
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message);
+                    $("#messenger").addClass("notice succes");
                     console.log("done " + data.message);
                     $("#messenger").fadeIn("slow");
                     document.location.href = '/';
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
+                    $("#messenger").addClass("notice error");
                     console.log("fail " + data.message);
                     $("#messenger").fadeIn("slow");
                 }
@@ -60,6 +62,7 @@
                 if (error == 1) var err_text = "Не все обязательные поля заполнены!";
                 if (error == 2) var err_text = "Email введен неверно";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
                 return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
             }

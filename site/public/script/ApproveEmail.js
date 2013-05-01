@@ -5,6 +5,7 @@
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message);
+                    $("#messenger").addClass("notice succes");
                     console.log("done " + data.message);
                     $("#messenger").fadeIn("slow");
                     var delay = 3000;
@@ -12,6 +13,7 @@
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
+                    $("#messenger").addClass("notice error");
                     console.log("fail " + data.message);
                     $("#messenger").fadeIn("slow");
                 }

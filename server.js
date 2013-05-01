@@ -128,6 +128,7 @@ app.set('views', __dirname + '/site/views')
 app.engine('ejs', ejsLocals)
 app.set('view engine', 'ejs')
 app.use(express.static(__dirname + '/site/public'))
+app.use(express.favicon(__dirname + '/site/public/images/favicon.png'))
 
 // mount routes
 app.use(function (req, res, next) {

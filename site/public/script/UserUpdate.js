@@ -13,7 +13,8 @@
                 }else {
                
                     $("#messenger").html("Не удалось получить пользователя");
-                    console.log("fail " + "Не удалось получить пользователя");
+                    $("#messenger").addClass("notice error");
+                    
                     
                 }
             });
@@ -25,12 +26,13 @@
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message);
-                    console.log("done " + data.message);
+                    $("#messenger").addClass("notice succes");
+                    
                     $("#messenger").fadeIn("slow");
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
+                    $("#messenger").addClass("notice error");
                     $("#messenger").fadeIn("slow");
                 }
             });
@@ -41,12 +43,12 @@
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message);
-                    console.log("done " + data.message);
+                    $("#messenger").addClass("notice succes");
                     $("#messenger").fadeIn("slow");
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
+                    $("#messenger").addClass("notice error");
                     $("#messenger").fadeIn("slow");
                 }
             });
@@ -57,12 +59,12 @@
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message);
-                    console.log("done " + data.message);
+                    $("#messenger").addClass("notice succes");
                     $("#messenger").fadeIn("slow");
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
+                    $("#messenger").addClass("notice error");
                     $("#messenger").fadeIn("slow");
                 }
             });
@@ -96,6 +98,7 @@
                 if (error == 3) var err_text = "Пароль введен неверно";
                 if (error == 4) var err_text = "Пароли не совпадают";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
             }
         })
@@ -116,6 +119,7 @@
             else {
                 if (error == 1) var err_text = "Введите email правильно!";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
             }
 
@@ -132,6 +136,7 @@
             else {
                 if (error == 1) var err_text = "Введите имя пользователя!";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
             }
 

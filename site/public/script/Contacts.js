@@ -5,6 +5,7 @@
             .done(function (data) {
 
                 $("#messenger").html("Ваше сообщение отправлено");
+                $("#messenger").addClass("notice succes");
 
             });
 
@@ -55,6 +56,7 @@
                 if (error == 2) var err_text = "Email введен неверно";
 
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
                 return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
             }

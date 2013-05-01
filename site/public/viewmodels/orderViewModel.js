@@ -209,7 +209,7 @@ var CartLine = function(dish, count) {
         self.hasErrorMessage = ko.computed(function () {
             var text = "";
             if (self.userName.hasError() || self.email.hasError())
-            { text += "Все поля должны быть заполнены"; }
+            { text += "email и Имя обязательные поля, если вы заполните телефон, то Вам придет SMS подтверждение заказа"; }
 
             return text;
         });

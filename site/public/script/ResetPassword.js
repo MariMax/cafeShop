@@ -5,12 +5,12 @@
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message);
-                    console.log("done " + data.message);
+                    $("#messenger").addClass("notice succes");
                     $("#messenger").fadeIn("slow");
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
+                    $("#messenger").addClass("notice error");
                     $("#messenger").fadeIn("slow");
                 }
             });

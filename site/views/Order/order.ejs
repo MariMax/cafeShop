@@ -1,4 +1,5 @@
-﻿<% layout('../layout') -%><div class="page_title_block"><h1>Оформление заказа</h1>
+﻿<% layout('../layout') -%>
+<div class="page_title_block"><h1>Оформление заказа</h1>
     <div class="border_wave_bot"></div>
 </div>
 <div id="order_page" class="order_page">
@@ -26,7 +27,7 @@
     </div><div class="order_total">Итого: <b><span data-bind="text: $root.total()"></span> р.</b></div>
 
    
-        <div id="messenger" class="messenger" data-bind="text: hasErrorMessage()"></div>
+        <div id="messenger" class="notice error" data-bind="{text: hasErrorMessage(), visible: hasError()}"></div>
         <div class="order_info">
             <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
             <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>

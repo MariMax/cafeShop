@@ -5,12 +5,14 @@
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message);
-                    console.log("done " + data.message);
+                    $("#messenger").addClass("notice succes");
+                    
                     $("#messenger").fadeIn("slow");
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
+                    $("#messenger").addClass("notice error");
+                    
                     $("#messenger").fadeIn("slow");
                 }
             });
@@ -76,6 +78,7 @@
                 if (error == 3) var err_text = "Пароль введен неверно";
                 if (error == 4) var err_text = "Пароли не совпадают";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
                 return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
             }

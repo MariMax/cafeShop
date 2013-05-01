@@ -34,12 +34,14 @@
                  .done(function (data) {
                      if (data.status == 200) {
                          $("#messenger").html(data.message);
+                         $("#messenger").addClass("notice succes");
                          console.log("done " + data.message);
                          $("#messenger").fadeIn("slow");
                          //$('#verify').removeAttr('hidden');
                      }
                      if (data.status == 500) {
                          $("#messenger").html(data.message);
+                         $("#messenger").addClass("notice error");
                          console.log("fail " + data.message);
                          $("#messenger").fadeIn("slow");
                      }
@@ -53,12 +55,14 @@
 
                      if (data.status == 200) {
                          $("#messenger").html(data.message);
+                         $("#messenger").addClass("notice succes");
                          console.log("done " + data.message);
                          $("#messenger").fadeIn("slow");
                          $('#verify').removeAttr('style');
                      }
                      if (data.status == 500) {
                          $("#messenger").html(data.message);
+                         $("#messenger").addClass("notice error");
                          console.log("fail " + data.message);
                          $("#messenger").fadeIn("slow");
                      }
@@ -70,6 +74,7 @@
                  .done(function (data) {
                      if (data.status == 200) {
                          $("#messenger").html(data.message.message);
+                         $("#messenger").addClass("notice succes");
                          console.log("done " + data.message);
                          $("#messenger").fadeIn("slow");
                          var cafeId = data.message.cafeId;
@@ -78,6 +83,7 @@
                      }
                      if (data.status == 500) {
                          $("#messenger").html(data.message);
+                         $("#messenger").addClass("notice error");
                          console.log("fail " + data.message);
                          $("#messenger").fadeIn("slow");
                      }
@@ -95,6 +101,7 @@
             if (!isValidPhoneNumber(phone)) {
                 var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
             } else {
                 $("#messenger").html('');
@@ -107,6 +114,7 @@
             if (!code) {
                 var err_text = "Введите код подтверждения";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
             } else { confirmCellPhone(); }
         })
@@ -140,6 +148,7 @@
                 if (error == 1) var err_text = "Необходимо ввести название кафе";
                 // if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
                 return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
             }

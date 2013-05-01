@@ -5,7 +5,8 @@
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message.message);
-                    console.log("done " + data.message);
+                    $("#messenger").addClass("notice succes");
+                    
                     $("#messenger").fadeIn("slow");
                     $('#verify').removeAttr('style');
                     $('#name').hide();
@@ -15,7 +16,8 @@
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
+                    $("#messenger").addClass("notice error");
+                   
                     $("#messenger").fadeIn("slow");
                 }
             });
@@ -27,7 +29,8 @@
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message.message);
-                    console.log("done " + data.message);
+                    $("#messenger").addClass("notice succes");
+                    
                     $("#messenger").fadeIn("slow");
                     var cafeId = data.message.cafeId;
                     var delay = 2000;
@@ -35,7 +38,8 @@
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
-                    console.log("fail " + data.message);
+                    $("#messenger").addClass("notice error");
+                    
                     $("#messenger").fadeIn("slow");
                 }
             });
@@ -81,6 +85,7 @@
                 if (error == 1) var err_text = "Не все обязательные поля заполнены!";
                 if (error == 2) var err_text = "Введите правильный Российский сотовый номер, пример +79177640209";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
                 return false; //если в форме встретились ошибки , не  позволяем отослать данные на сервер.
             }
@@ -94,6 +99,7 @@
             if (!code) {
                 var err_text = "Введите код подтверждения";
                 $("#messenger").html(err_text);
+                $("#messenger").addClass("notice error");
                 $("#messenger").fadeIn("slow");
             } else { confirmCellPhone(); }
         })
