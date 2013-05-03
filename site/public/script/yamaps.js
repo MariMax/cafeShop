@@ -42,8 +42,8 @@ function fid_13613773245519471603(ymaps) {
                 //console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind + ' ' + val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
 
                 map.geoObjects.add(new ymaps.Placemark([cafe.Longitude, cafe.Latitude], {
-                    balloonContent: '<div class="baloon_content"><b>' + cafe.Name + '</b> <a href="/cafe/' + cafe._id + '/menu">Меню</a></div>',
-                    autoPan: false
+                    //balloonContent: '<script type="text/javascript">alert("hello")</script></script><div class="baloon_content"><b>' + cafe.Name + '</b> <a href="/cafe/' + cafe._id + '/menu">Меню</a></div>',
+                    autoPan: true
                 }, {
                     iconImageHref: '/images/baloon.png',
                     iconImageSize: [41, 52],
@@ -56,7 +56,29 @@ function fid_13613773245519471603(ymaps) {
         })
 
 
+        map.geoObjects.events.add('click',
+        function (e) {
+            var object = e.get('target');
+            //alert(object.geometry._Ih[0]+" "+object.geometry._Ih[1]); 
 
+            $.get('/api/cafes/allinPalce/' + object.geometry._Ih[0] + '/' + object.geometry._Ih[1])
+        .done(function (data) {
+            var storeList = $("#StoreList");
+            if (storeList) {
+                storeList.empty();
+                var storeListContent = '';
+                for (var key in data) {
+                    var cafe = data[key];
+                    storeListContent += '<div><b>' + cafe.Name + '</b> <a href="/cafe/' + cafe._id + '/menu">Меню</a></div>'
+                    //balloonContent: '<script type="text/javascript">alert("hello")</script></script><div class="baloon_content"><b>' + cafe.Name + '</b> <a href="/cafe/' + cafe._id + '/menu">Меню</a></div>',
+                };
+                storeList.html(storeListContent);
+                var storeBlock = $("#StoreBlock");
+                if (storeBlock)
+                 storeBlock.attr("style", "display: normal");
+            }
+        })
+        });
     //map.events.add("click",
     //                                        function (e) {
     //                                            map.balloon.open(

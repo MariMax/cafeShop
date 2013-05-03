@@ -1,3 +1,14 @@
 <% layout('../layout') -%>
 <input type="hidden" name="userId" id="userId" value="<%=userId%>" hidden>
+        <div class="where_iam_popup" style="display: none" id="where_iam_popup">
+            <span>Укажите где вы сейчас:</span>
+            <input id="UserAddress" type="text" size="30" name="UserAddress" placeholder="Уфа, ул. Ленина 21" onkeyup="GetLocation($('#UserAddress'),true)" />
+            <input type="button" class="button" value="Верно" onclick="HidePopup($('#where_iam_popup'))"/>
+            <input type="button" class="button simple" value="Закрыть" onclick="HidePopup($('#where_iam_popup'))">
+        </div>
+
+        <div class="store_block_popup" style="display: none" id="StoreBlock">
+            <div id="StoreList"></div>
+            <input type="button" class="button simple" value="Закрыть" onclick="HidePopup($('#StoreBlock'))">
+        </div>
 <script src="/script/index.js" type="text/javascript"></script>

@@ -110,6 +110,14 @@ exports.add_routes = function (app) {
         });
     });
 
+    app.get("/api/cafes/allinPalce/:longitude/:latitude", function (req, res) {
+        Cafe.find({ CanWorkInCafeShop: true, Longitude: req.params.longitude, Latitude: req.params.latitude }, function (error, cafes) {
+            if (error) res.json(null, 404); else {
+                res.json(cafes, 200);
+            }
+        });
+    });
+
     app.post("/api/cafes/updateValues", forms.updateCafeForm, function (req, res) {
 
         if (req.form.isValid) {

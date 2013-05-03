@@ -174,3 +174,5 @@ footer .admin_block a:hover{color:#a6adb9}
 .login a:not(.button){color:#f7ae77;display:inline-block;margin-right:10px;-webkit-transition:color .3s ease;-moz-transition:color .3s ease;transition:color .3s ease;}
 .login a:not(.button):hover{color:#f17517}
 .where_iam_popup{position:fixed;top:50%;left:50%;text-align:center;background:#7ab10b;border:1px solid #598108;padding:20px 40px;width:270px;margin:-40px 0 0 -175px;font-size:24px;-webkit-border-radius:5px;border-radius:5px;font-family:'Lobster',Arial;color:#fff;-webkit-box-shadow:0 5px 25px rgba(0,0,0,0.4);box-shadow:0 5px 25px rgba(0,0,0,0.4);}
+.store_block_popup{position:fixed;top:50%;left:50%;text-align:center;background:#7ab10b;border:1px solid #598108;padding:20px 40px;margin:-40px 0 0 -175px;font-size:24px;-webkit-border-radius:5px;border-radius:5px;font-family:'Lobster',Arial;color:#f17517;-webkit-box-shadow:0 5px 25px rgba(0,0,0,0.4);box-shadow:0 5px 25px rgba(0,0,0,0.4);}
+.store_block_popup a {color:#f7ae77}

@@ -33,15 +33,10 @@
                     $("#link2").attr("style", "display: none");
                     $("#link3").attr("style", "display: none");
                 }
-                if (!$.cookie('longitude') || !$.cookie('latitude')) {
-                    $("#where_iam_popup").attr("style", "display: normal");
-                }
+
             });
             
-            function HidePopup(popup)
-            {
-                popup.attr("style", "display: none");
-            }
+
 
         </script>
         <header>
@@ -75,12 +70,7 @@
             <script type="text/javascript" src="http://api-maps.yandex.ru/2.0-stable/?lang=ru-RU&coordorder=longlat&load=package.full&wizard=constructor&onload=fid_13613773245519471603"></script>
         </div>
         <div class="content"><%- body %></div>
-        <div class="where_iam_popup" style="display: none" id="where_iam_popup">
-            <span>Укажите где вы сейчас:</span>
-            <input id="UserAddress" type="text" size="30" name="UserAddress" placeholder="Уфа, ул. Ленина 21" onkeyup="GetLocation($('#UserAddress'),true)" />
-            <input type="button" class="button" value="Верно" onclick="HidePopup($('#where_iam_popup'))"/>
-            <input type="button" class="button simple" value="Закрыть" onclick="HidePopup($('#where_iam_popup'))">
-        </div>
+
 
 
 

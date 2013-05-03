@@ -21,6 +21,7 @@ var cafeSchema = new Schema({
 
     Latitude: Number,
     Longitude: Number,
+    Coords:[{type:Number}],
     Logo: Buffer,
 
     CellPhoneApprove: { type: Boolean, 'default': false },
@@ -45,6 +46,7 @@ cafeSchema.statics.newCafe = function (data, cb) {
     if (data.cellPhone) instance.tempCellPhone = data.cellPhone;
     if (data.Latitude) instance.Latitude = data.Latitude;
     if (data.Longitude) instance.Longitude = data.Longitude;
+    if (data.Latitude && data.Longitude) { instance.Coords = []; instance.Coords.push(data.Longitude); instance.Coords.push(data.Latitude); }
 
     var newPassword = '';
     newPassword = newPassword.randomNumberString(6);
@@ -73,6 +75,7 @@ cafeSchema.statics.UpdateCafeValue = function (cafeId, data, cb) {
     //if (data.CellPhone&&data.CellPhone!='') newdata.CellPhone=data.CellPhone; Отдельная тема
     if (data.Latitude) newdata.Latitude = data.Latitude;
     if (data.Longitude) newdata.Longitude = data.Longitude;
+    if (data.Latitude && data.Longitude) { newdata.Coords = []; newdata.Coords.push(data.Longitude);newdata.Coords.push(data.Latitude); }
 
     this.findByIdAndUpdate(cafeId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
         if (error) {

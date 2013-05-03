@@ -19,4 +19,13 @@
             }
         }
         route();
+
+                if (!$.cookie('longitude') || !$.cookie('latitude')) {
+                    $("#where_iam_popup").attr("style", "display: normal");
+                }
     })
+
+            function HidePopup(popup)
+            {
+                popup.attr("style", "display: none");
+            }
