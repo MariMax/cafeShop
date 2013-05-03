@@ -57,17 +57,17 @@ function fid_13613773245519471603(ymaps) {
 
 
 
-    map.events.add("click",
-                                            function (e) {
-                                                map.balloon.open(
-                                                // Позиция балуна
-                            e.get("coordPosition"), {
-                                // Свойства балуна:
-                                // контент балуна
-                                contentBody: "Значение: " +
-                                e.get("coordPosition")
-                            }
-                        )
-                                            }
-                );
+    //map.events.add("click",
+    //                                        function (e) {
+    //                                            map.balloon.open(
+    //                                            // Позиция балуна
+    //                        e.get("coordPosition"), {
+    //                            // Свойства балуна:
+    //                            // контент балуна
+    //                            contentBody: "Значение: " +
+    //                            e.get("coordPosition")
+    //                        }
+    //                    )
+    //                                        }
+    //            );
 };
