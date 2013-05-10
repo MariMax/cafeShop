@@ -17,21 +17,21 @@ exports.add_routes = function (app) {
         });
     });
 
-    //app.put("/shop/dishes/:id", function (req, res) {
+    //app.put("/shop/items/:id", function (req, res) {
     //    var data = req.body;
     //    var query = { _id: req.params.id };
-    //    Dish.findOne(query, function (err, dish) {
+    //    Item.findOne(query, function (err, item) {
     //        if (err)
     //            res.send(err, 404);
     //        else {
-    //            dish.Name = data.Name;
-    //            Dish.save(function (err) {
+    //            item.Name = data.Name;
+    //            Item.save(function (err) {
     //                if (err)
     //                    res.send(err, 404);
     //                else
-    //                    res.json(dish, 200);
+    //                    res.json(item, 200);
     //            });
-    //            res.json(dish, 200);
+    //            res.json(item, 200);
     //        }
     //    });
     //});

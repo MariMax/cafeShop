@@ -7,8 +7,8 @@ var mongoose = require('mongoose')
 
 mongoTypes.loadTypes(mongoose, 'email');
 
-var dishSchema = new Schema({
-    dishId:ObjectId,
+var itemSchema = new Schema({
+    itemId:ObjectId,
     count:Number,
     price:Number
 });
@@ -22,7 +22,7 @@ var orderSchema = new Schema({
         type: mongoose.SchemaTypes.Email
 
     },
-    Dishes: [dishSchema],
+    Items: [itemSchema],
     Description: String,
     Price: Number,
     OrderDate: { type: Date, 'default': Date.now() },
@@ -39,15 +39,15 @@ var orderSchema = new Schema({
 
 
 
-orderSchema.statics.createOrder = function (shopId, dish, _quantify, _price, callback) {
+orderSchema.statics.createOrder = function (shopId, item, _quantify, _price, callback) {
     if (!_quantify) _quantify = 1;
     var instance = new Order();
-    var dishOrder = new OrderDish({ dishId: dish, count: _quantify, price: _price });
+    var itemOrder = new OrderItem({ itemId: item, count: _quantify, price: _price });
     var paymentId = '';
     paymentId = paymentId.randomString(12);
     instance.PaymentId = paymentId;
     instance._shop = shopId;
-    instance.Dishes.push(dishOrder);
+    instance.Items.push(itemOrder);
     instance.save(function (error, data) {
         if (error) {
             callback(error);
@@ -58,18 +58,18 @@ orderSchema.statics.createOrder = function (shopId, dish, _quantify, _price, cal
     })
 }
 
-orderSchema.statics.setOrderDishes = function (orderId, dish, _quantify,_price, callback) {
+orderSchema.statics.setOrderItems = function (orderId, item, _quantify,_price, callback) {
     if (!_quantify) _quantify = 1;
     Order.findOne({ _id: orderId, Approved: false }, function (error, order) {
         if (error) callback(error);
         else {
             var num = -1;
-            for (var key in order.Dishes) {
-                var val = order.Dishes[key];
-                if (val.dishId == dish) {
+            for (var key in order.Items) {
+                var val = order.Items[key];
+                if (val.itemId == item) {
                     num = key;
-                    order.Dishes[key].count = _quantify;
-                    order.Dishes[key].price = _price;
+                    order.Items[key].count = _quantify;
+                    order.Items[key].price = _price;
                     order.save(function (error, data) {
                         if (error) {
                             callback(error);
@@ -82,8 +82,8 @@ orderSchema.statics.setOrderDishes = function (orderId, dish, _quantify,_price, 
                 }
             }
             if (num == -1) {
-                var dishOrder = new OrderDish({ dishId: dish, count: _quantify,price:_price });
-                order.Dishes.push(dishOrder);
+                var itemOrder = new OrderItem({ itemId: item, count: _quantify,price:_price });
+                order.Items.push(itemOrder);
                 order.save(function (error, data) {
                     if (error) {
                         callback(error);
@@ -97,21 +97,21 @@ orderSchema.statics.setOrderDishes = function (orderId, dish, _quantify,_price, 
     })
 }
 
-orderSchema.statics.addOrderDishes = function (orderId, dish, _quantify, _price, callback) {
+orderSchema.statics.addOrderItems = function (orderId, item, _quantify, _price, callback) {
     if (!_quantify) _quantify = 1;
     Order.findOne({ _id: orderId, Approved: false }, function (error, order) {
         if (error) callback(error);
         else {
             var num = -1;
-            for (var key in order.Dishes) {
-                var val = order.Dishes[key];
-                if (val.dishId == dish) {
+            for (var key in order.Items) {
+                var val = order.Items[key];
+                if (val.itemId == item) {
                     num = key;
                     var count = 0;
-                    count += order.Dishes[key].count;
+                    count += order.Items[key].count;
                     count += Number(_quantify);
-                    order.Dishes[key].count = count;
-                    order.Dishes[key].price = _price;
+                    order.Items[key].count = count;
+                    order.Items[key].price = _price;
                     order.save(function (error, data) {
                         if (error) {
                             callback(error);
@@ -124,8 +124,8 @@ orderSchema.statics.addOrderDishes = function (orderId, dish, _quantify, _price,
                 }
             }
             if (num == -1) {
-                var dishOrder = new OrderDish({ dishId: dish, count: _quantify, price: _price });
-                order.Dishes.push(dishOrder);
+                var itemOrder = new OrderItem({ itemId: item, count: _quantify, price: _price });
+                order.Items.push(itemOrder);
                 order.save(function (error, data) {
                     if (error) {
                         callback(error);
@@ -147,8 +147,8 @@ orderSchema.statics.calcOrderPrice = function (orderId, callback) {
         else {
             var num = -1;
             var price = 0;
-            for (var key in order.Dishes) {
-                var val = order.Dishes[key];
+            for (var key in order.Items) {
+                var val = order.Items[key];
                 if (val.count!=null&&val.price!=null)
                 price += val.count * val.price;
                 console.log(price);
@@ -168,17 +168,17 @@ orderSchema.statics.calcOrderPrice = function (orderId, callback) {
     })
 }
 
-orderSchema.statics.deleteOrderDish = function (orderId, dish, callback) {
+orderSchema.statics.deleteOrderItem = function (orderId, item, callback) {
 
     Order.findOne({ _id: orderId, Approved:false }, function (error, order) {
         if (error) callback(error);
         else {
             var num = -1;
-            for (var key in order.Dishes) {
-                var val = order.Dishes[key];
-                if (val.dishId == dish) {
+            for (var key in order.Items) {
+                var val = order.Items[key];
+                if (val.itemId == item) {
                     num = key;
-                    order.Dishes[key].remove();
+                    order.Items[key].remove();
                     order.save(function (error, data) {
                         if (error) {
                             callback(error);
@@ -253,7 +253,7 @@ orderSchema.statics.getOrder = function (orderId, callback) {
 
      };
 
-OrderDish = mongoose.model('orderDish', dishSchema);
+OrderItem = mongoose.model('orderItem', itemSchema);
 Order = mongoose.model('Order', orderSchema);
 exports.Order = Order;
 

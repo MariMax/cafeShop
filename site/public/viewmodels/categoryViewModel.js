@@ -6,7 +6,7 @@ function Category(data, shopId, messageFunc, errorFunc) {
     self.id = ko.observable(data._id);
     self.Name = ko.observable(data.Name);
     self.IdName = ko.observable(data.IdName);
-    self.Dishes = ko.observableArray([]);
+    self.Items = ko.observableArray([]);
     self.IdNameHash = ko.observable('#' + data.IdName);
     self.active = ko.observable(false);
     self.activeText = ko.computed(function () {
@@ -17,28 +17,28 @@ function Category(data, shopId, messageFunc, errorFunc) {
 
 
 
-    self.newDishName = ko.observable();
-    self.newDishDescription = ko.observable();
-    self.newDishPrice = ko.observable();
-    self.newDishDays = ko.observableArray([]);
+    self.newItemName = ko.observable();
+    self.newItemDescription = ko.observable();
+    self.newItemPrice = ko.observable();
+    self.newItemDays = ko.observableArray([]);
 
-    self.addDish = function (data) {
-        var dish = new Dish({ Name: this.newDishName(), Description: this.newDishDescription(), Price: this.newDishPrice(), Days: this.newDishDays(), Image: $('#newPhotoTmpUrl').val() });
-        self.Dishes.push(dish);
+    self.addItem = function (data) {
+        var item = new Item({ Name: this.newItemName(), Description: this.newItemDescription(), Price: this.newItemPrice(), Days: this.newItemDays(), Image: $('#newPhotoTmpUrl').val() });
+        self.Items.push(item);
     };
-    self.addDishToDb = function (dishData) {
+    self.addItemToDb = function (itemData) {
         debugger;
         var imageUrl = $('#newPhotoTmpUrl').val();
-        var dish = new Dish({ Name: dishData.Name(), Description: dishData.Description(), Price: dishData.Price(), Days: dishData.Days(), Image: imageUrl });
-        var url = "/api/shop/" + self.shopId + "/category/" + self.id() + "/dishes";
-        var jsonData = ko.toJSON(dish);
+        var item = new Item({ Name: itemData.Name(), Description: itemData.Description(), Price: itemData.Price(), Days: itemData.Days(), Image: imageUrl });
+        var url = "/api/shop/" + self.shopId + "/category/" + self.id() + "/items";
+        var jsonData = ko.toJSON(item);
         $.ajax(url, {
             data: jsonData,
             type: "post", contentType: "application/json",
             success: function (data) {
                 $('#newPhotoTmpUrl').val("")
                 self.messageFunc("Блюдо добавлено");
-                dishData.id(data.id._id);
+                itemData.id(data.id._id);
 
             },
             error: function (result) {
@@ -48,10 +48,10 @@ function Category(data, shopId, messageFunc, errorFunc) {
         });
     };
 
-    self.removeDish = function (dish) {
-        self.Dishes.destroy(dish)
-        var url = "/api/dishes/" + dish.id();
-        var jsonData = ko.toJSON(dish);
+    self.removeItem = function (item) {
+        self.Items.destroy(item)
+        var url = "/api/item/" + item.id();
+        var jsonData = ko.toJSON(item);
         $.ajax(url, {
             data: jsonData,
             type: "delete", contentType: "application/json",

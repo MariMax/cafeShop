@@ -1,4 +1,4 @@
-function Dish(data, messageFunc,errorFunc) {
+function Item(data, messageFunc,errorFunc) {
     var self = this;
     self.messageFunc = messageFunc;
     self.errorFunc = errorFunc;
@@ -21,10 +21,10 @@ function Dish(data, messageFunc,errorFunc) {
             self.Image(data.Image);
     }
 
-    self.updateDish = function (dish) {
-        var url = "/api/dishes/" + this.id();
-        dish.Image($('#newPhotoTmpUrl').val());
-        var jsonData = ko.toJSON(dish);
+    self.updateItem = function (item) {
+        var url = "/api/item/" + this.id();
+        item.Image($('#newPhotoTmpUrl').val());
+        var jsonData = ko.toJSON(item);
         $.ajax(url, {
             data: jsonData,
             type: "put", contentType: "application/json",

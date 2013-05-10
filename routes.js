@@ -1,7 +1,7 @@
 
 var usersHelper = require('./api/controllers/UserController.js')
 var siteUsersHelper = require('./site/controllers/SiteUserController.js')
-var dishesHelper = require('./api/controllers/DishesController.js')
+var itemsHelper = require('./api/controllers/ItemsController.js')
 var shopHelper = require('./api/controllers/ShopController.js')
 var orderHelper = require('./api/controllers/OrderController.js')
 var commonHelper = require('./api/controllers/CommonController.js')
@@ -16,7 +16,7 @@ module.exports = function (app) {
     siteCommonHelper.add_routes(app);
     usersHelper.add_routes(app);
     siteUsersHelper.add_routes(app);
-    dishesHelper.add_routes(app);
+    itemsHelper.add_routes(app);
     shopHelper.add_routes(app);
     siteShopHelper.add_routes(app);
     categoriesHelper.add_routes(app);

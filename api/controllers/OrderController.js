@@ -1,5 +1,5 @@
 var Order = require('../models/Order.js').Order;
-var Dish = require('../models/Dish.js').Dish;
+var Item = require('../models/Item.js').Item;
 var Shop = require('../models/Shop.js').Shop;
 var forms = require('../forms/PayForms.js');
 var sendSMS = require('../models/CommonFunctions.js').sendSMS;
@@ -20,17 +20,17 @@ exports.add_routes = function (app) {
         });
     });
 
-    app.get("/api/order/createOrder/:shopId/:dishId/:count", function (req, res) {
+    app.get("/api/order/createOrder/:shopId/:itemId/:count", function (req, res) {
         var shopId = req.params.shopId;
-        var dishId = req.params.dishId;
+        var itemId = req.params.itemId;
         var count = req.params.count;
         Shop.getShop(shopId, function (error, shop) {
             if (error) res.send(error, 404);
             else
-                Dish.getDish(dishId, function (error, dish) {
+                Item.getItem(itemId, function (error, item) {
                     if (error) res.send(error, 404);
                     else
-                        Order.createOrder(shopId, dishId, count, dish.Price, function (error, order) {
+                        Order.createOrder(shopId, itemId, count, item.Price, function (error, order) {
                             if (error)
                                 res.send(error, 404);
                             else {
@@ -42,10 +42,10 @@ exports.add_routes = function (app) {
         })
     });
 
-    app.get("/api/order/setDish/:orderId/:shopId/:dishId/:count", function (req, res) {
+    app.get("/api/order/setItem/:orderId/:shopId/:itemId/:count", function (req, res) {
         var orderId = req.params.orderId;
         var shopId = req.params.shopId;
-        var dishId = req.params.dishId;
+        var itemId = req.params.itemId;
         var count = req.params.count;
         Order.getOrder(orderId, function (error, order) {
             if (error) res.send(error, 404);
@@ -53,12 +53,12 @@ exports.add_routes = function (app) {
                 Shop.getShop(shopId, function (error, shop) {
                     if (error) res.send(error, 404);
                     else
-                        Dish.getDish(dishId, function (error, dish) {
+                        Item.getItem(itemId, function (error, item) {
 
-                            if (error || dish._shop != shopId) res.send("Наверное блюдо не из этого кафе", 404);
+                            if (error || item._shop != shopId) res.send("Наверное блюдо не из этого кафе", 404);
                             else {
-                                console.log("set order " + orderId + " " + dishId + " " + count)
-                                Order.setOrderDishes(orderId, dishId, count, dish.Price, function (error, order) {
+                                console.log("set order " + orderId + " " + itemId + " " + count)
+                                Order.setOrderItems(orderId, itemId, count, item.Price, function (error, order) {
                                     if (error)
                                         res.send(error, 404);
                                     else {
@@ -72,10 +72,10 @@ exports.add_routes = function (app) {
         })
     });
 
-    app.get("/api/order/addDish/:orderId/:shopId/:dishId/:count", function (req, res) {
+    app.get("/api/order/addItem/:orderId/:shopId/:itemId/:count", function (req, res) {
         var orderId = req.params.orderId;
         var shopId = req.params.shopId;
-        var dishId = req.params.dishId;
+        var itemId = req.params.itemId;
         var count = req.params.count;
         Order.getOrder(orderId, function (error, order) {
             if (error) res.send(error, 404);
@@ -83,11 +83,11 @@ exports.add_routes = function (app) {
                 Shop.getShop(shopId, function (error, shop) {
                     if (error) res.send(error, 404);
                     else
-                        Dish.getDish(dishId, function (error, dish) {
-                            if (error || dish._shop != shopId) res.send("Наверное блюдо не из этого кафе", 404);
+                        Item.getItem(itemId, function (error, item) {
+                            if (error || item._shop != shopId) res.send("Наверное блюдо не из этого кафе", 404);
                             else
-                                console.log("set order " + orderId + " " + dishId + " " + count)
-                            Order.addOrderDishes(orderId, dishId, count, dish.Price, function (error, order) {
+                                console.log("set order " + orderId + " " + itemId + " " + count)
+                            Order.addOrderItems(orderId, itemId, count, item.Price, function (error, order) {
                                 if (error)
                                     res.send(error, 404);
                                 else {
@@ -111,10 +111,10 @@ exports.add_routes = function (app) {
         Order.dropOrder(orderId, function (error, result) { if (error) res.send(error, 404); else res.json("Ok", 200) });
     });
 
-    app.get("/api/order/deleteDish/:orderId/:dishId", function (req, res) {
+    app.get("/api/order/deleteItem/:orderId/:itemId", function (req, res) {
         var orderId = req.params.orderId;
-        var dishId = req.params.dishId;
-        Order.deleteOrderDish(orderId, dishId, function (error, order) { if (error) res.send(error, 404); else res.json(order, 200) });
+        var itemId = req.params.itemId;
+        Order.deleteOrderItem(orderId, itemId, function (error, order) { if (error) res.send(error, 404); else res.json(order, 200) });
     });
 
     app.post("/api/order/pay", forms.OrderFinalForm, function (req, res) {
@@ -154,7 +154,7 @@ exports.add_routes = function (app) {
         var orderLink = conf.site_url + "/order/show/" + orderId;
         var clientPhone = "";
         var clientEmail = "";
-        var orderDishes = { dishIds: [], dishCount: [] };
+        var orderItems = { itemIds: [], itemCount: [] };
         var myOrder = {};
 
         Order.approveOrder(orderId, data.BalanceAmount, data.Amount, data.paySystemHash, hash, function (error, order) {
@@ -171,24 +171,24 @@ exports.add_routes = function (app) {
                     //Рассылка sms продавцу, покупателю и 3 email
                     clientPhone = order.UserPhone;
                     clientEmail = order.Email;
-                    for (var key in order.Dishes) {
-                        if (order.Dishes[key].dishId) {
-                            orderDishes.dishIds.push(order.Dishes[key].dishId);
-                            orderDishes.dishCount.push(order.Dishes[key].count);
+                    for (var key in order.Items) {
+                        if (order.Items[key].itemId) {
+                            orderItems.itemIds.push(order.Items[key].itemId);
+                            orderItems.itemCount.push(order.Items[key].count);
                         }
                     }
-                    console.log(orderDishes);
-                    Dish.getDishes(orderDishes.dishIds, function (error, dishes) {
+                    console.log(orderItems);
+                    Item.getItems(orderItems.itemIds, function (error, items) {
                         if (error) callback(error); else {
-                            console.log(dishes);
-                            for (var key in dishes) {
+                            console.log(items);
+                            for (var key in items) {
                                 var count = 0;
-                                for (var key2 in orderDishes.dishIds)
-                                    if (orderDishes.dishIds[key2].toString() == dishes[key]._id.toString()) {
-                                        count = orderDishes.dishCount[key2]; break;
+                                for (var key2 in orderItems.itemIds)
+                                    if (orderItems.itemIds[key2].toString() == items[key]._id.toString()) {
+                                        count = orderItems.itemCount[key2]; break;
                                     }
-                                messageText += dishes[key].Name + ' ' + count + '; ';
-                                shopMessage += dishes[key].Name + ' ' + count + '; ';
+                                messageText += items[key].Name + ' ' + count + '; ';
+                                shopMessage += items[key].Name + ' ' + count + '; ';
                             }
                             messageText += orderLink + ' ' + myOrder.Description;
                             shopMessage += orderLink + ' ' + myOrder.Description + ' оплачено: ' + myOrder.PaymentAmmount + ' клиент: ' + myOrder.UserName;

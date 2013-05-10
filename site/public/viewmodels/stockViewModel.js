@@ -7,11 +7,11 @@ function StockViewModel(shopId) {
     self.ShopPhone = ko.observable('Телефон не задан');
     self.ShopWorkTime = ko.observable('Время работы не задано');
     self.Categories = ko.observableArray([]);
-    self.OrderedDishes = ko.observableArray([]);
-    self.OrderedDishesPrices = ko.computed(function () {
+    self.OrderedItems = ko.observableArray([]);
+    self.OrderedItemsPrices = ko.computed(function () {
         var total = 0;
-        ko.utils.arrayForEach(self.OrderedDishes(), function (dish) {
-            total += dish.Price();
+        ko.utils.arrayForEach(self.OrderedItems(), function (item) {
+            total += item.Price();
         })
         return total;
     });
@@ -21,26 +21,28 @@ function StockViewModel(shopId) {
     self.order = function () {
         var first = true;
         var orderId = null;
-        ko.utils.arrayForEach(self.OrderedDishes(), function (dish) {
+        ko.utils.arrayForEach(self.OrderedItems(), function (item) {
             if (first) {
                 $.ajax({
-                    url: '/api/order/createOrder/' + self.ShopId + '/' + dish.id() + '/1',
+                    url: '/api/order/createOrder/' + self.ShopId + '/' + item.id() + '/1',
                     type: "GET",
                     async: false,
                     cache: false
                 }).done(function (order) {
+                    
                     orderId = order._id;
                     first = false;
                 })
             } else {
                 $.ajax({
-                    url: '/api/order/addDish/' + orderId + '/' + self.ShopId + '/' + dish.id() + '/1',
+                    url: '/api/order/addItem/' + orderId + '/' + self.ShopId + '/' + item.id() + '/1',
                     type: "GET",
                     async: false,
                     cache: false
                 }).done(function (order) { orderId = order._id; }
                 )
             }
+            
             document.location.href = '/order/buy/' + orderId;
             //$.ajax({
             //    url: '/api/order/calcPrice/' + orderId,
@@ -50,8 +52,8 @@ function StockViewModel(shopId) {
 
         });
     }
-    self.buyDish = function (dish) {
-        self.OrderedDishes.push(dish);
+    self.buyItem = function (item) {
+        self.OrderedItems.push(item);
     };
 
     $.getJSON('/api/shops/' + shopId, function (shop) {
@@ -74,11 +76,11 @@ function StockViewModel(shopId) {
         var first = true;
         $.each(allData, function (index, value) {
             $.ajax({
-                url: "/api/shop/" + shopId + "/category/" + value._id + "/dishes",
+                url: "/api/shop/" + shopId + "/category/" + value._id + "/items",
                 type: "GET",
                 async: false
             }).done(function (allData) {
-                var mappedDishes = $.map(allData, function (item) {
+                var mappedItems = $.map(allData, function (item) {
                     var d = new Date();
                     var n = d.getDay();
                     var nStr = "";
@@ -99,16 +101,16 @@ function StockViewModel(shopId) {
 
                     //if ($.inArray("AllWeek", item.Days) >= 0) {
                     if (item.Days.length == 0) {
-                        return new Dish(item);
+                        return new Item(item);
                     }
                     else if ($.inArray(nStr, item.Days) >= 0) {
-                        return new Dish(item);
+                        return new Item(item);
                     }
 
 
                 });
                 var category = new Category(value);
-                category.Dishes(mappedDishes);
+                category.Items(mappedItems);
                 category.active(first);
                 if (first)
                     first = false;
@@ -119,10 +121,10 @@ function StockViewModel(shopId) {
 
     //$.getJSON("/api/shops/" + shopId + "/category", function (allData) {
     //    $.each(allData, function (index, value) {
-    //        $.getJSON("/api/shop/" + shopId + "/category/" + value._id + "/dishes", function (allData) {
-    //            var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
+    //        $.getJSON("/api/shop/" + shopId + "/category/" + value._id + "/items", function (allData) {
+    //            var mappedItems = $.map(allData, function (item) { return new Item(item) });
     //            var category = new Category(value);
-    //            category.Dishes(mappedDishes);
+    //            category.Items(mappedItems);
     //            self.Categories.push(category);
     //        });
     //    });

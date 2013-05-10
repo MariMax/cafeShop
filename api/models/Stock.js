@@ -14,7 +14,7 @@ var stockSchema = new Schema({
     Description:String
     //DateFrom:{type:Date,validate:[required,'Дата действия меню обязательна'],'default':Date.now.getDate() },
     //DateTo:{type:Date,validate:[required,'Дата действия меню обязательна'],'default':Date.now.getDate() },
-    //Dishes:[{type:ObjectId,ref:'Dish'}]
+
 });
 
 

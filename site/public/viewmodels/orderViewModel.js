@@ -74,10 +74,10 @@ ko.extenders.requiredEmail = function(target, overrideMessage) {
     return target;
 };
 
-var CartLine = function(dish, count) {
+var CartLine = function(item, count) {
     var self = this;
     
-    self.product = ko.observable(dish);
+    self.product = ko.observable(item);
     self.quantity = ko.observable(count);
     self.subtotal = ko.computed(function() {
         return self.product() ? self.product().Price * parseInt("0" + self.quantity(), 10) : 0;
@@ -113,7 +113,7 @@ var CartLine = function(dish, count) {
         ko.utils.arrayForEach(self.lines(), function (line) {
 
             $.ajax({
-                url: '/api/order/setDish/' + self.orderId + '/' + self.shopId + '/' + line.product()._id + '/' + line.quantity(),
+                url: '/api/order/setItem/' + self.orderId + '/' + self.shopId + '/' + line.product()._id + '/' + line.quantity(),
                 type: "GET",
                 async: false,
                 cache: false
@@ -243,15 +243,15 @@ var CartLine = function(dish, count) {
                 self.PaymentId(order.PaymentId);
 
 
-            ko.utils.arrayForEach(order.Dishes, function (dish) {
+            ko.utils.arrayForEach(order.Items, function (item) {
                 $.ajax({
-                    url: "/api/dishes/" + dish.dishId,
+                    url: "/api/item/" + item.itemId,
                     type: "GET",
                     async: false,
                     cache: false
-                }).done(function (b_dish) {
+                }).done(function (b_item) {
 
-                    self.lines.push(new CartLine(b_dish, dish.count));
+                    self.lines.push(new CartLine(b_item, item.count));
 
                 });
 

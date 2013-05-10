@@ -29,7 +29,7 @@ var shopSchema = new Schema({
     tempCellPhone: String,
     //DeliveryMethods:[{type:ObjectId,ref:'DeliveryMethod'}],
     //Users:[{type:ObjectId,ref:'User'}],
-    //Dishes:[{type:ObjectId,ref:'Dish'}],
+
 
     CanWorkInShopShop: { type: Boolean, 'default': false }
 });

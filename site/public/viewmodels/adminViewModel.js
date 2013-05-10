@@ -35,13 +35,13 @@ function AdminViewModel(shopId) {
         var first = true;
         $.each(allData, function (index, value) {
             $.ajax({
-                url: "/api/shop/" + self.shopId + "/category/" + value._id + "/dishes",
+                url: "/api/shop/" + self.shopId + "/category/" + value._id + "/items",
                 type: "GET",
                 async: false
             }).done(function (allData) {
-                var mappedDishes = $.map(allData, function (item) { return new Dish(item, okMessage, errorMessage) });
+                var mappedItems = $.map(allData, function (item) { return new Item(item, okMessage, errorMessage) });
                 var category = new Category(value, self.shopId, okMessage, errorMessage);
-                category.Dishes(mappedDishes);
+                category.Items(mappedItems);
                 category.active(first);
                 if (first)
                     first = false;
@@ -53,10 +53,10 @@ function AdminViewModel(shopId) {
     //$.getJSON("/api/shops/" + shopId + "/category", function (allData) {
     //    var first = true;
     //    $.each(allData, function (index, value) {
-    //        $.getJSON("/api/shop/" + shopId + "/category/" + value._id + "/dishes", function (allData) {
-    //            var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
+    //        $.getJSON("/api/shop/" + shopId + "/category/" + value._id + "/items", function (allData) {
+    //            var mappedItems = $.map(allData, function (item) { return new Item(item) });
     //            var category = new Category(value);
-    //            category.Dishes(mappedDishes);
+    //            category.Items(mappedItems);
     //            category.active(first);
     //            if (first)
     //                first = false;

@@ -18,13 +18,13 @@
             </ul>
             <div data-bind="foreach: Categories">
                 <div data-bind="attr: { id: IdName , class: active() ? 'catalog clearfix active':'catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
-                    <div data-bind="foreach: Dishes">
+                    <div data-bind="foreach: Items">
                         <div class="catalog_item">
                             <div class="img"><img data-bind="attr: { src: Image(), alt: Name(), title: Description() }" width="186" height="131"></div>
                             <h3><span data-bind="text: Name"></span></h3>
                             <div class="price"><span data-bind="text: Price"></span> р.</div>
                             <div class="buy">
-                                <a href="#" data-bind="click: $root.buyDish">заказать</a>
+                                <a href="#" data-bind="click: $root.buyItem">заказать</a>
                             </div>
                         </div>
                     </div>
@@ -35,10 +35,10 @@
             <div class="wrap">
                 <div class="basket">
 			Вы выбрали:
-                    <a href="#" class="basket_link"><span data-bind="text: OrderedDishes().length"></span> блюда на <span data-bind="text: OrderedDishesPrices()"></span> руб.</a>
+                    <a href="#" class="basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
                     <a href="#" class="order button big cursiv second" data-bind="click: $root.order">Оформить</a>
                 </div>
-                <div class="basket_block" data-bind="foreach: OrderedDishes">
+                <div class="basket_block" data-bind="foreach: OrderedItems">
                     <div class="item">
                         <div class="img">
                             <img data-bind="attr: { src: Image(), alt: Name() }"></img>

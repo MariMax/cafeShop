@@ -9,7 +9,7 @@ var mongoose = require('mongoose')
 //// Ensure safe writes
 //var mongoOptions = { db: { safe: true} };
 
-var dishSchema = new Schema({
+var itemSchema = new Schema({
     _shop: ObjectId, // { type: ObjectId, ref: 'Shop' },
     Name: String,
     Description: String,
@@ -20,8 +20,8 @@ var dishSchema = new Schema({
 });
 
 
-dishSchema.statics.newDish = function (shopId, categoryId, data, cb, err) {
-    var instance = new Dish();
+itemSchema.statics.newItem = function (shopId, categoryId, data, cb, err) {
+    var instance = new Item();
     instance._shop = shopId;
     instance._category = categoryId;
     instance.Name = data.Name;
@@ -39,8 +39,8 @@ dishSchema.statics.newDish = function (shopId, categoryId, data, cb, err) {
     });
 };
 
-dishSchema.statics.updateDish = function (dishId, data, cb) {
-    console.log("updateDish");
+itemSchema.statics.updateItem = function (itemId, data, cb) {
+    console.log("updateItem");
     var newdata = {};
     if (data.Name && data.Name != '') newdata.Name = data.Name;
     if (data.Description && data.Description != '') newdata.Description = data.Description;
@@ -49,7 +49,7 @@ dishSchema.statics.updateDish = function (dishId, data, cb) {
     if (data.Days) newdata.Days = data.Days;
     if (data.Image) newdata.Image = data.Image;
 
-    this.findByIdAndUpdate(dishId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
+    this.findByIdAndUpdate(itemId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
         if (error) {
             cb(error, null);
         }
@@ -59,13 +59,13 @@ dishSchema.statics.updateDish = function (dishId, data, cb) {
     })
 };
 
-dishSchema.statics.getDish = function (dishId, callback) {
-    this.findOne({ _id: dishId }, callback);
+itemSchema.statics.getItem = function (itemId, callback) {
+    this.findOne({ _id: itemId }, callback);
 }
 
-dishSchema.statics.getDishes = function (dishIds, callback) {
-    this.find({ _id: { $in: dishIds} }, callback);
+itemSchema.statics.getItems = function (itemIds, callback) {
+    this.find({ _id: { $in: itemIds} }, callback);
 }
 
-Dish = mongoose.model('Dish', dishSchema);
-exports.Dish = Dish;
+Item = mongoose.model('Item', itemSchema);
+exports.Item = Item;
