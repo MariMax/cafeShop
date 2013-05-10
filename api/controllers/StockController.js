@@ -1,5 +1,5 @@
-var models = require('../models/Menu.js');
-var Menu = models.Menu;
+var models = require('../models/Stock.js');
+var Stock = models.Stock;
 
 var mongoose = require('mongoose')
     , mongoTypes = require('mongoose-types')
@@ -8,8 +8,8 @@ var Schema = mongoose.Schema
 
 exports.add_routes = function (app) {
 
-    app.get("/shop/menu/:id", function (req, res) {
-        Menu.findOne({ _id: req.params.id }, function (err, value) {
+    app.get("/shop/stock/:id", function (req, res) {
+        Stock.findOne({ _id: req.params.id }, function (err, value) {
             if (err)
                 res.send(err, 404);
             else
@@ -36,25 +36,25 @@ exports.add_routes = function (app) {
     //    });
     //});
 
-    app.post("/shop/:shopId/menu", function (req, res) {
-        Menu.newMenu(req.params.shopId, req.body, function (err,menu) {
+    app.post("/shop/:shopId/stock", function (req, res) {
+        Stock.newStock(req.params.shopId, req.body, function (err,stock) {
             if (err) res.send('ERROR : ' + err,500); else
-            res.send({ id: Menu._id }, 201)
+            res.send({ id: Stock._id }, 201)
         });
 
     });
 
-    app.get("/shop/:shopId/menu", function (req, res) {
-        Menu.find({ _shop: req.params.shopId }, function (err, menu) {
+    app.get("/shop/:shopId/stock", function (req, res) {
+        Stock.find({ _shop: req.params.shopId }, function (err, stock) {
             if (err)
                 res.send(err, 404);
             else
-                res.json(menu, 200);
+                res.json(stock, 200);
         });
     });
 
-    app.delete("/shop/menu/:id", function (req, res) {
-        Menu.remove({ _id: req.params.id }, function (err, numberOfDeleted) {
+    app.delete("/shop/stock/:id", function (req, res) {
+        Stock.remove({ _id: req.params.id }, function (err, numberOfDeleted) {
              if (err)
                 res.send(err, 404);
             else

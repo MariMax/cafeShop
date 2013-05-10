@@ -99,6 +99,6 @@ function AdminViewModel(shopId) {
 
 if (document.getElementById("shopId") != null) {
     var shopId = document.getElementById("shopId").value;
-    if (document.getElementById("admin_menu") != null)
-        ko.applyBindings(new AdminViewModel(shopId), document.getElementById("admin_menu"));
+    if (document.getElementById("admin_stock") != null)
+        ko.applyBindings(new AdminViewModel(shopId), document.getElementById("admin_stock"));
 }

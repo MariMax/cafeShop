@@ -1,6 +1,6 @@
 exports.add_routes = function (app) {
-    app.get("/shop/:shopId/menu", function (req, res)
-    { res.render("Shops/menu", { shopId: req.params.shopId }); });
+    app.get("/shop/:shopId/stock", function (req, res)
+    { res.render("Shops/stock", { shopId: req.params.shopId }); });
 
     app.get("/shops/newShop", function (req, res) {
         if (req.session.user) {

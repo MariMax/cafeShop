@@ -30,8 +30,7 @@ var shopSchema = new Schema({
     //DeliveryMethods:[{type:ObjectId,ref:'DeliveryMethod'}],
     //Users:[{type:ObjectId,ref:'User'}],
     //Dishes:[{type:ObjectId,ref:'Dish'}],
-    //Menus:[{type:ObjectId,ref:'Menu'}],
-    //Orders:[{type:ObjectId,ref:'Order'}],
+
     CanWorkInShopShop: { type: Boolean, 'default': false }
 });
 

@@ -1,5 +1,5 @@
 <% layout('../layout') -%>
-    <div class="shop_page" id="shop_menu_page">
+    <div class="shop_page" id="shop_stock_page">
         <input type="hidden" hidden="hidden" value="<%= shopId %>" id="shopId" />
         <div class="shop_info page_title_block">
             <div class="shop_name"><span data-bind="text: ShopName"></span></div>
@@ -8,7 +8,7 @@
             <div class="shop_tel"><span data-bind="text: ShopPhone"></span></div>
             <div class="border_wave_bot"></div>
         </div>
-        <div class="shop_menu" id="tab-container">
+        <div class="shop_stock" id="tab-container">
             <ul class="catalog_nav etabs" data-bind="foreach: Categories">
                 <li data-bind="attr: { class: activeText() }">
                     <a data-bind="click: $root.setActiveCategory  ">

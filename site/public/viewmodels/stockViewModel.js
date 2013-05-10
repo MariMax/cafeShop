@@ -1,4 +1,4 @@
-function MenuViewModel(shopId) {
+function StockViewModel(shopId) {
 
     var self = this;
     self.ShopId = shopId;
@@ -141,6 +141,6 @@ function MenuViewModel(shopId) {
 
 if (document.getElementById("shopId") != null) {
     var shopId = document.getElementById("shopId").value;
-    if (document.getElementById("shop_menu_page") != null)
-        ko.applyBindings(new MenuViewModel(shopId), document.getElementById("shop_menu_page"));
+    if (document.getElementById("shop_stock_page") != null)
+        ko.applyBindings(new StockViewModel(shopId), document.getElementById("shop_stock_page"));
 }

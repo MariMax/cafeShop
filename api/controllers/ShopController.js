@@ -1,7 +1,7 @@
 var models = require('../models/Shop.js');
 var forms = require('../forms/ShopForms.js');
 var User = require('../models/User.js').User;
-var Menu = require('../models/Menu.js').Menu;
+var Stock = require('../models/Stock.js').Stock;
 var common = require('../models/CommonFunctions.js');
 //var gm = require('gm');
 var sendMail = common.sendMail;
@@ -28,7 +28,7 @@ exports.add_routes = function (app) {
 
                                 if (error) ShowMessage(res, "Не удалось создать кафе, попробуйте еще раз позже", 500); else {
                                     console.log(shop);
-                                    Menu.newMenu(shop._id, { Name: "NewMenu", Description: "NewDescription" }, function (error, menu) {
+                                    Stock.newStock(shop._id, { Name: "NewStock", Description: "NewDescription" }, function (error, stock) {
                                         if (error) ShowMessage(res, "Не удалось создать еню в кафе", 500);
                                     });
                                     assignUserandShop(user._id, shop._id, function (error, userAssigned) {

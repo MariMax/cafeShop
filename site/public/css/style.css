@@ -104,7 +104,7 @@ footer .admin_block a:hover{color:#a6adb9}
 .shop_page .shop_info .shop_address{position:absolute;left:45px;top:40%;background:url("../images/icon_point_small.png") no-repeat 0 1px;padding:0 0 0 20px;font-size:16px;font-weight:bold;}
 .shop_page .shop_info .shop_address a{color:#67645c}
 .shop_page .shop_info .shop_tel{position:absolute;right:45px;top:40%;background:url("../images/icon_phone.png") no-repeat 0 1px;padding:0 0 0 24px;font-size:16px;font-weight:bold;color:#67645c}
-.shop_page .shop_menu{padding:30px 45px}
+.shop_page .shop_stock{padding:30px 45px}
 .catalog_nav{position:relative;text-align:center;list-style:disc;margin:0 0 30px;}
 .catalog_nav li{display:inline-block;color:#f17517;padding:0 10px 0 0;font-family:'Marmelad',Arial;font-size:15px;}
 .catalog_nav li:before{content:'•';display:inline-block;margin:0 12px 0 0}
@@ -128,7 +128,7 @@ footer .admin_block a:hover{color:#a6adb9}
 .admin_page .admin_content{padding:30px 45px}
 .admin_page .admin_info{margin:0 0 50px;}
 .admin_page .admin_info h3{font-size:22px;font-weight:normal;color:#f17517;padding:0 0 12px;margin:0 0 30px;border-bottom:1px solid #ebeae9}
-.admin_page .admin_menu h3{font-size:22px;font-weight:normal;color:#f17517;padding:0 0 12px;margin:0 0 30px;border-bottom:1px solid #ebeae9}
+.admin_page .admin_stock h3{font-size:22px;font-weight:normal;color:#f17517;padding:0 0 12px;margin:0 0 30px;border-bottom:1px solid #ebeae9}
 .catalog_admin .catalog_item{margin:0 0 10px;padding:20px 40px;background:#f9f7f1 url("../images/block2_bg.png");border:1px solid #efe9d9;}
 .catalog_admin .catalog_item input[type=text],.catalog_admin .catalog_item textarea{background:#fff;-webkit-box-shadow:0 1px 1px rgba(0,0,0,0.13);box-shadow:0 1px 1px rgba(0,0,0,0.13);border:none}
 .catalog_admin .catalog_item .photo{float:left;width:186px;height:130px;overflow:hidden;background:#fff url("../images/icon_add_photo.png") no-repeat center 25%;-webkit-box-shadow:0 1px 1px rgba(0,0,0,0.13);box-shadow:0 1px 1px rgba(0,0,0,0.13);-webkit-border-radius:5px;border-radius:5px;}

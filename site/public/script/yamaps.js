@@ -42,7 +42,7 @@ function fid_13613773245519471603(ymaps) {
                 //console.log(val.GeoObject.metaDataProperty.GeocoderMetaData.kind + ' ' + val.GeoObject.Point.pos + ' ' + val.GeoObject.name + ' ' + val.GeoObject.description);
 
                 map.geoObjects.add(new ymaps.Placemark([shop.Longitude, shop.Latitude], {
-                    //balloonContent: '<script type="text/javascript">alert("hello")</script></script><div class="baloon_content"><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/menu">Меню</a></div>',
+                    //balloonContent: '<script type="text/javascript">alert("hello")</script></script><div class="baloon_content"><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/stock">Меню</a></div>',
                     autoPan: true
                 }, {
                     iconImageHref: '/images/baloon.png',
@@ -69,8 +69,8 @@ function fid_13613773245519471603(ymaps) {
                 var storeListContent = '';
                 for (var key in data) {
                     var shop = data[key];
-                    storeListContent += '<div><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/menu">Меню</a></div>'
-                    //balloonContent: '<script type="text/javascript">alert("hello")</script></script><div class="baloon_content"><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/menu">Меню</a></div>',
+                    storeListContent += '<div><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/stock">Меню</a></div>'
+                    //balloonContent: '<script type="text/javascript">alert("hello")</script></script><div class="baloon_content"><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/stock">Меню</a></div>',
                 };
                 storeList.html(storeListContent);
                 var storeBlock = $("#StoreBlock");
