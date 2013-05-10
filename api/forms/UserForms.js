@@ -44,12 +44,12 @@ validate("email").required(null,'please enter email')
 .isEmail('need some email')
 )
 
-var AssignWithCafeForm = form(
+var AssignWithShopForm = form(
 filter("userId").trim(),
 validate("userId").required(null,'please enter userId'),
 
-filter("cafeId").trim(),
-validate("cafeId").required(null,'please enter cafeId')
+filter("shopId").trim(),
+validate("shopId").required(null,'please enter shopId')
 )
 
 var UpdateNameForm = form(
@@ -108,7 +108,7 @@ exports.LoginForm = LoginForm;
 exports.ApproveEmailForm = ApproveEmailForm;
 exports.ResetPasswordForm = ResetPaswordForm;
 exports.ResetPasswordForm2 = ResetPasswordForm2;
-exports.AssignWithCafeForm = AssignWithCafeForm;
+exports.AssignWithShopForm = AssignWithShopForm;
 exports.UpdateNameForm = UpdateNameForm;
 exports.UpdateEmailForm = UpdateEmailForm;
 exports.UpdatePasswordForm = UpdatePasswordForm;

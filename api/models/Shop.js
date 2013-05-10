@@ -9,7 +9,7 @@ var mongoOptions = { db: { safe: true} };
 
 
 
-var cafeSchema = new Schema({
+var shopSchema = new Schema({
     //_id: ObjectId,
     Name: String,
     Address: String,
@@ -32,12 +32,12 @@ var cafeSchema = new Schema({
     //Dishes:[{type:ObjectId,ref:'Dish'}],
     //Menus:[{type:ObjectId,ref:'Menu'}],
     //Orders:[{type:ObjectId,ref:'Order'}],
-    CanWorkInCafeShop: { type: Boolean, 'default': false }
+    CanWorkInShopShop: { type: Boolean, 'default': false }
 });
 
-cafeSchema.statics.newCafe = function (data, cb) {
-    console.log("newCafe");
-    var instance = new Cafe();
+shopSchema.statics.newShop = function (data, cb) {
+    console.log("newShop");
+    var instance = new Shop();
     instance.Name = data.Name;
     if (data.Address) instance.Address = data.Address;
     if (data.Description) instance.Description = data.Description;
@@ -64,8 +64,8 @@ cafeSchema.statics.newCafe = function (data, cb) {
     });
 }
 
-cafeSchema.statics.UpdateCafeValue = function (cafeId, data, cb) {
-    console.log("UpdateValueOfCafe");
+shopSchema.statics.UpdateShopValue = function (shopId, data, cb) {
+    console.log("UpdateValueOfShop");
     var newdata = {};
     if (data.Name && data.Name != '') newdata.Name = data.Name;
     if (data.Address && data.Address != '') newdata.Address = data.Address;
@@ -77,61 +77,61 @@ cafeSchema.statics.UpdateCafeValue = function (cafeId, data, cb) {
     if (data.Longitude) newdata.Longitude = data.Longitude;
     if (data.Latitude && data.Longitude) { newdata.Coords = []; newdata.Coords.push(data.Longitude);newdata.Coords.push(data.Latitude); }
 
-    this.findByIdAndUpdate(cafeId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
+    this.findByIdAndUpdate(shopId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
         if (error) {
             cb(error);
         }
         else {
-            Cafe.findOne({ _id: cafeId }, cb)
+            Shop.findOne({ _id: shopId }, cb)
         }
     })
 };
 
-cafeSchema.statics.dropToken = function (cafeId, callback) {
+shopSchema.statics.dropToken = function (shopId, callback) {
 
-    this.findByIdAndUpdate(cafeId, { $set: { CellPhoneVerificationCode: '', tempCellPhone: ''} }, { multi: false, safe: true }, function (error, docs) {
+    this.findByIdAndUpdate(shopId, { $set: { CellPhoneVerificationCode: '', tempCellPhone: ''} }, { multi: false, safe: true }, function (error, docs) {
         if (error) {
             callback(error);
         }
         else {
-            Cafe.findOne({ _id: cafeId }, callback);
+            Shop.findOne({ _id: shopId }, callback);
 
         }
     })
 }
 
-cafeSchema.statics.approveCellPhone = function (cafeId, cellPhone, callback) {
+shopSchema.statics.approveCellPhone = function (shopId, cellPhone, callback) {
 
-    this.findByIdAndUpdate(cafeId, { $set: { CellPhoneApprove: true, CellPhone: cellPhone, tempCellPhone: ''} }, { multi: false, safe: true }, function (error, docs) {
+    this.findByIdAndUpdate(shopId, { $set: { CellPhoneApprove: true, CellPhone: cellPhone, tempCellPhone: ''} }, { multi: false, safe: true }, function (error, docs) {
         if (error) {
             callback(error);
         }
         else {
-            Cafe.findOne({ CellPhone: cellPhone }, callback)
+            Shop.findOne({ CellPhone: cellPhone }, callback)
 
         }
     })
 
 };
 
-cafeSchema.statics.UpdateCellPhone = function (cafeId, cellPhone, callback) {
+shopSchema.statics.UpdateCellPhone = function (shopId, cellPhone, callback) {
     var newPassword = '';
     newPassword = newPassword.randomNumberString(6);
     console.log('Verify code: ' + newPassword);
-    this.findByIdAndUpdate(cafeId, { $set: { tempCellPhone: cellPhone, CellPhoneVerificationCode: newPassword} }, { multi: false, safe: true }, function (error, docs) {
+    this.findByIdAndUpdate(shopId, { $set: { tempCellPhone: cellPhone, CellPhoneVerificationCode: newPassword} }, { multi: false, safe: true }, function (error, docs) {
         if (error) {
             callback(error);
         }
         else {
-            Cafe.findOne({ _id: cafeId }, callback)
+            Shop.findOne({ _id: shopId }, callback)
         }
     })
 
 };
 
-cafeSchema.statics.getCafe = function (cafeId, callback) {
-    this.findOne({ _id: cafeId }, callback);
+shopSchema.statics.getShop = function (shopId, callback) {
+    this.findOne({ _id: shopId }, callback);
 }
 
-Cafe = mongoose.model('Cafe', cafeSchema);
-exports.Cafe = Cafe;
+Shop = mongoose.model('Shop', shopSchema);
+exports.Shop = Shop;

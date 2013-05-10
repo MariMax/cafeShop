@@ -14,7 +14,7 @@ var dishSchema = new Schema({
 });
 
 var orderSchema = new Schema({
-    _cafe: { type: ObjectId, ref: 'Cafe' },
+    _shop: { type: ObjectId, ref: 'Shop' },
     //_deliveryMethod:{type:ObjectId, ref:'DeliveryMethod'},
     UserName: String,
     UserPhone: String,
@@ -39,14 +39,14 @@ var orderSchema = new Schema({
 
 
 
-orderSchema.statics.createOrder = function (cafeId, dish, _quantify, _price, callback) {
+orderSchema.statics.createOrder = function (shopId, dish, _quantify, _price, callback) {
     if (!_quantify) _quantify = 1;
     var instance = new Order();
     var dishOrder = new OrderDish({ dishId: dish, count: _quantify, price: _price });
     var paymentId = '';
     paymentId = paymentId.randomString(12);
     instance.PaymentId = paymentId;
-    instance._cafe = cafeId;
+    instance._shop = shopId;
     instance.Dishes.push(dishOrder);
     instance.save(function (error, data) {
         if (error) {

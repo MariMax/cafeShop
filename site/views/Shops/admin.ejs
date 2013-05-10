@@ -1,0 +1,124 @@
+﻿<% layout('../layout') -%>
+
+<div class="admin_page" id="admin_page">
+    <div class="admin_title page_title_block">
+        <h1>Администрирование</h1>
+        <a class="shop_link" href="/shop/<%= shopId %>/menu">Страница заведения</a>
+        <div class="border_wave_bot"></div>
+    </div>
+
+    <div class="admin_content">
+        <div class="admin_info">
+            <h3>Информация</h3>
+            <form method="post" action="" class="horizontal">
+                <div id="messenger">
+                </div>
+                <div class="form_item">
+
+                    <div class="label">Название кафе/ресторана</div>
+                    <input id="shopId" type="hidden" size="20" name="shopId" value="<%= shopId %>" required hidden>
+                    <input id="Longitude" type="hidden" size="20" name="Longitude" hidden>
+                    <input id="Latitude" type="hidden" size="20" name="Latitude" hidden>
+                    <div class="input"><input id="name" type="text" size="60" name="Name" required>
+                    </div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Адрес</div>
+                    <div class="input"><input id="Address" type="text" size="60" name="Address" placeholder="Уфа, ул. Ленина 21" onkeyup="GetLocation($('#Address'))"></div>
+
+
+                </div>
+                <div class="form_item">
+                    <div class="label">Режим работы</div>
+                    <div class="input"><input id="WorkTime" type="text" size="60" name="WorkTime"></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Телефон (для клиентов)</div>
+                    <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone"></div>
+                </div>
+                <div class="form_item">
+                    <div class="label">Сотовый (для sms оповещения)</div>
+                    <div class="input"><input type="text" size="20" id="cellPhone" name="cellPhone" required>
+                    </div>
+                </div>
+                <div id="verify" class="form_item" style="display: none">
+                    <div class="label">Введите код подтверждения</div>
+                    <div class="input"><input id="cellPhoneConfirmation" type="text" size="20" name="token">
+
+                        <input type="button" id="confirm" value="Подтвердить" class="button succes"></div>
+
+                </div>
+
+
+                <div class="form_item">
+                    <div class="label">Описание, особенности работы</div>
+                    <div class="input"><textarea id="Description" name="Description" style="width: 520px; height: 200px" required></textarea></div>
+                </div>
+                <div class="form_but">
+                    <input type="submit" value="Сохранить" class="button succes">
+                    <input type="reset" value="Очистить" class="button simple">
+                </div>
+            </form>
+        </div>
+
+        <div class="admin_menu" id="admin_menu">
+            <h3>Меню заведения</h3>
+            <div id="tab-container">
+                <ul class="catalog_nav etabs" data-bind="foreach: Categories">
+                    <li data-bind="attr: { class: activeText() } ">
+                        <a data-bind="click: $root.setActiveCategory  ">
+                            <span data-bind="text: Name"></span>
+                        </a>
+                    </li>
+                </ul>
+                <input type="hidden" id="newPhotoTmpUrl" />
+                <div data-bind="foreach: Categories">
+                    <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
+                        <div data-bind="foreach: Dishes">
+                            <div class="catalog_item">
+                                <div class="photo">
+                                    <a href="#" class="addfile">
+                                        <img width="186" height="131" data-bind="attr: { id: 'newPhotoImage'+id(), src: Image() }"></img>
+                                        Фото блюда
+                                        <input class="fileupload" type="file" name="uploads" data-url="/upload" data-bind="attr: { id: 'newPhotoInput'+id() }, uploadImage: id()"></a>
+                                </div>
+                                <div class="info">
+                                    <input type="text" name="" id="" class="name" placeholder="Название блюда" required data-bind="value: Name">
+                                    <textarea name="" id="" placeholder="Описание блюда" required data-bind="value: Description"></textarea>
+                                    <input type="text" name="" placeholder="0" id="" class="price" required data-bind="value: Price"><span class="currency">руб</span>
+                                    <a href="#" class="button " data-bind="click: id()!=null ? updateDish : $parent.addDishToDb">Сохранить</a>
+                                    <div class="week">
+                                        <input type="checkbox" value="AllWeek" data-bind=" attr:{ id: 'allWeek' + id(), name: 'allWeek' + id()  },checked: Days"><label data-bind="attr:{ for: 'allweek' + id()  }" class="check">Всю неделю</label>
+                                        <input type="checkbox" value="Mon" data-bind="attr:{ id: 'mon' + id(),name: 'mon' + id()  },checked: Days"><label data-bind="attr:{ for: 'mon' + id()  }" class="check">Пон</label>
+                                        <input type="checkbox" value="Tue" data-bind="attr:{ id: 'tue' + id(),name: 'tue' + id()  },checked: Days"><label data-bind="attr:{ for: 'tue' + id()  }" class="check">Втр</label>
+                                        <input type="checkbox" value="Wed" data-bind="attr:{ id: 'wed' + id(),name: 'wed' + id()  },checked: Days"><label data-bind="attr:{ for: 'wed' + id()  }" class="check">Срд</label>
+                                        <input type="checkbox" value="Thu" data-bind="attr:{ id: 'thu' + id(),name: 'thu' + id()  },checked: Days"><label data-bind="attr:{ for: 'thu' + id()  }" class="check">Чтв</label>
+                                        <input type="checkbox" value="Fri" data-bind="attr:{ id: 'fri' + id(),name: 'fri' + id()  },checked: Days"><label data-bind="attr:{ for: 'fri' + id()  }" class="check">Пят</label>
+                                        <input type="checkbox" value="Sat" data-bind="attr:{ id: 'sat' + id(),name: 'sat' + id()  },checked: Days"><label data-bind="attr:{ for: 'sat' + id()  }" class="check">Суб</label>
+                                        <input type="checkbox" value="Sun" data-bind="attr:{ id: 'sun' + id(),name: 'sun' + id()  },checked: Days"><label data-bind="attr:{ for: 'sun' + id()  }" class="check">Вск</label>
+                                    </div>
+                                </div>
+                                <a href="#" class="delete" data-bind="click: $parent.removeDish"></a>
+                            </div>
+                        </div>
+                        <a href="#" class="button succes small" data-bind="click: addDish">+ Добавить блюдо</a>
+                    </div>
+
+                </div>
+                <div class="notification" data-bind="visible: showOkMessage">
+                    <span data-bind="text: Message"></span>
+                </div>
+                <div class="notification error" data-bind="visible: showErrorMessage">
+                    <span data-bind="text: Message"></span>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<script src="/script/admin.js" type="text/javascript"></script>
+
+
+

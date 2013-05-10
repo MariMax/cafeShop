@@ -1,7 +1,7 @@
 var crypto = require('crypto');
 var rest = require('restler');
 
-var cafeModel = require('./Cafe.js').Cafe;
+var shopModel = require('./Shop.js').Shop;
 
 
 exports.hash =  function hash (msg, key) {
@@ -76,13 +76,13 @@ exports.sendMail = function sendMail(mailTo, mailFrom, subject, body, fn) {
 
 
 
-exports.assignUserandCafe = function (userId, cafeId, callback) {
-    cafeModel.findOne({ _id: cafeId }, function (error, cafe) {
+exports.assignUserandShop = function (userId, shopId, callback) {
+    shopModel.findOne({ _id: shopId }, function (error, shop) {
         if (error) { callback(error) }
         else {
             User.findOne({ _id: userId }, function (error, user) {
                 if (error) { return callback(error) } else {
-                    User.assignWithCafe(cafe._id, user._id, function (error, val) {
+                    User.assignWithShop(shop._id, user._id, function (error, val) {
                         if (error) { callback(error) } else {
                             callback(null, val);
                         }
@@ -93,22 +93,22 @@ exports.assignUserandCafe = function (userId, cafeId, callback) {
     });
 }
 
-exports.approveuserInCafe = function(userId,cafeId, callback)
+exports.approveuserInShop = function(userId,shopId, callback)
 {
     User.findOne({ _id: userId }, function (error, requestedUser) {/*Ищем подтверждаемого юзера*/
         if (error) { callback(error) } else {
-            console.log(requestedUser._cafe);
-            console.log(cafeId);
-            cafeModel.findOne({ _id: cafeId }, function (error, cafe) { 
-            if (error) callback("Cafe does not exists"); else
+            console.log(requestedUser._shop);
+            console.log(shopId);
+            shopModel.findOne({ _id: shopId }, function (error, shop) { 
+            if (error) callback("Shop does not exists"); else
             {
-              if (requestedUser._cafe.toString()== cafe._id.toString()) {/*проверяем его принадлежность к кафе*/
-                User.approveInCafe(cafe._id, requestedUser._id, function (error, result) {/*если все сошлось подтверждаем юзера*/
+              if (requestedUser._shop.toString()== shop._id.toString()) {/*проверяем его принадлежность к кафе*/
+                User.approveInShop(shop._id, requestedUser._id, function (error, result) {/*если все сошлось подтверждаем юзера*/
                     if (error) { callback(error) } else
                         callback(null, result)
                 })
             } else {
-                callback("confirm user from another cafe");
+                callback("confirm user from another shop");
             }  
             }
             })

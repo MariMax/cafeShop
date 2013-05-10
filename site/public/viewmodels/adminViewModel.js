@@ -1,7 +1,7 @@
 
-function AdminViewModel(cafeId) {
+function AdminViewModel(shopId) {
     var self = this;
-    self.cafeId = cafeId;
+    self.shopId = shopId;
     self.Categories = ko.observableArray([]);
 
     self.Message = ko.observable("");
@@ -28,19 +28,19 @@ function AdminViewModel(cafeId) {
     // Operations
     $.ajax(
     {
-        url: "/api/cafes/" + self.cafeId + "/category",
+        url: "/api/shops/" + self.shopId + "/category",
         type: "GET",
         async: false
     }).done(function (allData) {
         var first = true;
         $.each(allData, function (index, value) {
             $.ajax({
-                url: "/api/cafe/" + self.cafeId + "/category/" + value._id + "/dishes",
+                url: "/api/shop/" + self.shopId + "/category/" + value._id + "/dishes",
                 type: "GET",
                 async: false
             }).done(function (allData) {
                 var mappedDishes = $.map(allData, function (item) { return new Dish(item, okMessage, errorMessage) });
-                var category = new Category(value, self.cafeId, okMessage, errorMessage);
+                var category = new Category(value, self.shopId, okMessage, errorMessage);
                 category.Dishes(mappedDishes);
                 category.active(first);
                 if (first)
@@ -50,10 +50,10 @@ function AdminViewModel(cafeId) {
         });
     });
 
-    //$.getJSON("/api/cafes/" + cafeId + "/category", function (allData) {
+    //$.getJSON("/api/shops/" + shopId + "/category", function (allData) {
     //    var first = true;
     //    $.each(allData, function (index, value) {
-    //        $.getJSON("/api/cafe/" + cafeId + "/category/" + value._id + "/dishes", function (allData) {
+    //        $.getJSON("/api/shop/" + shopId + "/category/" + value._id + "/dishes", function (allData) {
     //            var mappedDishes = $.map(allData, function (item) { return new Dish(item) });
     //            var category = new Category(value);
     //            category.Dishes(mappedDishes);
@@ -97,8 +97,8 @@ function AdminViewModel(cafeId) {
 
 }
 
-if (document.getElementById("cafeId") != null) {
-    var cafeId = document.getElementById("cafeId").value;
+if (document.getElementById("shopId") != null) {
+    var shopId = document.getElementById("shopId").value;
     if (document.getElementById("admin_menu") != null)
-        ko.applyBindings(new AdminViewModel(cafeId), document.getElementById("admin_menu"));
+        ko.applyBindings(new AdminViewModel(shopId), document.getElementById("admin_menu"));
 }

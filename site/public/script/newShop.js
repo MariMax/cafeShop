@@ -1,7 +1,7 @@
    $(function () {
     
         function postData() {
-            var jqXHR = $.post('/api/cafes/newCafe', $('form').serialize())
+            var jqXHR = $.post('/api/shops/newShop', $('form').serialize())
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message.message);
@@ -12,7 +12,7 @@
                     $('#name').hide();
                     $('#phone').hide();
                     $('#submit').hide();
-                    $('#cafeId').attr('value', data.message.cafeId);
+                    $('#shopId').attr('value', data.message.shopId);
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);
@@ -25,16 +25,16 @@
     
         function confirmCellPhone() {
     
-            var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
+            var jqXHR = $.post('/api/shops/approve-CellPhone', $('form').serialize())
             .done(function (data) {
                 if (data.status == 200) {
                     $("#messenger").html(data.message.message);
                     $("#messenger").addClass("notice succes");
                     
                     $("#messenger").fadeIn("slow");
-                    var cafeId = data.message.cafeId;
+                    var shopId = data.message.shopId;
                     var delay = 2000;
-                    setTimeout(document.location.href = '/cafe/'+cafeId+'/admin/'  , delay);
+                    setTimeout(document.location.href = '/shop/'+shopId+'/admin/'  , delay);
                 }
                 if (data.status == 500) {
                     $("#messenger").html(data.message);

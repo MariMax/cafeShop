@@ -2,12 +2,12 @@
     
     
     
-        function getUserCafe(userId) {
-            $.post('/api/users/getcafe/' + userId)
+        function getUserShop(userId) {
+            $.post('/api/users/getshop/' + userId)
         .done(function (data) {
             if (data && data.CellPhoneApprove)
-                document.location.href = '/cafe/'+data._id+'/admin/';
-            else document.location.href = '/cafes/newcafe';
+                document.location.href = '/shop/'+data._id+'/admin/';
+            else document.location.href = '/shops/newshop';
         })
         }
     
@@ -15,7 +15,7 @@
             var userId = $('#userId').val();
     
             if (userId != 'undefined') {
-                getUserCafe(userId);
+                getUserShop(userId);
             }
         }
         route();

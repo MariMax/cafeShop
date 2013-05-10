@@ -8,7 +8,7 @@ var Schema = mongoose.Schema
 
 exports.add_routes = function (app) {
 
-    app.get("/cafe/menu/:id", function (req, res) {
+    app.get("/shop/menu/:id", function (req, res) {
         Menu.findOne({ _id: req.params.id }, function (err, value) {
             if (err)
                 res.send(err, 404);
@@ -17,7 +17,7 @@ exports.add_routes = function (app) {
         });
     });
 
-    //app.put("/cafe/dishes/:id", function (req, res) {
+    //app.put("/shop/dishes/:id", function (req, res) {
     //    var data = req.body;
     //    var query = { _id: req.params.id };
     //    Dish.findOne(query, function (err, dish) {
@@ -36,16 +36,16 @@ exports.add_routes = function (app) {
     //    });
     //});
 
-    app.post("/cafe/:cafeId/menu", function (req, res) {
-        Menu.newMenu(req.params.cafeId, req.body, function (err,menu) {
+    app.post("/shop/:shopId/menu", function (req, res) {
+        Menu.newMenu(req.params.shopId, req.body, function (err,menu) {
             if (err) res.send('ERROR : ' + err,500); else
             res.send({ id: Menu._id }, 201)
         });
 
     });
 
-    app.get("/cafe/:cafeId/menu", function (req, res) {
-        Menu.find({ _cafe: req.params.cafeId }, function (err, menu) {
+    app.get("/shop/:shopId/menu", function (req, res) {
+        Menu.find({ _shop: req.params.shopId }, function (err, menu) {
             if (err)
                 res.send(err, 404);
             else
@@ -53,7 +53,7 @@ exports.add_routes = function (app) {
         });
     });
 
-    app.delete("/cafe/menu/:id", function (req, res) {
+    app.delete("/shop/menu/:id", function (req, res) {
         Menu.remove({ _id: req.params.id }, function (err, numberOfDeleted) {
              if (err)
                 res.send(err, 404);

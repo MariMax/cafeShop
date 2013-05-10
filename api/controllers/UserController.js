@@ -1,13 +1,13 @@
 var models = require('../models/User.js');
-var cafeModel = require('../models/Cafe.js');
+var shopModel = require('../models/Shop.js');
 
 var forms = require('../forms/UserForms.js');
 var User = models.User;
 var common = require('../models/CommonFunctions.js');
 var sendMail = common.sendMail;
 
-var approveuserInCafe = common.approveuserInCafe;
-var assignUserandCafe = common.assignUserandCafe;
+var approveuserInShop = common.approveuserInShop;
+var assignUserandShop = common.assignUserandShop;
 var logError = common.logError;
 var ShowMessage = common.ShowMessage;
 
@@ -286,12 +286,12 @@ exports.add_routes = function (app) {
 
     });
 
-    //app.get("/users/assignwithcafe", function (req, res) { res.render("users/AssignWithCafe", { title: "AssignWithCafe" }); });
+    //app.get("/users/assignwithshop", function (req, res) { res.render("users/AssignWithShop", { title: "AssignWithShop" }); });
 
-    app.post('/users/assignwithcafe', forms.AssignWithCafeForm, function (req, res) {
+    app.post('/users/assignwithshop', forms.AssignWithShopForm, function (req, res) {
         if (req.session.user) {
             if (req.form.isValid) {
-                assignUserandCafe(req.form.userId, req.form.cafeId, function (error, result) {
+                assignUserandShop(req.form.userId, req.form.shopId, function (error, result) {
                     if (error) ShowMessage(res, error, 500); else
                         ShowMessage(res, result, 200);
                 });
@@ -299,21 +299,21 @@ exports.add_routes = function (app) {
         } else { ShowMessage(res, "Not autentificated", 500); }
     });
 
-    //app.get("/users/approveuserincafe", function (req, res) { res.render("users/ApproveInCafe", { title: "ApproveInCafe" }); });
+    //app.get("/users/approveuserinshop", function (req, res) { res.render("users/ApproveInShop", { title: "ApproveInShop" }); });
 
-    app.post('/users/approveuserincafe', forms.AssignWithCafeForm, function (req, res) {
+    app.post('/users/approveuserinshop', forms.AssignWithShopForm, function (req, res) {
         if (req.session.user)/*если сотрудник кафе авторизован, то он сможет подтвердить что еще кто-то является сотрудником*/
         {
             if (req.form.isValid) {
                 User.findOne({ _id: req.session.user }, function (error, user) {/*ищем сначала авторизованого юзера*/
                     if (error) ShowMessage(res, error, 500); else
-                        if (user.approveInCurrentCafe && user._cafe && user._cafe == req.form.cafeId) {/*проеряем его принадлежность к нужному кафе*/
-                            approveuserInCafe(req.form.userId, req.form.cafeId, function (error, result) {
+                        if (user.approveInCurrentShop && user._shop && user._shop == req.form.shopId) {/*проеряем его принадлежность к нужному кафе*/
+                            approveuserInShop(req.form.userId, req.form.shopId, function (error, result) {
                                 if (error) ShowMessage(res, error, 500); else
                                     ShowMessage(res, result, 200);
                             })
                         } else
-                        { ShowMessage(res, "authorized user from another cafe", 500) }
+                        { ShowMessage(res, "authorized user from another shop", 500) }
                 });
             } else { ShowMessage(res, "error in approve form", 500); }
         }
@@ -321,14 +321,14 @@ exports.add_routes = function (app) {
     });
 
 
-    app.post('/api/users/getcafe/:userId', function (req, res) {
-        User.findOne({ _id: req.params.userId }).populate('_cafe').exec(function (error, user) {
+    app.post('/api/users/getshop/:userId', function (req, res) {
+        User.findOne({ _id: req.params.userId }).populate('_shop').exec(function (error, user) {
             if (error) { ShowMessage(res, "Не удалось получить кафе пользователя", 500) } else
                 if (user) {
-                    var cafe = user._cafe;
-                    if (cafe) {
-                        cafe.CellPhoneVerificationCode = '';
-                        res.json(cafe, 200);
+                    var shop = user._shop;
+                    if (shop) {
+                        shop.CellPhoneVerificationCode = '';
+                        res.json(shop, 200);
                     } else res.json(404);
                 }
         });

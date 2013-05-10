@@ -1,36 +1,36 @@
-         function getCafe() {
-            var cafeId = $('#cafeId').val();
-            var jqXHR = $.ajax({ url: '/api/cafes/' + cafeId, cache: false, async: true })
-                 .done(function (cafe) {
+         function getShop() {
+            var shopId = $('#shopId').val();
+            var jqXHR = $.ajax({ url: '/api/shops/' + shopId, cache: false, async: true })
+                 .done(function (shop) {
 
-                     if (cafe) {
-                         if (cafe.Name)
-                             $('#name').attr('value', cafe.Name);
-                         if (cafe.Address)
-                             $('#Address').attr('value', cafe.Address);
-                         if (cafe.Description)
-                             $('#Description').html(cafe.Description);
-                         if (cafe.WorkTime)
-                             $('#WorkTime').attr('value', cafe.WorkTime);
-                         if (cafe.ClientPhone)
-                             $('#ClientPhone').attr('value', cafe.ClientPhone);
-                         if (cafe.CellPhone)
-                             $('#cellPhone').attr('value', cafe.CellPhone);
+                     if (shop) {
+                         if (shop.Name)
+                             $('#name').attr('value', shop.Name);
+                         if (shop.Address)
+                             $('#Address').attr('value', shop.Address);
+                         if (shop.Description)
+                             $('#Description').html(shop.Description);
+                         if (shop.WorkTime)
+                             $('#WorkTime').attr('value', shop.WorkTime);
+                         if (shop.ClientPhone)
+                             $('#ClientPhone').attr('value', shop.ClientPhone);
+                         if (shop.CellPhone)
+                             $('#cellPhone').attr('value', shop.CellPhone);
                          else {
-                             document.location.href = '/cafes/newcafe'; //Сначала подтверди телефон, потом администрируй
+                             document.location.href = '/shops/newshop'; //Сначала подтверди телефон, потом администрируй
                          }
-                     } else document.location.href = '/cafes/newcafe'; //а куда деваться если мы не нашли кафе, его надо создать
+                     } else document.location.href = '/shops/newshop'; //а куда деваться если мы не нашли кафе, его надо создать
                  })
         }   
         
         $(function () {
 
 
-        getCafe();
+        getShop();
 
         function postData() {
 
-            var jqXHR = $.post('/api/cafes/updateValues', $('form').serialize())
+            var jqXHR = $.post('/api/shops/updateValues', $('form').serialize())
                  .done(function (data) {
                      if (data.status == 200) {
                          $("#messenger").html(data.message);
@@ -50,7 +50,7 @@
 
         function updatePhone() {
 
-            var jqXHR = $.post('/api/cafes/updateCellPhone', $('form').serialize())
+            var jqXHR = $.post('/api/shops/updateCellPhone', $('form').serialize())
                  .done(function (data) {
 
                      if (data.status == 200) {
@@ -70,16 +70,16 @@
         }
         function confirmCellPhone() {
 
-            var jqXHR = $.post('/api/cafes/approve-CellPhone', $('form').serialize())
+            var jqXHR = $.post('/api/shops/approve-CellPhone', $('form').serialize())
                  .done(function (data) {
                      if (data.status == 200) {
                          $("#messenger").html(data.message.message);
                          $("#messenger").addClass("notice succes");
                          console.log("done " + data.message);
                          $("#messenger").fadeIn("slow");
-                         var cafeId = data.message.cafeId;
+                         var shopId = data.message.shopId;
                          var delay = 2000;
-                         setTimeout(document.location.href = '/cafe/' + cafeId + '/admin/', delay);
+                         setTimeout(document.location.href = '/shop/' + shopId + '/admin/', delay);
                      }
                      if (data.status == 500) {
                          $("#messenger").html(data.message);

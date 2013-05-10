@@ -113,7 +113,7 @@ var CartLine = function(dish, count) {
         ko.utils.arrayForEach(self.lines(), function (line) {
 
             $.ajax({
-                url: '/api/order/setDish/' + self.orderId + '/' + self.cafeId + '/' + line.product()._id + '/' + line.quantity(),
+                url: '/api/order/setDish/' + self.orderId + '/' + self.shopId + '/' + line.product()._id + '/' + line.quantity(),
                 type: "GET",
                 async: false,
                 cache: false
@@ -190,12 +190,12 @@ var CartLine = function(dish, count) {
             }
             return sum;
         };
-        self.cafeId = ko.observable();
+        self.shopId = ko.observable();
 
-        self.CafeName = ko.observable();
-        self.CafeAddress = ko.observable('Адрес не задан');
-        self.CafePhone = ko.observable('Телефон не задан');
-        self.CafeWorkTime = ko.observable('Время работы не задано');
+        self.ShopName = ko.observable();
+        self.ShopAddress = ko.observable('Адрес не задан');
+        self.ShopPhone = ko.observable('Телефон не задан');
+        self.ShopWorkTime = ko.observable('Время работы не задано');
         self.userName = ko.observable("").extend({ required: "Введите имя пользователя" });
         self.cellPhone = ko.observable("");
         self.email = ko.observable("").extend({ requiredEmail: "Введите email" });
@@ -257,24 +257,24 @@ var CartLine = function(dish, count) {
 
             });
 
-            self.cafeId = order._cafe;
+            self.shopId = order._shop;
             self.orderPrice = order.Price;
 
             $.ajax({
-                url: "/api/cafes/" + order._cafe,
+                url: "/api/shops/" + order._shop,
                 type: "GET",
                 async: false,
                 cache: false
-            }).done(function (cafe) {
+            }).done(function (shop) {
 
-                if (cafe.Name)
-                    self.CafeName(cafe.Name);
-                if (cafe.Address)
-                    self.CafeAddress(cafe.Address);
-                if (cafe.WorkTime)
-                    self.CafeWorkTime(cafe.WorkTime);
-                if (cafe.ClientPhone)
-                    self.CafePhone(cafe.ClientPhone);
+                if (shop.Name)
+                    self.ShopName(shop.Name);
+                if (shop.Address)
+                    self.ShopAddress(shop.Address);
+                if (shop.WorkTime)
+                    self.ShopWorkTime(shop.WorkTime);
+                if (shop.ClientPhone)
+                    self.ShopPhone(shop.ClientPhone);
 
             });
 

@@ -6,13 +6,13 @@ var mongoose = require('mongoose')
 var categorySchema = new Schema({
     Name: String,
     IdName: String,
-    _cafe: ObjectId,
+    _shop: ObjectId,
     id: Number
 });
 
-categorySchema.statics.newCategory = function (cafeId, id, idName, name, cb, err) {
+categorySchema.statics.newCategory = function (shopId, id, idName, name, cb, err) {
     var instance = new Category();
-    instance._cafe = cafeId;
+    instance._shop = shopId;
     instance.Name = name;
     instance.IdName = idName;
     instance.id = id;

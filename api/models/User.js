@@ -11,7 +11,7 @@ var Schema = mongoose.Schema
     , ObjectId = Schema.ObjectId;
 
 var UserSchema = new Schema({
-    _cafe:{type:ObjectId,ref:'Cafe'},
+    _shop:{type:ObjectId,ref:'Shop'},
     UserName:String,
     email: mongoose.SchemaTypes.Email,
     password: {
@@ -24,7 +24,7 @@ var UserSchema = new Schema({
     },
     approve:{type:Boolean,'default':false},
     token: {type:String, 'default':hash(Date.now().toString(),conf.secret)},
-    approveInCurrentCafe:{type:Boolean,'default':false},
+    approveInCurrentShop:{type:Boolean,'default':false},
     tempemail: mongoose.SchemaTypes.Email
 });
 
@@ -35,27 +35,27 @@ UserSchema.path('email').validate(function (v, fn) {
     });
 }, 'Такой email уже существует!');
 
-UserSchema.statics.getAllApprovedUsersInCafe = function (cafeId, callback) {
-    this.find({ _cafe: cafeId, approveInCurrentCafe: true }, callback);
+UserSchema.statics.getAllApprovedUsersInShop = function (shopId, callback) {
+    this.find({ _shop: shopId, approveInCurrentShop: true }, callback);
 }
 
-UserSchema.statics.getFirstApprovedUserInCafe = function (cafeId, callback) {
-    this.findOne({ _cafe: cafeId, approveInCurrentCafe: true }, callback);
+UserSchema.statics.getFirstApprovedUserInShop = function (shopId, callback) {
+    this.findOne({ _shop: shopId, approveInCurrentShop: true }, callback);
 }
 
-UserSchema.statics.getAllUsersInCafe = function (cafeId, callback) {
-    this.find({ _cafe: cafeId }, callback);
+UserSchema.statics.getAllUsersInShop = function (shopId, callback) {
+    this.find({ _shop: shopId }, callback);
 }
 
-UserSchema.statics.getAllUnApprovedUsersInCafe = function (cafeId, callback) {
-    this.find({ _cafe: cafeId, approveInCurrentCafe: false }, callback);
+UserSchema.statics.getAllUnApprovedUsersInShop = function (shopId, callback) {
+    this.find({ _shop: shopId, approveInCurrentShop: false }, callback);
 }
 
 UserSchema.statics.authenticate = function (email, password, fn) {
     this.findOne({email: email}, function (err, user) {
         if (!user) return fn(new Error('Такой пользователь не существует'));
         if (!user.approve) return fn(new Error('email не подтвержден'));
-        //if (!user.approveInCurrentCafe) return fn(new Error('Пользователь не является сотрудником ни одного кафе'));
+        //if (!user.approveInCurrentShop) return fn(new Error('Пользователь не является сотрудником ни одного кафе'));
         if (user.password == hash(password, conf.secret)) return fn(null, user);
         // Otherwise password is invalid
         fn(new Error('Неверный пароль'));
@@ -66,7 +66,7 @@ UserSchema.statics.UpdatePassword = function (userId, oldPassword, newPassword, 
     this.findOne({ _id: userId }, function (err, user) {
         if (!user) return fn(new Error('User does not exist'));
         if (!user.approve) return fn(new Error('email in not approved'));
-        //if (!user.approveInCurrentCafe) return fn(new Error('Пользователь не является сотрудником ни одного кафе'));
+        //if (!user.approveInCurrentShop) return fn(new Error('Пользователь не является сотрудником ни одного кафе'));
         if (user.password == hash(oldPassword, conf.secret)) {
             var data = {}
             data.password =hash(newPassword, conf.secret);
@@ -89,9 +89,9 @@ UserSchema.statics.UpdatePassword = function (userId, oldPassword, newPassword, 
     });
 };
 
-UserSchema.statics.assignWithCafe = function (cafeID, userID, callback) {
+UserSchema.statics.assignWithShop = function (shopID, userID, callback) {
     var data = {}
-    data._cafe = cafeID;
+    data._shop = shopID;
     this.update({ _id: userID }
         , { $set: data }
         , { multi: false, safe: true }
@@ -105,9 +105,9 @@ UserSchema.statics.assignWithCafe = function (cafeID, userID, callback) {
         });
 };
 
-UserSchema.statics.approveInCafe= function(cafeID, userID, callback) {
+UserSchema.statics.approveInShop= function(shopID, userID, callback) {
      var data = {}
-    data.approveInCurrentCafe = true;
+    data.approveInCurrentShop = true;
     this.update({_id: userID}
         , {$set: data}
         , {multi:false,safe:true}

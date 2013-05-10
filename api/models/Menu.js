@@ -9,7 +9,7 @@ var mongoose = require('mongoose')
 function required(val) { return val && val.length; }
 
 var menuSchema = new Schema({
-    _cafe:{type:ObjectId, ref:'Cafe'},
+    _shop:{type:ObjectId, ref:'Shop'},
     Name:String,
     Description:String
     //DateFrom:{type:Date,validate:[required,'Дата действия меню обязательна'],'default':Date.now.getDate() },
@@ -18,9 +18,9 @@ var menuSchema = new Schema({
 });
 
 
-menuSchema.statics.newMenu = function (cafeId, data, cb) {
+menuSchema.statics.newMenu = function (shopId, data, cb) {
     var instance = new Menu();
-    instance._cafe = cafeId;
+    instance._shop = shopId;
     instance.Name = data.Name;
     instance.Description = data.Description;
     instance.save(function (error, data) {

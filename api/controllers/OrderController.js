@@ -1,6 +1,6 @@
 var Order = require('../models/Order.js').Order;
 var Dish = require('../models/Dish.js').Dish;
-var Cafe = require('../models/Cafe.js').Cafe;
+var Shop = require('../models/Shop.js').Shop;
 var forms = require('../forms/PayForms.js');
 var sendSMS = require('../models/CommonFunctions.js').sendSMS;
 var sendMail = require('../models/CommonFunctions.js').sendMail;
@@ -20,17 +20,17 @@ exports.add_routes = function (app) {
         });
     });
 
-    app.get("/api/order/createOrder/:cafeId/:dishId/:count", function (req, res) {
-        var cafeId = req.params.cafeId;
+    app.get("/api/order/createOrder/:shopId/:dishId/:count", function (req, res) {
+        var shopId = req.params.shopId;
         var dishId = req.params.dishId;
         var count = req.params.count;
-        Cafe.getCafe(cafeId, function (error, cafe) {
+        Shop.getShop(shopId, function (error, shop) {
             if (error) res.send(error, 404);
             else
                 Dish.getDish(dishId, function (error, dish) {
                     if (error) res.send(error, 404);
                     else
-                        Order.createOrder(cafeId, dishId, count, dish.Price, function (error, order) {
+                        Order.createOrder(shopId, dishId, count, dish.Price, function (error, order) {
                             if (error)
                                 res.send(error, 404);
                             else {
@@ -42,20 +42,20 @@ exports.add_routes = function (app) {
         })
     });
 
-    app.get("/api/order/setDish/:orderId/:cafeId/:dishId/:count", function (req, res) {
+    app.get("/api/order/setDish/:orderId/:shopId/:dishId/:count", function (req, res) {
         var orderId = req.params.orderId;
-        var cafeId = req.params.cafeId;
+        var shopId = req.params.shopId;
         var dishId = req.params.dishId;
         var count = req.params.count;
         Order.getOrder(orderId, function (error, order) {
             if (error) res.send(error, 404);
-            else if (order._cafe != cafeId) res.send("Заказ не в том кафе", 404); else
-                Cafe.getCafe(cafeId, function (error, cafe) {
+            else if (order._shop != shopId) res.send("Заказ не в том кафе", 404); else
+                Shop.getShop(shopId, function (error, shop) {
                     if (error) res.send(error, 404);
                     else
                         Dish.getDish(dishId, function (error, dish) {
 
-                            if (error || dish._cafe != cafeId) res.send("Наверное блюдо не из этого кафе", 404);
+                            if (error || dish._shop != shopId) res.send("Наверное блюдо не из этого кафе", 404);
                             else {
                                 console.log("set order " + orderId + " " + dishId + " " + count)
                                 Order.setOrderDishes(orderId, dishId, count, dish.Price, function (error, order) {
@@ -72,19 +72,19 @@ exports.add_routes = function (app) {
         })
     });
 
-    app.get("/api/order/addDish/:orderId/:cafeId/:dishId/:count", function (req, res) {
+    app.get("/api/order/addDish/:orderId/:shopId/:dishId/:count", function (req, res) {
         var orderId = req.params.orderId;
-        var cafeId = req.params.cafeId;
+        var shopId = req.params.shopId;
         var dishId = req.params.dishId;
         var count = req.params.count;
         Order.getOrder(orderId, function (error, order) {
             if (error) res.send(error, 404);
-            else if (order._cafe != cafeId) res.send("Заказ не в том кафе", 404); else
-                Cafe.getCafe(cafeId, function (error, cafe) {
+            else if (order._shop != shopId) res.send("Заказ не в том кафе", 404); else
+                Shop.getShop(shopId, function (error, shop) {
                     if (error) res.send(error, 404);
                     else
                         Dish.getDish(dishId, function (error, dish) {
-                            if (error || dish._cafe != cafeId) res.send("Наверное блюдо не из этого кафе", 404);
+                            if (error || dish._shop != shopId) res.send("Наверное блюдо не из этого кафе", 404);
                             else
                                 console.log("set order " + orderId + " " + dishId + " " + count)
                             Order.addOrderDishes(orderId, dishId, count, dish.Price, function (error, order) {
@@ -148,8 +148,8 @@ exports.add_routes = function (app) {
     function PaySystemAnswer(data, hash, callback) {
         var orderId = data.orderId//req.form.spUserDataOrderId;
         var messageText = '';
-        var cafeMessage = '';
-        var cafeSMSMessage = '';
+        var shopMessage = '';
+        var shopSMSMessage = '';
         var smsMessage = '';
         var orderLink = conf.site_url + "/order/show/" + orderId;
         var clientPhone = "";
@@ -188,27 +188,27 @@ exports.add_routes = function (app) {
                                         count = orderDishes.dishCount[key2]; break;
                                     }
                                 messageText += dishes[key].Name + ' ' + count + '; ';
-                                cafeMessage += dishes[key].Name + ' ' + count + '; ';
+                                shopMessage += dishes[key].Name + ' ' + count + '; ';
                             }
                             messageText += orderLink + ' ' + myOrder.Description;
-                            cafeMessage += orderLink + ' ' + myOrder.Description + ' оплачено: ' + myOrder.PaymentAmmount + ' клиент: ' + myOrder.UserName;
-                            //                        if (clientPhone) cafeMessage += ' тел.: ' + clientPhone;
-                            cafeSMSMessage = ru2en.translite(cafeMessage);
-                            Cafe.getCafe(order._cafe, function (error, cafe) {
+                            shopMessage += orderLink + ' ' + myOrder.Description + ' оплачено: ' + myOrder.PaymentAmmount + ' клиент: ' + myOrder.UserName;
+                            //                        if (clientPhone) shopMessage += ' тел.: ' + clientPhone;
+                            shopSMSMessage = ru2en.translite(shopMessage);
+                            Shop.getShop(order._shop, function (error, shop) {
                                 if (error) callback(error);
                                 else {
-                                    messageText += ' кафе: ' + cafe.Name + ' ' + cafe.WorkTime + ' ' + cafe.Address + ' Приятного аппетита!'
+                                    messageText += ' кафе: ' + shop.Name + ' ' + shop.WorkTime + ' ' + shop.Address + ' Приятного аппетита!'
                                     smsMessage = ru2en.translite(messageText);
                                     console.log(messageText);
-                                    sendSMS(SMSconf, cafe.CellPhone, cafeSMSMessage, function (data, response) { console.log(data + " " + response) });
+                                    sendSMS(SMSconf, shop.CellPhone, shopSMSMessage, function (data, response) { console.log(data + " " + response) });
                                     if (clientPhone) {
                                         sendSMS(SMSconf, clientPhone, smsMessage, function (data, response) { console.log(data + " " + response) });
                                     }
                                     sendMail(clientEmail, conf.site_email, conf.site_name + ': Подтверждение платежа', messageText);
-                                    sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': Заказ оплачен', cafeMessage);
-                                    User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
+                                    sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': Заказ оплачен', shopMessage);
+                                    User.getFirstApprovedUserInShop(shop._id, function (error, user) {
                                         if (user) {
-                                            sendMail(user.email, conf.site_email, conf.site_name + ': Заказ оплачен', cafeMessage);
+                                            sendMail(user.email, conf.site_email, conf.site_name + ': Заказ оплачен', shopMessage);
                                             callback(null, "ok");
                                         } else callback(error);
                                     })
@@ -270,76 +270,7 @@ exports.add_routes = function (app) {
         })
     })
 
-    //Для тестов
-    //app.get("/api/order/paySystemAnswer/:orderId", function (req, res) {
-    //    //Оплата Ответ платежной системы
-    //    var orderId = req.params.orderId;
-    //    var messageText = 'Ваш заказ: ';
-    //    var cafeMessage = 'Вам заказ: '
-    //    var cafeSMSMessage = ''
-    //    var smsMessage = '';
-    //    var orderLink = conf.site_url + "/order/show/" + orderId;
-    //    var clientPhone = "";
-    //    var clientEmail = "";
-    //    var orderDishes = { dishIds: [], dishCount: [] };
-    //    var myOrder = {};
-    //    console.log(orderDishes);
-    //    Order.approveOrder(orderId, function (error, order) {
-    //        if (error) res.send("error", 404);
-
-    //        else {
-    //            myOrder = order;
-    //            //Рассылка sms продавцу, покупателю и 3 email
-    //            clientPhone = order.UserPhone;
-    //            clientEmail = order.Email;
-    //            for (var key in order.Dishes) {
-    //                if (order.Dishes[key].dishId) {
-    //                    orderDishes.dishIds.push(order.Dishes[key].dishId);
-    //                    orderDishes.dishCount.push(order.Dishes[key].count);
-    //                }
-    //            }
-    //            console.log(orderDishes);
-    //            Dish.getDishes(orderDishes.dishIds, function (error, dishes) {
-    //                if (error) res.send("error " + error, 404); else {
-    //                    console.log(dishes);
-    //                    for (var key in dishes) {
-    //                        var count = 0;
-    //                        for (var key2 in orderDishes.dishIds)
-    //                            if (orderDishes.dishIds[key2].toString() == dishes[key]._id.toString()) {
-    //                                count = orderDishes.dishCount[key2]; break;
-    //                            }
-    //                        messageText += dishes[key].Name + ' ' + count + '; ';
-    //                        cafeMessage += dishes[key].Name + ' ' + count + '; ';
-    //                    }
-    //                    messageText += orderLink+' ' +myOrder.Description+' Приятного аппетита!';
-    //                    cafeMessage += orderLink+' '+myOrder.Description;
-    //                    smsMessage = ru2en.translite(messageText);
-    //                    cafeSMSMessage = ru2en.translite(cafeMessage);
-    //                    console.log(messageText);
-    //                    Cafe.getCafe(order._cafe, function (error, cafe) {
-    //                        if (error) res.send("error " + error, 404);
-    //                        else {
-    //                            sendSMS(SMSconf, cafe.CellPhone, cafeSMSMessage, function (data, response) { console.log(data + " " + response) });
-    //                            if (clientPhone) {
-    //                                sendSMS(SMSconf, clientPhone, smsMessage, function (data, response) { console.log(data + " " + response) });
-    //                            }
-    //                            sendMail(clientEmail, conf.site_email, conf.site_name + ': approve order', messageText);
-    //                            sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': approve order', cafeMessage);
-    //                            User.getFirstApprovedUserInCafe(cafe._id, function (error, user) {
-    //                                if (user) {
-    //                                    sendMail(user.email, conf.site_email, conf.site_name + ': approve order', cafeMessage);
-    //                                    res.json("ok " + myOrder, 200);
-    //                                } else res.send("error " + error, 404);
-    //                            })
-
-    //                        }
-    //                    })
-    //                }
-    //            });
-
-    //        }
-    //    })
-    //})
+   
 
 
 }

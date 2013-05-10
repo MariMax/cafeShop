@@ -1,8 +1,8 @@
-function Category(data, cafeId, messageFunc, errorFunc) {
+function Category(data, shopId, messageFunc, errorFunc) {
     var self = this;
     self.messageFunc = messageFunc;
     self.errorFunc = errorFunc;
-    self.cafeId = cafeId;
+    self.shopId = shopId;
     self.id = ko.observable(data._id);
     self.Name = ko.observable(data.Name);
     self.IdName = ko.observable(data.IdName);
@@ -30,7 +30,7 @@ function Category(data, cafeId, messageFunc, errorFunc) {
         debugger;
         var imageUrl = $('#newPhotoTmpUrl').val();
         var dish = new Dish({ Name: dishData.Name(), Description: dishData.Description(), Price: dishData.Price(), Days: dishData.Days(), Image: imageUrl });
-        var url = "/api/cafe/" + self.cafeId + "/category/" + self.id() + "/dishes";
+        var url = "/api/shop/" + self.shopId + "/category/" + self.id() + "/dishes";
         var jsonData = ko.toJSON(dish);
         $.ajax(url, {
             data: jsonData,

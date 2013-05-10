@@ -20,13 +20,13 @@
         <!--/sprypay.tag.check:51691f6d1fecb/-->
         <script type="text/javascript">
             $(function () {
-                var cafeId = $.cookie("cafeId");
-                if (cafeId != undefined) {
+                var shopId = $.cookie("shopId");
+                if (shopId != undefined) {
                     $("#link1").attr("style", "display: none");
                     $("#link2").attr("style", "display: normal");
-                    $("#link2").attr("href", "/cafe/" + cafeId + "/menu");
+                    $("#link2").attr("href", "/shop/" + shopId + "/menu");
                     $("#link3").attr("style", "display: normal");
-                    $("#link3").attr("href", "/cafe/" + cafeId + "/admin");
+                    $("#link3").attr("href", "/shop/" + shopId + "/admin");
                 }
                 else {
                     $("#link1").attr("style", "display: normal");

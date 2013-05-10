@@ -7,9 +7,9 @@ var Schema = mongoose.Schema
     , ObjectId = Schema.ObjectId;
 
 exports.add_routes = function (app) {
-    app.get("/api/cafes/:cafeId/category", function (req, res) {
+    app.get("/api/shops/:shopId/category", function (req, res) {
         console.log(req);
-        Category.find({ _cafe: req.params.cafeId }, function (err, category) {
+        Category.find({ _shop: req.params.shopId }, function (err, category) {
             if (err)
                 res.send(err, 404);
             else

@@ -3,11 +3,11 @@
     <div class="border_wave_bot"></div>
 </div>
 <div id="order_page" class="order_page">
-    <div class="cafe_info">
-        <div class="name"><span data-bind="text: CafeName()"></span></div>
-        <div class="info_item address"><span data-bind="text: CafeAddress()"></span></div>
-        <div class="info_item phone"><span data-bind="text: CafePhone()"></span></div>
-        <div class="info_item time"><span data-bind="text: CafeWorkTime()"></span></div>
+    <div class="shop_info">
+        <div class="name"><span data-bind="text: ShopName()"></span></div>
+        <div class="info_item address"><span data-bind="text: ShopAddress()"></span></div>
+        <div class="info_item phone"><span data-bind="text: ShopPhone()"></span></div>
+        <div class="info_item time"><span data-bind="text: ShopWorkTime()"></span></div>
     </div>
     <div><input id="orderId" type="hidden" size="20" name="orderId" value="<%= orderId %>" required hidden></div>
     <div class="basket_block" data-bind="foreach: lines">

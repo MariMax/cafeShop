@@ -3,10 +3,10 @@ var form = require("express-form"),
     filter = form.filter,
     validate = form.validate;
 
-var createCafeForm = form(
+var createShopForm = form(
     filter("Name").trim(),
     validate("Name")
-        .required(null, "please enter CafeName"),
+        .required(null, "please enter ShopName"),
 
 
     filter("cellPhone").trim(),
@@ -19,10 +19,10 @@ var createCafeForm = form(
         
         );
 
-var UpdateCafeCellPhoneForm = form(
-    filter("cafeId").trim(),
-    validate("cafeId")
-        .required(null, "please enter cafeId"),
+var UpdateShopCellPhoneForm = form(
+    filter("shopId").trim(),
+    validate("shopId")
+        .required(null, "please enter shopId"),
 
 
     filter("cellPhone").trim(),
@@ -31,10 +31,10 @@ var UpdateCafeCellPhoneForm = form(
         
         );
 
-var ConfirmCafeCellPhoneForm = form(
-    filter("cafeId").trim(),
-    validate("cafeId")
-        .required(null, "please enter cafeId"),
+var ConfirmShopCellPhoneForm = form(
+    filter("shopId").trim(),
+    validate("shopId")
+        .required(null, "please enter shopId"),
 
 
     filter("cellPhone").trim(),
@@ -47,17 +47,17 @@ var ConfirmCafeCellPhoneForm = form(
         .required(null, "please enter token")
         );
 
-var updateCafeForm = form(
+var updateShopForm = form(
     filter("Name").trim(),
     validate("Name")
-        .required(null, "please enter CafeName"),
+        .required(null, "please enter ShopName"),
 
    filter("Address").trim(),
    filter("Description").trim(),
    filter("WorkTime").trim(),
-   filter("cafeId").trim(),
-   validate("cafeId")
-        .required(null, "please enter cafeId"),
+   filter("shopId").trim(),
+   validate("shopId")
+        .required(null, "please enter shopId"),
    filter("ClientPhone").trim(),
    filter("Latitude").trim(),
    filter("Longitude").trim(),
@@ -67,7 +67,7 @@ var updateCafeForm = form(
         .required(null, "please enter CellPhone")
 );
         
-exports.createCafeForm = createCafeForm;
-exports.updateCafeForm = updateCafeForm;
-exports.UpdateCafeCellPhoneForm = UpdateCafeCellPhoneForm;
-exports.ConfirmCafeCellPhoneForm = ConfirmCafeCellPhoneForm;
+exports.createShopForm = createShopForm;
+exports.updateShopForm = updateShopForm;
+exports.UpdateShopCellPhoneForm = UpdateShopCellPhoneForm;
+exports.ConfirmShopCellPhoneForm = ConfirmShopCellPhoneForm;

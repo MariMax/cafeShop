@@ -4,13 +4,13 @@ var mongoose = require('mongoose')
     , Schema = mongoose.Schema
     , ObjectId = Schema.ObjectId;
 
-//var uristring = 'mongodb://localhost/cafeShop';
+//var uristring = 'mongodb://localhost/shopShop';
 
 //// Ensure safe writes
 //var mongoOptions = { db: { safe: true} };
 
 var dishSchema = new Schema({
-    _cafe: ObjectId, // { type: ObjectId, ref: 'Cafe' },
+    _shop: ObjectId, // { type: ObjectId, ref: 'Shop' },
     Name: String,
     Description: String,
     Price: Number,
@@ -20,9 +20,9 @@ var dishSchema = new Schema({
 });
 
 
-dishSchema.statics.newDish = function (cafeId, categoryId, data, cb, err) {
+dishSchema.statics.newDish = function (shopId, categoryId, data, cb, err) {
     var instance = new Dish();
-    instance._cafe = cafeId;
+    instance._shop = shopId;
     instance._category = categoryId;
     instance.Name = data.Name;
     instance.Description = data.Description;

@@ -26,10 +26,10 @@ exports.add_routes = function (app) {
         });
     });
 
-    app.post("/api/cafe/:cafeId/category/:categoryId/dishes", function (req, res) {
+    app.post("/api/shop/:shopId/category/:categoryId/dishes", function (req, res) {
         
         console.log('body : ' + req.body);
-        Dish.newDish(req.params.cafeId, req.params.categoryId, req.body, function (dishId) {
+        Dish.newDish(req.params.shopId, req.params.categoryId, req.body, function (dishId) {
             res.send({ id: dishId }, 201)
         }, function (err) {
             console.log('ERROR : ' + err);
@@ -37,8 +37,8 @@ exports.add_routes = function (app) {
 
     });
 
-    app.get("/api/cafe/:cafeId/category/:categoryId/dishes", function (req, res) {
-        Dish.find({ _cafe: req.params.cafeId, _category: req.params.categoryId }, function (err, dish) {
+    app.get("/api/shop/:shopId/category/:categoryId/dishes", function (req, res) {
+        Dish.find({ _shop: req.params.shopId, _category: req.params.categoryId }, function (err, dish) {
             if (err)
             {
                 console.log('error : ' + err);
