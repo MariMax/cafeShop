@@ -73,9 +73,17 @@ function fid_13613773245519471603(ymaps) {
                     //balloonContent: '<script type="text/javascript">alert("hello")</script></script><div class="baloon_content"><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/stock">Меню</a></div>',
                 };
                 storeList.html(storeListContent);
-                var storeBlock = $("#StoreBlock");
-                if (storeBlock)
-                 storeBlock.attr("style", "display: normal");
+				position = e.get('globalPixelPosition');
+				//object.balloon.setContent(storeListContent);
+				map.balloon.open([object.geometry._Ih[0], object.geometry._Ih[1]],{
+				contentBody: storeListContent
+			});
+//ebugger;
+  //map.openBalloon(position, storeListContent);
+  
+              //  var storeBlock = $("#StoreBlock");
+              //  if (storeBlock)
+              //   storeBlock.attr("style", "display: normal");
             }
         })
         });
