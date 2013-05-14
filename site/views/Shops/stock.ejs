@@ -2,10 +2,15 @@
     <div class="shop_page" id="shop_stock_page">
         <input type="hidden" hidden="hidden" value="<%= shopId %>" id="shopId" />
         <div class="shop_info page_title_block">
+				<div class="shop_desc">
+				<span data-bind="text: ShopDescription"></span>
+				</div>
+		
             <div class="shop_name"><span data-bind="text: ShopName"></span></div>
-            <div class="shop_tip"><span data-bind="text: ShopWorkTime"></span></div>
+           
             <div class="shop_address"><a href="#"><span data-bind="text: ShopAddress"></span></a></div>
             <div class="shop_tel"><span data-bind="text: ShopPhone"></span></div>
+			<div class="shop_time"><span data-bind="text: ShopWorkTime"></span></div>
             <div class="border_wave_bot"></div>
         </div>
         <div class="shop_stock" id="tab-container">

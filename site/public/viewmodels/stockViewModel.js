@@ -3,6 +3,7 @@ function StockViewModel(shopId) {
     var self = this;
     self.ShopId = shopId;
     self.ShopName = ko.observable();
+	self.ShopDescription = ko.observable();
     self.ShopAddress = ko.observable('Адрес не задан');
     self.ShopPhone = ko.observable('Телефон не задан');
     self.ShopWorkTime = ko.observable('Время работы не задано');
@@ -65,6 +66,9 @@ function StockViewModel(shopId) {
             self.ShopWorkTime(shop.WorkTime);
         if (shop.ClientPhone)
             self.ShopPhone(shop.ClientPhone);
+        if (shop.Description)
+            self.ShopDescription(shop.Description);
+			
     });
 
     $.ajax(

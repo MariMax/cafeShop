@@ -66,12 +66,14 @@ function fid_13613773245519471603(ymaps) {
             var storeList = $("#StoreList");
             if (storeList) {
                 storeList.empty();
-                var storeListContent = '';
+                var storeListContent = '<div class="baloon_content">';
                 for (var key in data) {
                     var shop = data[key];
-                    storeListContent += '<div><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/stock">Меню</a></div>'
+                    storeListContent += //'<div><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/stock">Меню</a></div>'
+' <div class="shop_item"> <div class="shop_name">'+shop.Name+'</div> <div class="shop_address">'+shop.Address+'</div> <div class="shop_phone">'+shop.ClientPhone+'</div> <div class="shop_time">'+shop.WorkTime+'</div><a href="/shop/' + shop._id + '/stock" class="button small">Открыть меню</a></div>'
                     //balloonContent: '<script type="text/javascript">alert("hello")</script></script><div class="baloon_content"><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/stock">Меню</a></div>',
                 };
+				storeListContent+='</div>'
                 storeList.html(storeListContent);
 				position = e.get('globalPixelPosition');
 				//object.balloon.setContent(storeListContent);
