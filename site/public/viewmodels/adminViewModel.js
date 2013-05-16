@@ -75,6 +75,24 @@ function AdminViewModel(shopId) {
         });
     };
 
+    self.removeCategory = function (category) {
+
+        var url = "/api/category/" + category.id() + "/shop/" + category.shopId;
+        var jsonData = ko.toJSON(category);
+        $.ajax(url, {
+            data: jsonData,
+            type: "delete", contentType: "application/json",
+            success: function (data) {
+                self.Categories.destroy(category);
+                okMessage("Категория удалена");
+            },
+            error: function (result) {
+                errorMessage("Ошибка при удалении");
+                console.log(result);
+            }
+        });
+    };
+
 
 
     self.hideOk = ko.computed(self.showOk).extend({ throttle: 1000 });
