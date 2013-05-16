@@ -17,7 +17,7 @@ exports.add_routes = function (app) {
         });
     });
 
-    app.delete("/api/category/:id/shop/:shopId", function (req, res) {
+    app.post("/api/category/delete/:id/shop/:shopId", function (req, res) {
         if (req.session.user) {
             User.find({ _shop: req.params.shopId,_id:req.session.user,approveInCurrentShop:true }, function (err, user) {
                 if (err) res.send(err, 404);

@@ -77,11 +77,11 @@ function AdminViewModel(shopId) {
 
     self.removeCategory = function (category) {
 
-        var url = "/api/category/" + category.id() + "/shop/" + category.shopId;
+        var url = "/api/category/delete/" + category.id() + "/shop/" + category.shopId;
         var jsonData = ko.toJSON(category);
         $.ajax(url, {
             data: jsonData,
-            type: "delete", contentType: "application/json",
+            type: "post", contentType: "application/json",
             success: function (data) {
                 self.Categories.destroy(category);
                 okMessage("Категория удалена");
