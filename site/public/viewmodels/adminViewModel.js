@@ -93,6 +93,11 @@ function AdminViewModel(shopId) {
         });
     };
 
+     self.addCategory = function (data) {
+        var category = new Category(data,self.shopId);
+        self.Categories.push(category);
+    };
+
 
 
     self.hideOk = ko.computed(self.showOk).extend({ throttle: 1000 });

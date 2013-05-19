@@ -19,19 +19,39 @@ exports.add_routes = function (app) {
 
     app.post("/api/category/delete/:id/shop/:shopId", function (req, res) {
         if (req.session.user) {
-            User.find({ _shop: req.params.shopId,_id:req.session.user,approveInCurrentShop:true }, function (err, user) {
+            User.find({ _shop: req.params.shopId, _id: req.session.user, approveInCurrentShop: true }, function (err, user) {
                 if (err) res.send(err, 404);
                 else {
-                   
-                Category.remove({ _id: req.params.id, _shop: req.params.shopId }, function (err) {
-                    if (err)
-                        res.send(err, 404);
+
+                    Category.remove({ _id: req.params.id, _shop: req.params.shopId }, function (err) {
+                        if (err)
+                            res.send(err, 404);
                         else res.json(req.params.id, 200);
-                });
+                    });
                 }
-                
+
             });
         } else res.send(404);
     });
+
+    app.post("/api/shop/:shopId/category/", function (req, res) {
+        //if (req.session.user) {
+        console.log('body : ' + req.body);
+        var name = req.body.name;
+        Category.findOne({ _shop: req.params.shopId }).sort('-id').select('id').exec(function (error, id) {
+            if (error)
+                res.send(err, 404);
+            else {
+                var maxId = id.id;
+                Category.newCategory(req.params.shopId, (maxId + 1), name, name, function (itemId) {
+                    res.send({ id: itemId }, 201)
+                }, function (err) {
+                    console.log('ERROR : ' + err);
+                })
+            }
+        });
+        //} else res.send(404);
+    });
+
 
 }

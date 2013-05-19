@@ -2,29 +2,29 @@ function fid_13613773245519471603(ymaps) {
 
     var longitude = ymaps.geolocation.longitude;
     var latitude = ymaps.geolocation.latitude;
-    var addImbaloon = false;
-    if ($.cookie('longitude') && $.cookie('latitude')) {
-        longitude = $.cookie('longitude');
-        latitude = $.cookie('latitude');
-        addImbaloon = true;
-    }
+    //var addImbaloon = false;
+    //if ($.cookie('longitude') && $.cookie('latitude')) {
+    //    longitude = $.cookie('longitude');
+    //    latitude = $.cookie('latitude');
+    //    addImbaloon = true;
+    //}
     var map = new ymaps.Map("ymaps-map-id_13613773245519471603", {
         center: [longitude, latitude],
         zoom: 13,
         type: "yandex#map"
     });
 
-    if (addImbaloon) {
-        map.geoObjects.add(
-        new ymaps.Placemark([longitude, latitude],
-            {
-                balloonContentHeader: "Я здесь"//,
-                //balloonContent: ymaps.geolocation.city,
-                //balloonContentFooter: ymaps.geolocation.region
-            }
-        )
-    );
-    }
+    //if (addImbaloon) {
+    //    map.geoObjects.add(
+    //    new ymaps.Placemark([longitude, latitude],
+    //        {
+    //            balloonContentHeader: "Я здесь"//,
+    //            //balloonContent: ymaps.geolocation.city,
+    //            //balloonContentFooter: ymaps.geolocation.region
+    //        }
+    //    )
+    //);
+    //}
 
     map.controls
                                         .add("zoomControl")
