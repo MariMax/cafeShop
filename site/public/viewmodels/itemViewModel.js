@@ -3,7 +3,7 @@ function Item(data, messageFunc,errorFunc) {
     self.messageFunc = messageFunc;
     self.errorFunc = errorFunc;
     self.id = ko.observable(data._id);
-        self.shop = ko.observable(data.shop);
+        self.shop = ko.observable(data._shop);
     self.Name = ko.observable(data.Name);
     self.Description = ko.observable(data.Description);
     self.Price = ko.observable(0);
