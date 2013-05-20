@@ -50,7 +50,7 @@ function Category(data, shopId, messageFunc, errorFunc) {
 
     self.removeItem = function (item) {
         self.Items.destroy(item)
-        var url = "/api/item/" + item.id();
+        var url = "/api/shop/"+item.shop()+"/item/" + item.id();
         var jsonData = ko.toJSON(item);
         $.ajax(url, {
             data: jsonData,

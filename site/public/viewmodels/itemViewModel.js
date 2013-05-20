@@ -3,6 +3,7 @@ function Item(data, messageFunc,errorFunc) {
     self.messageFunc = messageFunc;
     self.errorFunc = errorFunc;
     self.id = ko.observable(data._id);
+        self.shop = ko.observable(data.shop);
     self.Name = ko.observable(data.Name);
     self.Description = ko.observable(data.Description);
     self.Price = ko.observable(0);
@@ -22,7 +23,7 @@ function Item(data, messageFunc,errorFunc) {
     }
 
     self.updateItem = function (item) {
-        var url = "/api/item/" + this.id();
+        var url = "/api/shop/"+this.shop()+"/item/" + this.id();
         item.Image($('#newPhotoTmpUrl').val());
         var jsonData = ko.toJSON(item);
         $.ajax(url, {
