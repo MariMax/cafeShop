@@ -3,8 +3,10 @@ function AdminViewModel(shopId) {
     var self = this;
     self.shopId = shopId;
     self.Categories = ko.observableArray([]);
+    self.newCategoryName = ko.observable();
 
     self.Message = ko.observable("");
+
     self.showOk = ko.observable(false);
     self.showError = ko.observable(false);
 
@@ -76,29 +78,66 @@ function AdminViewModel(shopId) {
     };
 
     self.removeCategory = function (category) {
-
         var url = "/api/category/delete/" + category.id() + "/shop/" + category.shopId;
-        var jsonData = ko.toJSON(category);
-        $.ajax(url, {
-            data: jsonData,
-            type: "post", contentType: "application/json",
-            success: function (data) {
-                self.Categories.destroy(category);
-                okMessage("Категория удалена");
-            },
-            error: function (result) {
-                errorMessage("Ошибка при удалении");
-                console.log(result);
+        $("#dialog-delete-confirm").dialog({
+            resizable: false,
+            height: 140,
+            modal: true,
+            buttons: {
+                "Удалить": function () {
+                    self.Categories.remove(category);
+                    if (self.Categories().length > 0)
+                        self.setActiveCategory(self.Categories()[0]);
+                    //var jsonData = ko.toJSON(category);
+                    //$.ajax(url, {
+                    //    data: jsonData,
+                    //    type: "post", contentType: "application/json",
+                    //    success: function (data) {
+                    //        
+                    //        okMessage("Категория удалена");
+                    //    },
+                    //    error: function (result) {
+                    //        errorMessage("Ошибка при удалении");
+                    //        console.log(result);
+                    //    }
+                    //});
+                    $(this).dialog("close");
+                },
+                "Отмена": function () {
+                    $(this).dialog("close");
+                }
             }
         });
+
+
+
     };
 
-     self.addCategory = function (data) {
-        var category = new Category(data,self.shopId);
+    self.addCategory = function (data) {
+        var category = new Category({ Name: self.newCategoryName(), IdName: self.newCategoryName(), shopId: self.shopId });
         self.Categories.push(category);
     };
 
+    self.addCategoryToDb = function (itemData) {
+        self.messageFunc("Категория добавлена");
+        //var item = new Item({ Name: itemData.Name(), Description: itemData.Description(), Price: itemData.Price(), Days: itemData.Days(), Image: imageUrl });
+        //var url = "/api/shop/" + self.shopId + "/category/" + self.id() + "/items";
+        //var jsonData = ko.toJSON(item);
+        //$.ajax(url, {
+        //    data: jsonData,
+        //    type: "post", contentType: "application/json",
+        //    success: function (data) {
+        //        $('#newPhotoTmpUrl').val("")
+        //        self.messageFunc("Блюдо добавлено");
+        //        itemData.id(data.id._id);
 
+        //    },
+        //    error: function (result) {
+        //        self.errorFunc("Ошибка при добавлении");
+        //        console.log(result);
+        //    }
+        //});
+    };
 
     self.hideOk = ko.computed(self.showOk).extend({ throttle: 1000 });
     self.hideOk.subscribe(function (val) {
