@@ -32,12 +32,12 @@ exports.getSMSConfig = function () {
 
         service : 2,//1 - twilio, 2 - http://smsc.ru/
         //options for 1
-        accountSid:'AC26a253b30671ca908581ad0d64746241',
-        authToken: 'b0cf25f4e9d41a5f3adad56386ce14df',
+        accountSid:'',//'AC26a253b30671ca908581ad0d64746241',
+        authToken: '',//'b0cf25f4e9d41a5f3adad56386ce14df',
         From:'+16572153237',
         //options for 2
-        login:'MariMax',
-        password: 'XSWzaq',
+        login:'',//'MariMax',
+        password:'',//: 'XSWzaq',
         sender:'idiEsh'
     }
      return configValues;
