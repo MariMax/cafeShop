@@ -2,8 +2,10 @@
 function AdminViewModel(shopId) {
     var self = this;
     self.shopId = shopId;
+
+
     self.Categories = ko.observableArray([]);
-    self.newCategoryName = ko.observable();
+    self.newCategoryName = ko.observable("");
 
     self.Message = ko.observable("");
 
@@ -88,19 +90,19 @@ function AdminViewModel(shopId) {
                     self.Categories.remove(category);
                     if (self.Categories().length > 0)
                         self.setActiveCategory(self.Categories()[0]);
-                    //var jsonData = ko.toJSON(category);
-                    //$.ajax(url, {
-                    //    data: jsonData,
-                    //    type: "post", contentType: "application/json",
-                    //    success: function (data) {
-                    //        
-                    //        okMessage("Категория удалена");
-                    //    },
-                    //    error: function (result) {
-                    //        errorMessage("Ошибка при удалении");
-                    //        console.log(result);
-                    //    }
-                    //});
+                    var jsonData = ko.toJSON(category);
+                    $.ajax(url, {
+                        data: jsonData,
+                        type: "post", contentType: "application/json",
+                        success: function (data) {
+
+                            okMessage("Категория удалена");
+                        },
+                        error: function (result) {
+                            errorMessage("Ошибка при удалении");
+                            console.log(result);
+                        }
+                    });
                     $(this).dialog("close");
                 },
                 "Отмена": function () {
@@ -114,29 +116,33 @@ function AdminViewModel(shopId) {
     };
 
     self.addCategory = function (data) {
+        debugger;
         var category = new Category({ Name: self.newCategoryName(), IdName: self.newCategoryName(), shopId: self.shopId });
         self.Categories.push(category);
     };
 
     self.addCategoryToDb = function (itemData) {
-        self.messageFunc("Категория добавлена");
-        //var item = new Item({ Name: itemData.Name(), Description: itemData.Description(), Price: itemData.Price(), Days: itemData.Days(), Image: imageUrl });
-        //var url = "/api/shop/" + self.shopId + "/category/" + self.id() + "/items";
-        //var jsonData = ko.toJSON(item);
-        //$.ajax(url, {
-        //    data: jsonData,
-        //    type: "post", contentType: "application/json",
-        //    success: function (data) {
-        //        $('#newPhotoTmpUrl').val("")
-        //        self.messageFunc("Блюдо добавлено");
-        //        itemData.id(data.id._id);
+        debugger;
+        var url = "/api/shop/" + self.shopId + "/category/";
 
-        //    },
-        //    error: function (result) {
-        //        self.errorFunc("Ошибка при добавлении");
-        //        console.log(result);
-        //    }
-        //});
+        var category = new Category({ Name: itemData.Name(), IdName: itemData.Name() });
+
+        var jsonData = ko.toJSON(category);
+        $.ajax(url, {
+            data: jsonData,
+            type: "post", contentType: "application/json",
+            success: function (data) {
+                debugger;
+                okMessage("Категория добавлена");
+                itemData.id(data.id._id);
+
+            },
+            error: function (result) {
+                debugger;
+                errorMessage("Ошибка при добавлении");
+                console.log(result);
+            }
+        });
     };
 
     self.hideOk = ko.computed(self.showOk).extend({ throttle: 1000 });

@@ -38,6 +38,7 @@ exports.add_routes = function (app) {
         //if (req.session.user) {
         console.log('body : ' + req.body);
         var name = req.body.name;
+        console.log('name : ' + name);
         Category.findOne({ _shop: req.params.shopId }).sort('-id').select('id').exec(function (error, id) {
             if (error)
                 res.send(err, 404);
