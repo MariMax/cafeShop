@@ -6,7 +6,7 @@ var express = require('express')
 //, im = require('imagemagick')
 
 
-fs = require('fs');
+//fs = require('fs');
 uploadsDir = __dirname + "\\site\\public\\uploads\\";
 thumbnailDir = __dirname + "\\site\\public\\uploads\\thumbnail\\";
 
@@ -15,7 +15,7 @@ var MongoStore = require('connect-mongo')(express),
 
 
 
-//var path = require('path');
+var fs = require('path');
 
 String.prototype.randomString = function (stringLength) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";

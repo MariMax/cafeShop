@@ -110,13 +110,9 @@ function AdminViewModel(shopId) {
                 }
             }
         });
-
-
-
     };
 
     self.addCategory = function (data) {
-        debugger;
         var category = new Category({ Name: self.newCategoryName(), IdName: self.newCategoryName(), shopId: self.shopId });
         self.Categories.push(category);
     };
