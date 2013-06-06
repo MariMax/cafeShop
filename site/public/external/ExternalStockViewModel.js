@@ -1,7 +1,8 @@
-function StockViewModel(shopId) {
+function StockViewModel(shopId,orderTemplate) {
 
     var self = this;
     self.ShopId = shopId;
+	self.orderTemplate = orderTemplate;
     self.ShopName = ko.observable();
 	self.ShopDescription = ko.observable();
     self.ShopAddress = ko.observable('Адрес не задан');
@@ -44,12 +45,13 @@ function StockViewModel(shopId) {
                 )
             }
             
-            document.location.href = '/order/buy/' + orderId;
-            //$.ajax({
-            //    url: '/api/order/calcPrice/' + orderId,
-            //    type: "GET",
-            //    async: false
-            //}).done(function (order) { document.location.href = '/order/buy/' + order._id; })
+           cafeShopContainer.empty();
+		   cafeShopContainer.html(self.orderTemplate);
+		   enableOrderValidators();
+		   bindOrder(orderId)
+		   
+		   
+
 
         });
     }
@@ -133,10 +135,10 @@ function StockViewModel(shopId) {
         });
     };
 }
-function bind(){
+function bind(orderTemplate){
 if (document.getElementById("shopId") != null) {
     var shopId = document.getElementById("shopId").value;
     if (document.getElementById("shop_stock_page") != null)
-        ko.applyBindings(new StockViewModel(shopId), document.getElementById("shop_stock_page"));
+        ko.applyBindings(new StockViewModel(shopId,orderTemplate), document.getElementById("shop_stock_page"));
 }
 }
