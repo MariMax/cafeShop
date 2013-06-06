@@ -69,12 +69,11 @@
                 <ul class="catalog_nav etabs" data-bind="foreach: Categories">
                     <li data-bind="attr: { class: activeText() } ">
                         <a data-bind="click: $root.setActiveCategory  ">
-                            <div data-bind="if: Name()">
+                            <div data-bind="if: id()">
                                 <span data-bind="text: Name"></span>
                             </div>
-                            <div>
-                                <input type="text" name="" id="" class="name" placeholder="Название категории" required data-bind="value: newCategoryName">
-                                <a href="#" class="button " data-bind="click: $parent.addCategoryToDb">Сохранить</a>
+                            <div data-bind="if: !id()">
+                                <input type="text" name="" id="" class="name" placeholder="Название категории" required data-bind="value: Name, event: { $root.addCategoryToDb }" />
                             </div>
                         </a>
                     </li>
@@ -111,6 +110,7 @@
                         </div>
                         <a href="#" class="button succes small" data-bind="click: addItem">+ Добавить блюдо</a>
                         <a href="#" class="button small grey" data-bind="click: $root.removeCategory">Удалить категорию</a>
+
                     </div>
                 </div>
 
