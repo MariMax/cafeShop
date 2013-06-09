@@ -203,7 +203,8 @@ var CartLine = function(item, count) {
         self.hour = ko.observable(12).extend({ numeric: 24 });
         self.minute = ko.observable(00).extend({ numeric: 60 });
         self.PaymentId = ko.observable();
-
+        self.delivery = ko.observable(false);
+        self.deliveryAddress = ko.observable('');
 
 
         self.hasErrorMessage = ko.computed(function () {
@@ -227,10 +228,10 @@ var CartLine = function(item, count) {
 
 
         self.orderSpryPay = function (cart) {
-            orderCommon(cart,'sprypay');
+            orderCommon(cart, 'sprypay');
         }
 
-        self.orderW1= function(cart){orderCommon(cart,'w1');}
+        self.orderW1 = function (cart) { orderCommon(cart, 'w1'); }
 
         $.ajax({ url: '/api/order/' + orderId, cache: false, type: "GET" }).done(function (order) {
 

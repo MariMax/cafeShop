@@ -26,22 +26,27 @@
 
     </div><div class="order_total">Итого: <b><span data-bind="text: $root.total()"></span> р.</b></div>
 
-   
-        <div id="messenger" class="notice error" data-bind="{text: hasErrorMessage(), visible: hasError()}"></div>
-        <div class="order_info">
-            <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
-            <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>
-            <div class="info_item"><label>Ваш e-mail для связи</label> <input type="email" name="spUserEmail" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'" placeholder="mail@mail.ru"></div>
-            <div class="info_item"><label>Описание заказа</label> <input type="text" name="" id="" data-bind="value: description,valueUpdate: 'afterkeydown'"></div>
-            <div class="info_item time">Приготовить заказ к <input type="text" name="" id="" data-bind="value: hour">:<input type="text" name="" id="" data-bind="value: minute"> ч</div>
-        </div>
-        <div class="buttons">
-            <div class="form_but">
-                <a href="#" class="button big succes" data-bind="click: $root.orderSpryPay"
-                TITLE="Оплата возможна с помощью VISA/Mastercard&#10;Платежные терминалы Qiwi,Quickpay&#10;Qiwi кошелек&#10;кошелек в системе SpryPay&#10;Mail Деньги или Yandex деньги">Visa/MasterCard, Qiwi</a>
-                <a href="#" class="button big succes" data-bind="click: $root.orderW1"
-                   TITLE="Оплата возможна в платежных терминалах или салонах сотовой связи&#10;Online банки Альфа-Клик, Сбербанк ОнЛ@йн, ПромСвязьБанк(«PSB-Retail»), Связной Банк&#10;Через систему Единый кошелек&#10;Со счета операторов мобильной связи МТС, Мегафон">Online банк, наличные, оперторы связи</a>
+
+    <div id="messenger" class="notice error" data-bind="{text: hasErrorMessage(), visible: hasError()}"></div>
+    <div class="order_info">
+        <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
+        <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>
+        <div class="info_item"><label>Ваш e-mail для связи</label> <input type="email" name="spUserEmail" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'" placeholder="mail@mail.ru"></div>
+        <div class="info_item"><label>Описание заказа</label> <input type="text" name="" id="" data-bind="value: description,valueUpdate: 'afterkeydown'"></div>
+        <div class="info_item time">Приготовить заказ к <input type="text" name="" id="" data-bind="value: hour">:<input type="text" name="" id="" data-bind="value: minute"> ч</div>
+        <div>Доставка
+            <input type="checkbox" data-bind="checked: delivery" />
+            <div data-bind="visible: delivery">Адрес доставки:
+                <input type="text" name="deliveryAddress" id="" placeholder="Название категории" required data-bind="value: deliveryAddress" />
+
             </div>
         </div>
+    </div>
+    <div class="buttons">
+        <div class="form_but">
+            <a href="#" class="button big succes" data-bind="click: $root.orderSpryPay" title="Оплата возможна с помощью VISA/Mastercard&#10;Платежные терминалы Qiwi,Quickpay&#10;Qiwi кошелек&#10;кошелек в системе SpryPay&#10;Mail Деньги или Yandex деньги">Visa/MasterCard, Qiwi</a>
+            <a href="#" class="button big succes" data-bind="click: $root.orderW1" title="Оплата возможна в платежных терминалах или салонах сотовой связи&#10;Online банки Альфа-Клик, Сбербанк ОнЛ@йн, ПромСвязьБанк(«PSB-Retail»), Связной Банк&#10;Через систему Единый кошелек&#10;Со счета операторов мобильной связи МТС, Мегафон">Online банк, наличные, оперторы связи</a>
+        </div>
+    </div>
 
 </div>

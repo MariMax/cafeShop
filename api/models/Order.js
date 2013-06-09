@@ -32,7 +32,8 @@ var orderSchema = new Schema({
     BalanceAmmount: Number,//сколько зачисленно
     myHash:String,
     paySystemHash:String,
-    hash:String
+    hash:String,
+    DeliveryAddress:String
     //OrderGetTime:{type:Date,'default' : Date.now()}/*Дата когда заказ должен быть выполнен*/
 
 });
