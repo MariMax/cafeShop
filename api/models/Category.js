@@ -26,5 +26,19 @@ categorySchema.statics.newCategory = function (shopId, id, idName, name, cb, err
     });
 };
 
+categorySchema.statics.updateItem = function (itemId, data, cb) {
+    var newdata = {};
+    if (data.Name && data.Name != '') newdata.Name = data.Name;
+
+    this.findByIdAndUpdate(itemId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            cb(error, null);
+        }
+        else {
+            cb(null, docs);
+        }
+    })
+};
+
 Category = mongoose.model('Category', categorySchema);
 exports.Category = Category;

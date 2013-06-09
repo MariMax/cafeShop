@@ -9,6 +9,7 @@ function Category(data, shopId, messageFunc, errorFunc) {
     self.Items = ko.observableArray([]);
     self.IdNameHash = ko.observable('#' + data.IdName);
     self.active = ko.observable(false);
+    self.edit = ko.observable(false);
     self.activeText = ko.computed(function () {
         if (self.active())
             return 'active';
@@ -50,7 +51,7 @@ function Category(data, shopId, messageFunc, errorFunc) {
 
     self.removeItem = function (item) {
         self.Items.destroy(item)
-        var url = "/api/shop/"+item.shop()+"/item/" + item.id();
+        var url = "/api/shop/" + item.shop() + "/item/" + item.id();
         var jsonData = ko.toJSON(item);
         $.ajax(url, {
             data: jsonData,

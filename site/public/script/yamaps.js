@@ -1,7 +1,7 @@
 function fid_13613773245519471603(ymaps) {
 
-    var longitude = ymaps.geolocation.longitude;
-    var latitude = ymaps.geolocation.latitude;
+    var longitude = 55.96815; //ymaps.geolocation.longitude;
+    var latitude = 54.727744; // ymaps.geolocation.latitude;
     //var addImbaloon = false;
     //if ($.cookie('longitude') && $.cookie('latitude')) {
     //    longitude = $.cookie('longitude');
@@ -56,7 +56,7 @@ function fid_13613773245519471603(ymaps) {
         })
 
 
-        map.geoObjects.events.add('click',
+    map.geoObjects.events.add('click',
         function (e) {
             var object = e.get('target');
             //alert(object.geometry._Ih[0]+" "+object.geometry._Ih[1]); 
@@ -70,22 +70,22 @@ function fid_13613773245519471603(ymaps) {
                 for (var key in data) {
                     var shop = data[key];
                     storeListContent += //'<div><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/stock">Меню</a></div>'
-' <div class="shop_item"> <div class="shop_name">'+shop.Name+'</div> <div class="shop_address">'+shop.Address+'</div> <div class="shop_phone">'+shop.ClientPhone+'</div> <div class="shop_time">'+shop.WorkTime+'</div><a href="/shop/' + shop._id + '/stock" class="button small">Открыть меню</a></div>'
+' <div class="shop_item"> <div class="shop_name">' + shop.Name + '</div> <div class="shop_address">' + shop.Address + '</div> <div class="shop_phone">' + shop.ClientPhone + '</div> <div class="shop_time">' + shop.WorkTime + '</div><a href="/shop/' + shop._id + '/stock" class="button small">Открыть меню</a></div>'
                     //balloonContent: '<script type="text/javascript">alert("hello")</script></script><div class="baloon_content"><b>' + shop.Name + '</b> <a href="/shop/' + shop._id + '/stock">Меню</a></div>',
                 };
-				storeListContent+='</div>'
+                storeListContent += '</div>'
                 storeList.html(storeListContent);
-				position = e.get('globalPixelPosition');
-				//object.balloon.setContent(storeListContent);
-				map.balloon.open([object.geometry._Ih[0], object.geometry._Ih[1]],{
-				contentBody: storeListContent
-			});
-//ebugger;
-  //map.openBalloon(position, storeListContent);
-  
-              //  var storeBlock = $("#StoreBlock");
-              //  if (storeBlock)
-              //   storeBlock.attr("style", "display: normal");
+                position = e.get('globalPixelPosition');
+                //object.balloon.setContent(storeListContent);
+                map.balloon.open([object.geometry._Ih[0], object.geometry._Ih[1]], {
+                    contentBody: storeListContent
+                });
+                //ebugger;
+                //map.openBalloon(position, storeListContent);
+
+                //  var storeBlock = $("#StoreBlock");
+                //  if (storeBlock)
+                //   storeBlock.attr("style", "display: normal");
             }
         })
         });

@@ -64,16 +64,18 @@
         <div class="admin_stock" id="admin_stock">
             <h3>Меню заведения
                 <a href="#" class="add_category button small grey f-right" data-bind="click: $root.addCategory">+ Добавить категорию</a>
+                <a href="#" class="add_category button small grey f-right" data-bind="click: $root.renameCategory">+ Переименовать категорию</a>
             </h3>
             <div id="tab-container">
                 <ul class="catalog_nav etabs" data-bind="foreach: Categories">
                     <li data-bind="attr: { class: activeText() } ">
                         <a data-bind="click: $root.setActiveCategory  ">
-                            <div data-bind="if: id()">
+                            <div data-bind="if: id() && !edit()">
                                 <span data-bind="text: Name"></span>
                             </div>
-                            <div data-bind="if: !id()">
-                                <input type="text" name="" id="" class="name" placeholder="Название категории" required data-bind="value: Name, event: { $root.addCategoryToDb }" />
+                            <div data-bind="if: !id() || edit()">
+                                <input type="text" name="" id="" class="name" placeholder="Название категории" required data-bind="value: Name" />
+                                <a href="#" class="button small grey" data-bind="click: !edit() ? $root.addCategoryToDb : $root.renameCategoryToDb">Сохранить</a>
                             </div>
                         </a>
                     </li>

@@ -118,7 +118,6 @@ function AdminViewModel(shopId) {
     };
 
     self.addCategoryToDb = function (itemData) {
-        debugger;
         var url = "/api/shop/" + self.shopId + "/category/";
 
         var category = new Category({ Name: itemData.Name(), IdName: itemData.Name() });
@@ -128,18 +127,43 @@ function AdminViewModel(shopId) {
             data: jsonData,
             type: "post", contentType: "application/json",
             success: function (data) {
-                debugger;
                 okMessage("Категория добавлена");
                 itemData.id(data.id._id);
 
             },
             error: function (result) {
-                debugger;
                 errorMessage("Ошибка при добавлении");
                 console.log(result);
             }
         });
     };
+
+    self.renameCategory = function () {
+        var forEdit = ko.utils.arrayFirst(self.Categories(), function (category) {
+            return category.active() == true;
+        });
+        if (forEdit)
+            forEdit.edit(true);
+    }
+
+    self.renameCategoryToDb = function (item) {
+        var url = "/api/shop/" + self.shopId + "/category/" + item.id();
+        var jsonData = ko.toJSON(item);
+        $.ajax(url, {
+            data: jsonData,
+            type: "put", contentType: "application/json",
+            success: function (data) {
+                okMessage("Категория обновлена");
+
+            },
+            error: function (result) {
+                errorMessage("Ошибка при обновлении");
+                console.log(result);
+            }
+        });
+        item.edit(false);
+    };
+
 
     self.hideOk = ko.computed(self.showOk).extend({ throttle: 1000 });
     self.hideOk.subscribe(function (val) {

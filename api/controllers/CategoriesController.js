@@ -34,17 +34,37 @@ exports.add_routes = function (app) {
         } else res.send(404);
     });
 
+    app.put("/api/shop/:shopId/category/:id", function (req, res) {
+        if (req.session.user) {
+            User.find({ _shop: req.params.shopId, _id: req.session.user, approveInCurrentShop: true }, function (err, user) {
+                if (err) res.send(err, 404);
+                else {
+
+                    var data = req.body;
+                    Category.updateItem(req.params.id, data, function (err, item) {
+                        if (err)
+                            res.send(err, 404);
+                        else
+                            res.json(item, 200);
+                    });
+                }
+            })
+        } else res.send(404);
+    });
+
     app.post("/api/shop/:shopId/category/", function (req, res) {
         //if (req.session.user) {
+        console.log('body categoryController: ');
         console.log('body : ' + req.body);
-        var name = req.body.name;
+        var name = req.body.Name;
+        var idname = req.body.IdName;
         console.log('name : ' + name);
         Category.findOne({ _shop: req.params.shopId }).sort('-id').select('id').exec(function (error, id) {
             if (error)
                 res.send(err, 404);
             else {
                 var maxId = id.id;
-                Category.newCategory(req.params.shopId, (maxId + 1), name, name, function (itemId) {
+                Category.newCategory(req.params.shopId, (maxId + 1), name, idname, function (itemId) {
                     res.send({ id: itemId }, 201)
                 }, function (err) {
                     console.log('ERROR : ' + err);

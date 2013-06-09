@@ -2,11 +2,11 @@ var express = require('express')
   , app = express()
   , ejsLocals = require('ejs-locals')
   , nodemailer = require("nodemailer")
-, upload = require('jquery-file-upload-middleware'),
+, upload = require('jquery-file-upload-middleware')
 //, im = require('imagemagick')
 
 
-//fs = require('fs');
+var fs = require('fs');
 uploadsDir = __dirname + "\\site\\public\\uploads\\";
 thumbnailDir = __dirname + "\\site\\public\\uploads\\thumbnail\\";
 
@@ -15,7 +15,7 @@ var MongoStore = require('connect-mongo')(express),
 
 
 
-var fs = require('path');
+//var fs = require('path');
 
 String.prototype.randomString = function (stringLength) {
     var chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
