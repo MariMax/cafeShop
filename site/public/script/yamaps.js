@@ -56,12 +56,12 @@ function fid_13613773245519471603(ymaps) {
         })
 
 
-    map.geoObjects.events.add('click',
+        map.geoObjects.events.add('click',
         function (e) {
             var object = e.get('target');
             //alert(object.geometry._Ih[0]+" "+object.geometry._Ih[1]); 
-
-            $.get('/api/shops/allinPalce/' + object.geometry._Ih[0] + '/' + object.geometry._Ih[1])
+            var position = object.geometry.getBounds();
+            $.get('/api/shops/allinPalce/' + position[0][0] + '/' + position[0][1])
         .done(function (data) {
             var storeList = $("#StoreList");
             if (storeList) {
@@ -75,9 +75,9 @@ function fid_13613773245519471603(ymaps) {
                 };
                 storeListContent += '</div>'
                 storeList.html(storeListContent);
-                position = e.get('globalPixelPosition');
+                //position = e.get('globalPixelPosition');
                 //object.balloon.setContent(storeListContent);
-                map.balloon.open([object.geometry._Ih[0], object.geometry._Ih[1]], {
+                map.balloon.open([position[0][0],position[0][1]], {
                     contentBody: storeListContent
                 });
                 //ebugger;
