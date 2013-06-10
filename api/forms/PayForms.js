@@ -21,7 +21,9 @@ OrderFinalForm = form(
 
     filter("description").trim(),
         validate("description")
-        .required(null, 'please enter description')
+        .required(null, 'please enter description'),
+
+   filter("deliveryAddress").trim()
 )
 
 OrderAnswerForm = form(
@@ -58,9 +60,9 @@ OrderW1AnswerForm = form(
               filter("WMI_UPDATE_DATE").trim(),
               filter("WMI_ORDER_STATE").trim(),
               filter("WMI_SIGNATURE").trim()
-              ,filter("spUserDataOrderId").trim()
-              ,filter("spBalanceAmount").trim()
-              ,filter("spAmount").trim()
+              , filter("spUserDataOrderId").trim()
+              , filter("spBalanceAmount").trim()
+              , filter("spAmount").trim()
 
 )
 

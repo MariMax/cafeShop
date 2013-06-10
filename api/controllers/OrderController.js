@@ -46,6 +46,7 @@ exports.add_routes = function (app) {
         var orderId = req.params.orderId;
         var shopId = req.params.shopId;
         var itemId = req.params.itemId;
+        var deliveryAddress = req.params.deliveryAddress;
         var count = req.params.count;
         Order.getOrder(orderId, function (error, order) {
             if (error) res.send(error, 404);
@@ -58,7 +59,7 @@ exports.add_routes = function (app) {
                             if (error || item._shop != shopId) res.send("Наверное блюдо не из этого кафе", 404);
                             else {
                                 console.log("set order " + orderId + " " + itemId + " " + count)
-                                Order.setOrderItems(orderId, itemId, count, item.Price, function (error, order) {
+                                Order.setOrderItems(orderId, itemId, count, item.Price, deliveryAddress, function (error, order) {
                                     if (error)
                                         res.send(error, 404);
                                     else {
@@ -101,10 +102,10 @@ exports.add_routes = function (app) {
     });
 
 
-  //  app.get("/api/order/calcPrice/:orderId", function (req, res) {
-  //      var orderId = req.params.orderId;
-  //      Order.calcOrderPrice(orderId, function (error, result) { if (error) res.send(error, 404); else res.json(result, 200) })
-  //  });
+    //  app.get("/api/order/calcPrice/:orderId", function (req, res) {
+    //      var orderId = req.params.orderId;
+    //      Order.calcOrderPrice(orderId, function (error, result) { if (error) res.send(error, 404); else res.json(result, 200) })
+    //  });
 
     app.get("/api/order/delete/:orderId", function (req, res) {
         var orderId = req.params.orderId;
@@ -192,8 +193,12 @@ exports.add_routes = function (app) {
                             }
                             messageText += orderLink + ' ' + myOrder.Description;
                             shopMessage += orderLink + ' ' + myOrder.Description + ' оплачено: ' + myOrder.PaymentAmmount + ' клиент: ' + myOrder.UserName;
+                            if (order.DeliveryAddress && order.DeliveryAddress.length > 0)
+                                shopMessage += ' доставка: ' + order.DeliveryAddress;
+
                             //                        if (clientPhone) shopMessage += ' тел.: ' + clientPhone;
                             shopSMSMessage = ru2en.translite(shopMessage);
+
                             Shop.getShop(order._shop, function (error, shop) {
                                 if (error) callback(error);
                                 else {
@@ -218,7 +223,7 @@ exports.add_routes = function (app) {
                         }
                     });
 
-                } 
+                }
             }
         })
     }
@@ -270,7 +275,7 @@ exports.add_routes = function (app) {
         })
     })
 
-   
+
 
 
 }
