@@ -8,6 +8,7 @@ function StockViewModel(shopId,orderTemplate) {
     self.ShopAddress = ko.observable('Адрес не задан');
     self.ShopPhone = ko.observable('Телефон не задан');
     self.ShopWorkTime = ko.observable('Время работы не задано');
+	self.approved =  ko.observable(false);
     self.Categories = ko.observableArray([]);
     self.OrderedItems = ko.observableArray([]);
     self.OrderedItemsPrices = ko.computed(function () {
@@ -70,6 +71,8 @@ function StockViewModel(shopId,orderTemplate) {
             self.ShopPhone(shop.ClientPhone);
         if (shop.Description)
             self.ShopDescription(shop.Description);
+			if (shop.CanWorkInShopShop)
+			self.approved(true);
 			
     });
 

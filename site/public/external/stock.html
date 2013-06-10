@@ -1,4 +1,4 @@
-﻿<a href="http://idiesh.ru" type="hidden">Заказ еды онлайн</a>
+﻿<a href="http://idiesh.ru" type="hidden" style="display:none">Заказ еды онлайн</a>
   <div class="shop_page" id="shop_stock_page"> 
         <div class="shop_stock" id="tab-container">
             <ul class="catalog_nav etabs" data-bind="foreach: Categories">
@@ -28,7 +28,7 @@
                 <div class="basket">
 			Вы выбрали:
                     <a href="#" class="basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
-                    <a href="#" class="order button big cursiv second" data-bind="click: $root.order">Оформить</a>
+                    <a href="#" class="order button big cursiv second" data-bind="{visible: $root.approved(),click: $root.order}">Оформить</a>
                 </div>
                 <div class="basket_block" data-bind="foreach: OrderedItems">
                     <div class="item">
