@@ -29,6 +29,7 @@
 			Вы выбрали:
                     <a href="#" class="basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
                     <a href="#" class="order button big cursiv second" data-bind="{visible: $root.approved(),click: $root.order}">Оформить</a>
+					<a href="#" class="order button big cursiv second" data-bind="{visible: !$root.approved()}" title="Кафе не заключило договор с платежной системой">Пока только по телефону :(</a>
                 </div>
                 <div class="basket_block" data-bind="foreach: OrderedItems">
                     <div class="item">
