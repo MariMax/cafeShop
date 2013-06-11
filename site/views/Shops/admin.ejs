@@ -37,6 +37,10 @@
                     <div class="input"><input id="ClientPhone" type="text" size="60" name="ClientPhone"></div>
                 </div>
                 <div class="form_item">
+                    <div class="label" title="Если доставка товара возможна, пожплуйста подробно опишите условия доставки в разделе 'Особенности работы'">Возможность доставки</div>
+                    <div class="input"><input id="Delivery" type="checkbox" name="Delivery" title="Если доставка товара возможна, пожплуйста подробно опишите условия доставки в разделе 'Особенности работы'"></div>
+                </div>
+                <div class="form_item">
                     <div class="label">Сотовый (для sms оповещения)</div>
                     <div class="input"><input type="text" size="20" id="cellPhone" name="cellPhone" required>
                     </div>
@@ -115,12 +119,13 @@
                     </div>
                 </div>
 
-                <div class="notification" data-bind="visible: showOkMessage">
+                <div class="notification" style="display: none" data-bind="visible: showOkMessage" >
                     <span data-bind="text: Message"></span>
                 </div>
-                <div class="notification error" data-bind="visible: showErrorMessage">
+                <div class="notification error"  style="display: none" data-bind="visible: showErrorMessage" >
                     <span data-bind="text: Message"></span>
                 </div>
+                
             </div>
 
         </div>

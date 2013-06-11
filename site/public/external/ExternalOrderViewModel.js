@@ -138,6 +138,8 @@ function orderCommon(self, orderParameters) {
         data.description = self.description() ? self.description() + " " + self.hour() + ":" + self.minute() : self.hour() + ":" + self.minute();
         data.cellPhone = self.cellPhone();
         data.deliveryAddress = self.deliveryAddress();
+        if (self.showDelivery())
+            data.deliveryAddress = self.deliveryAddress();
 
         $.post('http://idiesh.ru/api/order/pay', data)
             .done(function (data) {
@@ -206,7 +208,9 @@ var Cart = function (orderId) {
     self.hour = ko.observable(12).extend({ numeric: 24 });
     self.minute = ko.observable(00).extend({ numeric: 60 });
     self.PaymentId = ko.observable();
+    self.showDelivery = ko.observable(false);
     self.delivery = ko.observable(false);
+    self.approved = ko.observable(false);
     self.deliveryAddress = ko.observable('');
 
 
@@ -245,6 +249,10 @@ var Cart = function (orderId) {
             self.description(order.Description);
         if (order.PaymentId)
             self.PaymentId(order.PaymentId);
+        if (order.DeliveryAddress)
+            self.deliveryAddress(order.DeliveryAddress)
+        if (order.Approved)
+            self.approved(true);
 
 
         ko.utils.arrayForEach(order.Items, function (item) {
@@ -279,6 +287,8 @@ var Cart = function (orderId) {
                 self.ShopWorkTime(shop.WorkTime);
             if (shop.ClientPhone)
                 self.ShopPhone(shop.ClientPhone);
+            if (shop.Delivery)
+                self.showDelivery(true);
 
         });
 

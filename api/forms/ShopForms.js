@@ -62,6 +62,7 @@ var updateShopForm = form(
    filter("Latitude").trim(),
    filter("Longitude").trim(),
    filter("Logo").trim(),
+   filter("Delivery").trim(),
    filter("cellPhone").trim(),
    validate("cellPhone")
         .required(null, "please enter CellPhone")

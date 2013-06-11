@@ -27,6 +27,7 @@ var shopSchema = new Schema({
     CellPhoneApprove: { type: Boolean, 'default': false },
     CellPhoneVerificationCode: { type: String },
     tempCellPhone: String,
+    Delivery: { type: Boolean, 'default': false },
     //DeliveryMethods:[{type:ObjectId,ref:'DeliveryMethod'}],
     //Users:[{type:ObjectId,ref:'User'}],
 
@@ -74,7 +75,8 @@ shopSchema.statics.UpdateShopValue = function (shopId, data, cb) {
     //if (data.CellPhone&&data.CellPhone!='') newdata.CellPhone=data.CellPhone; Отдельная тема
     if (data.Latitude) newdata.Latitude = data.Latitude;
     if (data.Longitude) newdata.Longitude = data.Longitude;
-    if (data.Latitude && data.Longitude) { newdata.Coords = []; newdata.Coords.push(data.Longitude);newdata.Coords.push(data.Latitude); }
+    if (data.Latitude && data.Longitude) { newdata.Coords = []; newdata.Coords.push(data.Longitude); newdata.Coords.push(data.Latitude); }
+    if (data.Delivery) newdata.Delivery = true; else newdata.Delivery = false;
 
     this.findByIdAndUpdate(shopId, { $set: newdata }, { multi: false, safe: true }, function (error, docs) {
         if (error) {
