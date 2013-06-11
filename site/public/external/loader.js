@@ -10,12 +10,12 @@ requirejs.config({
 				}
 			},
 			paths: {
-				text: 'http://cdnjs.cloudflare.com/ajax/libs/require-text/2.0.5/text',
-				knockout:'http://cdnjs.cloudflare.com/ajax/libs/knockout/2.2.1/knockout-min',
+				text: '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.5/text',
+				knockout:'//cdnjs.cloudflare.com/ajax/libs/knockout/2.2.1/knockout-min',
 				menu: 'http://idiesh.ru/external/ExternalStockViewModel',
 				item: 'http://idiesh.ru/external/ExternalItemViewModel',
 				category: 'http://idiesh.ru/external/ExternalCategoryViewModel',
-				css: 'https://raw.github.com/gist/3102735/018a0d9d6b390956956b0ef7a116daa2bd3b34c5/css',
+				css:'http://idiesh.ru/external/css',
 				order:'http://idiesh.ru/external/ExternalOrderViewModel'
 			}
 	});
