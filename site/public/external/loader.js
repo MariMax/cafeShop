@@ -14,13 +14,13 @@ requirejs.config({
 				knockout:'//cdnjs.cloudflare.com/ajax/libs/knockout/2.2.1/knockout-min',
 				menu: 'http://idiesh.ru/external/ExternalStockViewModel',
 				item: 'http://idiesh.ru/external/ExternalItemViewModel',
-				category: 'http://idiesh.ru/external/ExternalCategoryViewModel',
+				category: 'http://idiesh.ru/viewmodels/categoryViewModel',
 				css:'http://idiesh.ru/external/css',
-				order:'http://idiesh.ru/external/ExternalOrderViewModel'
+				order:'http://idiesh.ru/viewmodels/orderViewModel'
 			}
 	});
 
-require(['text',"text!http://idiesh.ru/external/stock.html","css!http://idiesh.ru/external/style",'knockout','category','item','menu', 'text!http://idiesh.ru/external/order.html','order'],
+require(['text',"text!http://idiesh.ru/external/stock.html","css!http://idiesh.ru/css/style",'knockout','category','item','menu', 'text!http://idiesh.ru/external/order.html','order'],
 function(t, stock, style,knockout,category,item,menu,orderTemplate,orderViewModel){
 ko=knockout;
 		cafeShopContainer = $( "#cafeShopContainer" );

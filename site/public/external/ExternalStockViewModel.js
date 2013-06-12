@@ -48,8 +48,7 @@ function StockViewModel(shopId,orderTemplate) {
             
            cafeShopContainer.empty();
 		   cafeShopContainer.html(self.orderTemplate);
-		   enableOrderValidators();
-		   bindOrder(orderId)
+		   bindOrder('http://idiesh.ru',orderId)
 		   
 		   
 

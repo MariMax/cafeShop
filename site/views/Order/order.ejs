@@ -61,20 +61,7 @@
 						<div class="label">Адрес доставки</div>
 						<div class="input"><input type="text" name="" id="" size="60" placeholder="Введите адрес" data-bind="value: deliveryAddress"></div>
 					</div>
-        </form><!--
-        <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
-        <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>
-        <div class="info_item"><label>Ваш e-mail для связи</label> <input type="email" name="spUserEmail" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'" placeholder="mail@mail.ru"></div>
-        <div class="info_item"><label>Описание заказа</label> <input type="text" name="" id="" data-bind="value: description,valueUpdate: 'afterkeydown'"></div>
-        <div class="info_item time">Приготовить заказ к <input type="text" name="" id="" data-bind="value: hour">:<input type="text" name="" id="" data-bind="value: minute"> ч</div>
-        
-        <div class="info_item" data-bind="visible:showDelivery" title="Пожалуйста внимательно ознакомьтесь с условиями доставки, стоимость доставки не включена в стоимость заказа">Доставка <input type="checkbox" data-bind="checked: delivery" />
-            
-            <div data-bind="visible: delivery">Адрес доставки:
-                <input type="text" name="deliveryAddress" id="" placeholder="Введите адрес" required data-bind="value: deliveryAddress" />
-
-            </div>
-        </div>-->
+        </form>
     </div>
     <div class="buttons">
         <div class="form_but">
@@ -84,3 +71,10 @@
     </div>
 
 </div>
+
+<script type="text/javascript">
+    $(function () {
+        var orderId = $('#orderId').val();
+        bindOrder('',orderId);
+    })
+</script>

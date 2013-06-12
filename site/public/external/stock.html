@@ -1,7 +1,18 @@
 ﻿<a href="http://idiesh.ru" type="hidden" style="display:none">Заказ еды онлайн</a>
   <div class="shop_page" id="shop_stock_page"> 
-        <div class="shop_stock" id="tab-container">
-            <ul class="catalog_nav etabs" data-bind="foreach: Categories">
+        <div class="naobed_shop_stock" id="tab-container">
+		
+				<div class="naobed_basket">
+					<i class="naobed_basket_icon"></i>
+					Вы выбрали:
+			
+                    <a href="#" class="naobed_basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
+                    <a href="#" class="naobed_order button cursiv" data-bind="{visible: $root.approved(),click: $root.order}">Оформить</a>
+					<a href="#" class="naobed_order button cursiv" data-bind="{visible: !$root.approved()}" title="Кафе не заключило договор с платежной системой">Пока только по телефону :(</a>
+					
+				</div>
+		
+            <ul class="naobed_catalog_nav etabs" data-bind="foreach: Categories">
                 <li data-bind="attr: { class: activeText() }">
                     <a data-bind="click: $root.setActiveCategory  ">
                         <span data-bind="text: Name"></span>
@@ -9,13 +20,13 @@
                 </li>
             </ul>
             <div data-bind="foreach: Categories">
-                <div data-bind="attr: { id: IdName , class: active() ? 'catalog clearfix active':'catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
+                <div data-bind="attr: { id: IdName , class: active() ? 'naobed_catalog clearfix active':'naobed_catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
                     <div data-bind="foreach: Items">
-                        <div class="catalog_item">
-                            <div class="img"><img data-bind="attr: { src: Image(), alt: Name(), title: Description() }" width="186" height="131"></div>
+                        <div class="naobed_catalog_item">
+                            <div class="naobed_img"><img data-bind="attr: { src: Image(), alt: Name(), title: Description() }" width="186" height="131"></div>
                             <h3><span data-bind="text: Name"></span></h3>
-                            <div class="price"><span data-bind="text: Price"></span> р.</div>
-                            <div class="buy">
+                            <div class="naobed_price"><span data-bind="text: Price"></span> р.</div>
+                            <div class="naobed_buy">
                                 <a href="#" data-bind="click: $root.buyItem">заказать</a>
                             </div>
                         </div>
@@ -23,36 +34,5 @@
                 </div>
             </div>
         </div>
-        <footer>
-            <div class="wrap">
-                <div class="basket">
-			Вы выбрали:
-                    <a href="#" class="basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
-                    <a href="#" class="order button big cursiv second" data-bind="{visible: $root.approved(),click: $root.order}">Оформить</a>
-					<a href="#" class="order button big cursiv second" data-bind="{visible: !$root.approved()}" title="Кафе не заключило договор с платежной системой">Пока только по телефону :(</a>
-                </div>
-                <div class="basket_block" data-bind="foreach: OrderedItems">
-                    <div class="item">
-                        <div class="img">
-                            <img data-bind="attr: { src: Image(), alt: Name() }"></img>
-                        </div>
-                        <h3><span data-bind="text: Name"></span></h3>
-                        <div class="price"><span data-bind="text: Price"></span></div>
-                    </div>
-                </div>
-
-            </div>
-        </footer>
-</div>
-
-    <script type="text/javascript">
-        $('.basket_link').mouseover(function () {
-            $('.basket_block').show().removeClass('fadeOutDown').addClass('animated fadeInUp')
-        }).mouseout(function () {
-            $('.basket_block').removeClass('fadeInUp').addClass('fadeOutDown');
-            setTimeout(function () {
-                $('.basket_block').hide();
-            }, 500)
-        });
-    </script>
+    </div>
 

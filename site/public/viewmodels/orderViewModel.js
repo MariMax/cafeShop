@@ -1,79 +1,81 @@
-ko.extenders.numeric = function (target, maxValue) {
-    //create a writeable computed observable to intercept writes to our observable
-    var result = ko.computed({
-        read: target,  //always return the original observables value
-        write: function (newValue) {
-            var current = target(),
+function enableOrderValidators() {
+    ko.extenders.numeric = function (target, maxValue) {
+        //create a writeable computed observable to intercept writes to our observable
+        var result = ko.computed({
+            read: target,  //always return the original observables value
+            write: function (newValue) {
+                var current = target(),
 
                 newValueAsNum = isNaN(newValue) || newValue > maxValue || newValue < 0 ? 12 : parseFloat(+newValue);
 
 
-            //only write if it changed
-            if (newValueAsNum !== current) {
-                target(newValueAsNum);
-            } else {
-                //if the rounded value is the same, but a different value was written, force a notification for the current field
-                if (newValue !== current) {
-                    target.notifySubscribers(newValueAsNum);
+                //only write if it changed
+                if (newValueAsNum !== current) {
+                    target(newValueAsNum);
+                } else {
+                    //if the rounded value is the same, but a different value was written, force a notification for the current field
+                    if (newValue !== current) {
+                        target.notifySubscribers(newValueAsNum);
+                    }
                 }
             }
+        });
+
+        //initialize with current value to make sure it is rounded appropriately
+        result(target());
+
+        //return the new computed observable
+        return result;
+    };
+
+    ko.extenders.required = function (target, overrideMessage) {
+        //add some sub-observables to our observable
+        target.hasError = ko.observable();
+        target.validationMessage = ko.observable();
+
+        //define a function to do validation
+        function validate(newValue) {
+            target.hasError(newValue ? false : true);
+            target.validationMessage(newValue ? "" : overrideMessage || "This field is required");
         }
-    });
 
-    //initialize with current value to make sure it is rounded appropriately
-    result(target());
+        //initial validation
+        validate(target());
 
-    //return the new computed observable
-    return result;
-};
+        //validate whenever the value changes
+        target.subscribe(validate);
 
-ko.extenders.required = function (target, overrideMessage) {
-    //add some sub-observables to our observable
-    target.hasError = ko.observable();
-    target.validationMessage = ko.observable();
+        //return the original observable
+        return target;
+    };
 
-    //define a function to do validation
-    function validate(newValue) {
-        target.hasError(newValue ? false : true);
-        target.validationMessage(newValue ? "" : overrideMessage || "This field is required");
-    }
+    ko.extenders.requiredEmail = function (target, overrideMessage) {
+        //add some sub-observables to our observable
+        target.hasError = ko.observable();
+        target.validationMessage = ko.observable();
 
-    //initial validation
-    validate(target());
+        //define a function to do validation
+        function isValidEmailAddress(emailAddress) {
+            var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+            return pattern.test(emailAddress);
+        }
 
-    //validate whenever the value changes
-    target.subscribe(validate);
+        function validate(newValue) {
+            target.hasError(!isValidEmailAddress(newValue));
+            target.validationMessage(isValidEmailAddress(newValue) ? "" : overrideMessage || "This field is required");
+        }
 
-    //return the original observable
-    return target;
-};
+        //initial validation
+        validate(target());
 
-ko.extenders.requiredEmail = function (target, overrideMessage) {
-    //add some sub-observables to our observable
-    target.hasError = ko.observable();
-    target.validationMessage = ko.observable();
+        //validate whenever the value changes
+        target.subscribe(validate);
 
-    //define a function to do validation
-    function isValidEmailAddress(emailAddress) {
-        var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
-        return pattern.test(emailAddress);
-    }
+        //return the original observable
+        return target;
+    };
 
-    function validate(newValue) {
-        target.hasError(!isValidEmailAddress(newValue));
-        target.validationMessage(isValidEmailAddress(newValue) ? "" : overrideMessage || "This field is required");
-    }
-
-    //initial validation
-    validate(target());
-
-    //validate whenever the value changes
-    target.subscribe(validate);
-
-    //return the original observable
-    return target;
-};
-
+}
 var CartLine = function (item, count) {
     var self = this;
 
@@ -113,7 +115,7 @@ function orderCommon(self, orderParameters) {
     ko.utils.arrayForEach(self.lines(), function (line) {
 
         $.ajax({
-            url: '/api/order/setItem/' + self.orderId + '/' + self.shopId + '/' + line.product()._id + '/' + line.quantity(),
+            url: self.url+'/api/order/setItem/' + self.orderId + '/' + self.shopId + '/' + line.product()._id + '/' + line.quantity(),
             type: "GET",
             async: false,
             cache: false
@@ -138,7 +140,7 @@ function orderCommon(self, orderParameters) {
         if (self.showDelivery())
             data.deliveryAddress = self.deliveryAddress();
 
-        $.post('/api/order/pay', data)
+        $.post(self.url+'/api/order/pay', data)
             .done(function (data) {
                 //sprypay.ru
                 if (orderParameters === 'sprypay') {
@@ -180,9 +182,10 @@ function orderCommon(self, orderParameters) {
     }
 }
 
-var Cart = function (orderId) {
+var Cart = function (url, orderId) {
 
     var self = this;
+    self.url = url;
     self.orderId = orderId;
     self.lines = ko.observableArray();
     self.total = function () {
@@ -237,7 +240,7 @@ var Cart = function (orderId) {
 
     self.orderW1 = function (cart) { orderCommon(cart, 'w1'); }
 
-    $.ajax({ url: '/api/order/' + orderId, cache: false, type: "GET" }).done(function (order) {
+    $.ajax({ url: self.url+'/api/order/' + orderId, cache: false, type: "GET" }).done(function (order) {
 
 
         if (order.UserName)
@@ -249,6 +252,7 @@ var Cart = function (orderId) {
         if (order.DeliveryAddress) {
             self.deliveryAddress(order.DeliveryAddress);
             self.delivery('delivery');
+
         }
         if (order.Approved)
             self.approved(true);
@@ -257,7 +261,7 @@ var Cart = function (orderId) {
 
         ko.utils.arrayForEach(order.Items, function (item) {
             $.ajax({
-                url: "/api/item/" + item.itemId,
+                url: self.url+"/api/item/" + item.itemId,
                 type: "GET",
                 async: false,
                 cache: false
@@ -273,7 +277,7 @@ var Cart = function (orderId) {
         self.orderPrice = order.Price;
 
         $.ajax({
-            url: "/api/shops/" + order._shop,
+            url: self.url+"/api/shops/" + order._shop,
             type: "GET",
             async: false,
             cache: false
@@ -297,8 +301,10 @@ var Cart = function (orderId) {
 
 };
 
-if (document.getElementById("orderId") != null) {
-    var orderId = document.getElementById("orderId").value;
+
+function bindOrder(url,orderId){
+	enableOrderValidators();
     if (document.getElementById("order_page") != null)
-        ko.applyBindings(new Cart(orderId), document.getElementById("order_page"));
+        ko.applyBindings(new Cart(url,orderId), document.getElementById("order_page"));
+
 }
