@@ -206,7 +206,7 @@ var Cart = function (orderId) {
     self.minute = ko.observable(00).extend({ numeric: 60 });
     self.PaymentId = ko.observable();
     self.showDelivery = ko.observable(false);
-    self.delivery = ko.observable(false);
+    self.delivery = ko.observable('self');
     self.approved = ko.observable(false);
     self.deliveryAddress = ko.observable('');
 
@@ -246,8 +246,10 @@ var Cart = function (orderId) {
             self.description(order.Description);
         if (order.PaymentId)
             self.PaymentId(order.PaymentId);
-        if (order.DeliveryAddress)
-            self.deliveryAddress(order.DeliveryAddress)
+        if (order.DeliveryAddress) {
+            self.deliveryAddress(order.DeliveryAddress);
+            self.delivery('delivery');
+        }
         if (order.Approved)
             self.approved(true);
 

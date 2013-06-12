@@ -33,13 +33,24 @@
     <div class="notice error" data-bind="{visible: !$root.approved()}">Заказ еще не оплачен</div>
         <div class="order_info">
 
-            <div class="info_item"><label>Имя клиента</label> <input type="text" name="" id="" data-bind="value: userName" disabled></div>
-           <div class="info_item"><label>Описание заказа</label> 
-               <textarea name="" id="" cols="30" rows="10" data-bind="value: $root.description()" disabled></textarea>
-               </div>
-           <div class="info_item" data-bind="visible:$root.deliveryAddress()"><label>Адрес доставки</label> 
-               <textarea name="" id="" cols="30" rows="10" data-bind="value: $root.deliveryAddress()" disabled></textarea>
-           </div>
+            <h3>Информация</h3>
+        <form action="" class="horizontal">
+        			<div class="form_item">
+						<div class="label">Имя клиента</div>
+						<div class="input"><input type="text" name="" id="" size="60" data-bind="value: userName" disabled></div>
+					</div>					
+
+					<div class="form_item">
+						<div class="label">Описание заказа</div>
+						<div class="input"><textarea name="" id="" cols="30" rows="10" data-bind="value: $root.description()" disabled></textarea></div>
+					</div>
+					<div class="form_item" data-bind="visible:  $root.deliveryAddress()">
+						<div class="label">Адрес доставки</div>
+						<div class="input"><textarea name="" id="" cols="30" rows="10" data-bind="value: $root.deliveryAddress()" disabled></textarea></div>
+					</div>
+        </form>
+
+
 
         </div>
 

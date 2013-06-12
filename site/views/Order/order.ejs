@@ -28,8 +28,40 @@
 
 
     <div id="messenger" class="notice error" data-bind="{text: hasErrorMessage(), visible: hasError()}"></div>
-    <div class="notice succes" data-bind="{visible: !$root.delivery()}">Вы должны забрать заказ самостоятельно</div>
+    <div class="notice succes" data-bind="{visible: $root.delivery()!='delivery'}">Вы должны забрать заказ самостоятельно</div>
     <div class="order_info">
+        <h3>Информация</h3>
+        <form action="" class="horizontal">
+        			<div class="form_item">
+						<div class="label">Ваше имя</div>
+						<div class="input"><input type="text" name="" id="" size="60" required data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
+					</div>					
+                    <div class="form_item">
+						<div class="label">Ваш e-mail для связи</div>
+						<div class="input"><input type="text" type="email" name="spUserEmail" id="email" required data-bind="value: email,valueUpdate: 'afterkeydown'" size="60" placeholder="name@domain.com"></div>
+					</div>
+					<div class="form_item">
+						<div class="label">Ваш номер телефона</div>
+						<div class="input"><input type="text" size="60" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>
+					</div>
+
+					<div class="form_item">
+						<div class="label">Описание заказа</div>
+						<div class="input"><input type="text" name="" id="" size="60" data-bind="value: description,valueUpdate: 'afterkeydown'"></div>
+					</div>
+					<div class="form_item radio_group" data-bind="visible:showDelivery" title="Пожалуйста внимательно ознакомьтесь с условиями доставки, стоимость доставки не включена в стоимость заказа">
+						<label for="1"><input type="radio" name="1" id="1" value="self" data-bind="checked: delivery">Самовывоз</label>
+						<label for="2"><input type="radio" name="1" id="2" value="delivery" data-bind="checked: delivery">Доставка</label>
+					</div>
+					<div class="form_item time">
+						<div class="label">Приготовить заказ к</div>
+						<div class="input"><input type="text" name="" id="" value="13" size="1" data-bind="value: hour"> : <input type="text" name="" id="" value="10" size="1" data-bind="value: minute"> ч</div>
+					</div>
+					<div class="form_item" data-bind="visible:  $root.delivery()=='delivery'">
+						<div class="label">Адрес доставки</div>
+						<div class="input"><input type="text" name="" id="" size="60" placeholder="Введите адрес" data-bind="value: deliveryAddress"></div>
+					</div>
+        </form><!--
         <div class="info_item"><label>Ваше имя</label> <input type="text" name="" id="" data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
         <div class="info_item"><label>Ваш номер телефона</label> <input type="text" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>
         <div class="info_item"><label>Ваш e-mail для связи</label> <input type="email" name="spUserEmail" id="email" data-bind="value: email,valueUpdate: 'afterkeydown'" placeholder="mail@mail.ru"></div>
@@ -42,7 +74,7 @@
                 <input type="text" name="deliveryAddress" id="" placeholder="Введите адрес" required data-bind="value: deliveryAddress" />
 
             </div>
-        </div>
+        </div>-->
     </div>
     <div class="buttons">
         <div class="form_but">

@@ -13,8 +13,8 @@
 			<div class="shop_time"><span data-bind="text: ShopWorkTime"></span></div>
             <div class="border_wave_bot"></div>
         </div>
-        <div class="shop_stock" id="tab-container">
-            <ul class="catalog_nav etabs" data-bind="foreach: Categories">
+        <div class="naobed_shop_stock" id="tab-container">
+            <ul class="naobed_catalog_nav etabs" data-bind="foreach: Categories">
                 <li data-bind="attr: { class: activeText() }">
                     <a data-bind="click: $root.setActiveCategory  ">
                         <span data-bind="text: Name"></span>
@@ -22,13 +22,13 @@
                 </li>
             </ul>
             <div data-bind="foreach: Categories">
-                <div data-bind="attr: { id: IdName , class: active() ? 'catalog clearfix active':'catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
+                <div data-bind="attr: { id: IdName , class: active() ? 'naobed_catalog clearfix active':'naobed_catalog clearfix', style: active() ? 'display: block' : 'display: none' }">
                     <div data-bind="foreach: Items">
-                        <div class="catalog_item">
-                            <div class="img"><img data-bind="attr: { src: Image(), alt: Name(), title: Description() }" width="186" height="131"></div>
+                        <div class="naobed_catalog_item">
+                            <div class="naobed_img"><img data-bind="attr: { src: Image(), alt: Name(), title: Description() }" width="186" height="131"></div>
                             <h3><span data-bind="text: Name"></span></h3>
-                            <div class="price"><span data-bind="text: Price"></span> р.</div>
-                            <div class="buy">
+                            <div class="naobed_price"><span data-bind="text: Price"></span> р.</div>
+                            <div class="naobed_buy">
                                 <a href="#" data-bind="click: $root.buyItem">заказать</a>
                             </div>
                         </div>
