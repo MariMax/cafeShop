@@ -29,6 +29,18 @@ function AdminViewModel(shopId) {
         self.showError(true);
     };
 
+     self.FillCategory = function (category, doneFunction) {
+        $.ajax({
+            url: "/api/shop/" + self.shopId + "/category/" + category.id() + "/items",
+            type: "GET",
+            async: true
+        }).done(function (allData) {
+            var mappedItems = $.map(allData, function (item) { return new Item(item, okMessage, errorMessage) });
+            category.Items(mappedItems);
+            doneFunction(category);
+        });
+    }
+
     // Operations
     $.ajax(
     {
@@ -38,19 +50,12 @@ function AdminViewModel(shopId) {
     }).done(function (allData) {
         var first = true;
         $.each(allData, function (index, value) {
-            $.ajax({
-                url: "/api/shop/" + self.shopId + "/category/" + value._id + "/items",
-                type: "GET",
-                async: false
-            }).done(function (allData) {
-                var mappedItems = $.map(allData, function (item) { return new Item(item, okMessage, errorMessage) });
-                var category = new Category(value, self.shopId, okMessage, errorMessage);
-                category.Items(mappedItems);
-                category.active(first);
-                if (first)
-                    first = false;
-                self.Categories.push(category);
-            });
+            var category = new Category(value, self.shopId, okMessage, errorMessage);
+            category.active(first);
+            if (first)
+                first = false;
+            self.FillCategory(category, function () { });
+            self.Categories.push(category);
         });
     });
 
@@ -69,11 +74,17 @@ function AdminViewModel(shopId) {
     //    });
     //});
 
+   
+
+
     self.setActiveCategory = function (category) {
         self.active = true;
         $.each(self.Categories(), function (index, value) {
-            if (value.id() == category.id())
-                value.active(true);
+            if (value.id() == category.id()) {
+                self.FillCategory(value, function (filledCategory) {
+                    filledCategory.active(true);
+                })
+            }
             else
                 value.active(false);
         });
