@@ -16,7 +16,10 @@ var itemSchema = new Schema({
     Price: Number,
     _category: ObjectId,
     Days: [],
-    Image: String
+    Image: String,
+    Product_sku: String,
+    Qnt: Number,
+    UnderOrder: Boolean
 });
 
 
@@ -24,11 +27,14 @@ itemSchema.statics.newItem = function (shopId, categoryId, data, cb, err) {
     var instance = new Item();
     instance._shop = shopId;
     instance._category = categoryId;
+    instance.Product_sku = data.Product_sku;
     instance.Name = data.Name;
     instance.Description = data.Description;
     instance.Price = data.Price;
     instance.Days = data.Days;
     instance.Image = data.Image;
+    instance.Qnt = data.Qnt;
+    instance.UnderOrder = data.UnderOrder; //возможность привезти под заказ
     instance.save(function (error, data) {
         if (error) {
             err(error);
@@ -42,10 +48,13 @@ itemSchema.statics.newItem = function (shopId, categoryId, data, cb, err) {
 itemSchema.statics.updateItem = function (itemId, data, cb) {
     console.log("updateItem");
     var newdata = {};
+    if (data.Product_sku && data.Product_sku != '') newdata.Product_sku = data.Product_sku;
     if (data.Name && data.Name != '') newdata.Name = data.Name;
     if (data.Description && data.Description != '') newdata.Description = data.Description;
     if (data.Description && data.Description != '') newdata.Description = data.Description;
     if (data.Price && data.Price > 0) newdata.Price = data.Price;
+    if (data.Qnt && data.Qnt >= 0) newdata.Qnt = data.Qnt;
+    if (data.UnderOrder) newdata.UnderOrder = data.UnderOrder;
     if (data.Days) newdata.Days = data.Days;
     if (data.Image) newdata.Image = data.Image;
 

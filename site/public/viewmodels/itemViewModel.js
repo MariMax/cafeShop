@@ -1,11 +1,14 @@
-function Item(data, messageFunc,errorFunc) {
+function Item(data, messageFunc, errorFunc) {
     var self = this;
     self.messageFunc = messageFunc;
     self.errorFunc = errorFunc;
     self.id = ko.observable(data._id);
-        self.shop = ko.observable(data._shop);
+    self.shop = ko.observable(data._shop);
     self.Name = ko.observable(data.Name);
     self.Description = ko.observable(data.Description);
+    self.Product_sku = ko.observable(data.Product_sku);
+    self.Qnt = ko.observable(data.Qnt);
+    self.UnderOrder = ko.observable(data.UnderOrder);
     self.Price = ko.observable(0);
     if (data.Price)
         self.Price(data.Price);
@@ -23,7 +26,7 @@ function Item(data, messageFunc,errorFunc) {
     }
 
     self.updateItem = function (item) {
-        var url = "/api/shop/"+this.shop()+"/item/" + this.id();
+        var url = "/api/shop/" + this.shop() + "/item/" + this.id();
         item.Image($('#newPhotoTmpUrl').val());
         var jsonData = ko.toJSON(item);
         $.ajax(url, {

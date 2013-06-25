@@ -1,0 +1,13 @@
+product_sku – артикул товара,
+product_parent_sku,
+category_path – категория (Категория1/Подскатегория1/Подкатегория2),
+product_name – имя товара,
+product_s_desc – краткое описание товара,
+product_desc – полное описание товара,
+product_price – цена товара,
+product_full_image – большое изображение,
+product_thumb_image – маленькое (preview) изображение,
+product_sku – артикул товара,
+product_price – цена товара,
+product_currency – валюта,
+price_quantity
