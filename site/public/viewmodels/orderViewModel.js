@@ -130,7 +130,6 @@ function orderCommon(self, orderParameters) {
         //document.location.href = '/order/buy/' + self.orderId;
     }
     else {
-        debugger;
         var data = {};
         data.userName = self.userName();
         data.spUserEmail = self.email();
@@ -140,7 +139,7 @@ function orderCommon(self, orderParameters) {
         if (self.showDelivery())
             data.deliveryAddress = self.deliveryAddress();
 
-        $.post(self.url+'/api/order/pay', data)
+        $.post(self.url + '/api/order/pay', data)
             .done(function (data) {
                 //sprypay.ru
                 if (orderParameters === 'sprypay') {
@@ -155,7 +154,8 @@ function orderCommon(self, orderParameters) {
                         spUserEmail: data.Email
 
                     })
-                } else {
+                }
+                if (orderParameters === 'w1') {
                     //w1.ru
                     var enabled = ['WalletOneRUB', 'YandexMoneyRUB', 'RbkMoneyRUB', 'BeelineRUB', 'MtsRUB', 'MegafonRUB', 'CashTerminalRUB', 'EurosetRUB', 'SvyaznoyRUB', 'CifrogradRUB', 'AlfaclickRUB', 'PsbRetailRUB', 'SvyaznoyBankRUB', 'SberOnlineRUB'];
 
@@ -175,8 +175,22 @@ function orderCommon(self, orderParameters) {
                     }
                     post("https://merchant.w1.ru/checkout/default.aspx", PARAMS, enabled);
                 }
-                //return (true);
-                // document.location.href = "http://sprypay.ru/sppi/?spShopId=213001&spShopPaymentId=" + data.PaymentId + "&spCurrency=rur&spPurpose=Оплата заказа&spAmount=" + data.Price + "&spUserDataOrderId=" + data._id + "&spUserEmail=" + data.Email;
+                if (orderParameters === 'RBK') {
+                    //RBK
+                    
+                    var PARAMS = {
+                        eshopid: 2000005,
+                        orderId: data._id,
+                        serviceName: data._id,
+                        recipientAmount: data.Price.toString() + '.00',
+                        recipientCurrency: 'RUR',
+                        user_email: data.Email,
+                        successUrl: "http://idiesh.ru/order/success/1",
+                        failUrl: "http://idiesh.ru/order/fail/1"
+                    }
+                    post("https://rbkmoney.ru/acceptpurchase.aspx", PARAMS);
+                }
+
             });
 
     }
@@ -231,14 +245,11 @@ var Cart = function (url, orderId) {
 
     // Operations
 
-
-
-
-    self.orderSpryPay = function (cart) {
-        orderCommon(cart, 'sprypay');
-    }
+    self.orderSpryPay = function (cart) { orderCommon(cart, 'sprypay'); }
 
     self.orderW1 = function (cart) { orderCommon(cart, 'w1'); }
+
+    self.orderRBK = function (cart) { orderCommon(cart, 'RBK'); }
 
     $.ajax({ url: self.url+'/api/order/' + orderId, cache: false, type: "GET" }).done(function (order) {
 
@@ -297,8 +308,6 @@ var Cart = function (url, orderId) {
         });
 
     });
-
-
 };
 
 

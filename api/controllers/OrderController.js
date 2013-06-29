@@ -275,6 +275,22 @@ exports.add_routes = function (app) {
         })
     })
 
+     app.post("/api/order/RBK", forms.OrderRBKAnswerForm, function (req, res) {
+        //Оплата Ответ платежной системы RBK
+        var hash = '';
+        console.log('ver rbk 29/06');
+
+        var data = {};
+        data.BalanceAmount = req.form.recipientAmount;
+        data.Amount = req.form.recipientAmount;
+        data.paySystemHash = req.form.hash;
+        data.orderId = req.form.orderId;
+
+        PaySystemAnswer(data, hash, function (error, answer) {
+            if (error) res.send("WMI_RESULT=RETRY&WMI_DESCRIPTION=Сервер временно недоступен"); else res.send("WMI_RESULT=OK");
+        })
+    })
+
 
 
 

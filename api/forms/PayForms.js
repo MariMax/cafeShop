@@ -66,8 +66,27 @@ OrderW1AnswerForm = form(
 
 )
 
+OrderRBKAnswerForm = form(
+    filter("eshopId").trim(),
+        filter("paymentId").trim(),
+             filter("orderId").trim(),
+              filter("eshopAccount").trim(),
+              filter("serviceName").trim(),
+              filter("recipientAmount").trim(),
+              filter("recipientCurrency").trim(),
+              filter("paymentStatus").trim(),
+              filter("userName").trim(),
+              filter("userEmail").trim(),
+              filter("paymentData").trim(),
+              filter("secretKey").trim(),
+              filter("hash").trim()
+
+
+)
+
 
 
 exports.OrderFinalForm = OrderFinalForm;
 exports.OrderAnswerForm = OrderAnswerForm;
 exports.OrderW1AnswerForm = OrderW1AnswerForm;
+exports.OrderRBKAnswerForm = OrderRBKAnswerForm;
