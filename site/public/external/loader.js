@@ -10,8 +10,8 @@ requirejs.config({
 				}
 			},
 			paths: {
-				text: '//cdnjs.cloudflare.com/ajax/libs/require-text/2.0.5/text',
-				knockout:'//cdnjs.cloudflare.com/ajax/libs/knockout/2.2.1/knockout-min',
+				text: 'http://cdnjs.cloudflare.com/ajax/libs/require-text/2.0.5/text',
+				knockout:'http://cdnjs.cloudflare.com/ajax/libs/knockout/2.2.1/knockout-min',
 				menu: 'http://idiesh.ru/external/ExternalStockViewModel',
 				item: 'http://idiesh.ru/external/ExternalItemViewModel',
 				category: 'http://idiesh.ru/viewmodels/categoryViewModel',
