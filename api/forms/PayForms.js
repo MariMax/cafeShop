@@ -84,9 +84,19 @@ OrderRBKAnswerForm = form(
 
 )
 
+OrderRBKHashForm = form(
+    filter("eshopid").trim(),
+    filter("orderId").trim(),
+    filter("serviceName").trim(),
+    filter("recipientAmount").trim(),
+    filter("recipientCurrency").trim(),
+    filter("user_email").trim()
+)
+
 
 
 exports.OrderFinalForm = OrderFinalForm;
 exports.OrderAnswerForm = OrderAnswerForm;
 exports.OrderW1AnswerForm = OrderW1AnswerForm;
 exports.OrderRBKAnswerForm = OrderRBKAnswerForm;
+exports.OrderRBKHashForm = OrderRBKHashForm;

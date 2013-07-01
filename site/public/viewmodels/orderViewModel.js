@@ -177,7 +177,7 @@ function orderCommon(self, orderParameters) {
                 }
                 if (orderParameters === 'RBK') {
                     //RBK
-                    
+
                     var PARAMS = {
                         eshopid: 2020011,
                         orderId: data._id,
@@ -186,9 +186,16 @@ function orderCommon(self, orderParameters) {
                         recipientCurrency: 'RUR',
                         user_email: data.Email,
                         successUrl: "http://idiesh.ru/order/success/1",
-                        failUrl: "http://idiesh.ru/order/fail/1"
-                    }
-                    post("https://rbkmoney.ru/acceptpurchase.aspx", PARAMS);
+                        failUrl: "http://idiesh.ru/order/fail/1",
+                        version: 2,
+                        hash: ""
+                    };
+
+                    $.post(self.url + '/api/order/RBKhash', PARAMS)
+                    .done(function (hashResult) {
+                        PARAMS.hash = hashResult;
+                        post("https://rbkmoney.ru/acceptpurchase.aspx", PARAMS);
+                    });
                 }
 
             });
