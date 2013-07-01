@@ -277,23 +277,19 @@ exports.add_routes = function (app) {
 
     app.post("/api/order/RBK", forms.OrderRBKAnswerForm, function (req, res) {
         //Оплата Ответ платежной системы RBK
-        var hashstr = req.form.eshopId + '::' + req.form.orderId + '::' + req.form.serviceName + '::' + req.forms.eshopAccount + '::' + req.form.recipientAmount + '::' + req.form.recipientCurrency + '::' + req.form.paymentStatus + '::' + req.form.userName + '::' + req.form.userEmail + '::' + req.form.paymentData + '::' + conf.rbkSecret;
-        console.log('___________hashstr_____________');
-        console.log(hashstr);
-        console.log('___________________');
+        var hashstr = req.form.eshopId + '::' + req.form.orderId + '::' + req.form.serviceName + '::'+req.form.eshopAccount+'::' + req.form.recipientAmount + '::' + req.form.recipientCurrency + '::' + req.form.paymentStatus + '::' + req.form.userName + '::' + req.form.userEmail + '::' + req.form.paymentData + '::' + conf.rbkSecret;
         var hash = md5(hashstr);
-        console.log(hash + "   " + req.form.hash);
-
-        console.log('ver rbk 29/06');
         var data = {};
         data.BalanceAmount = req.form.recipientAmount;
         data.Amount = req.form.recipientAmount;
         data.paySystemHash = req.form.hash;
         data.orderId = req.form.orderId;
-        if (req.form.paymentStatus == 5&&hash.toString==req.form.hash.toString())
+        if (req.form.paymentStatus == 5&&hash.toString()==req.form.hash.toString())
+		{
             PaySystemAnswer(data, hash, function (error, answer) {
                 if (error) res.send("Сервер временно недоступен"); else res.send("OK");
             });
+		}
         else res.send("OK");
     })
 
