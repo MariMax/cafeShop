@@ -1,19 +1,26 @@
 <% layout('../layout') -%>
-    <div class="shop_page" id="shop_stock_page">
-        <input type="hidden" hidden="hidden" value="<%= shopId %>" id="shopId" />
-        <div class="shop_info page_title_block">
-				<div class="shop_desc">
-				<span data-bind="text: ShopDescription"></span>
-				</div>
-		
-            <div class="shop_name"><span data-bind="text: ShopName"></span></div>
-           
-            <div class="shop_address"><a href="#"><span data-bind="text: ShopAddress"></span></a></div>
-            <div class="shop_tel"><span data-bind="text: ShopPhone"></span></div>
-			<div class="shop_time"><span data-bind="text: ShopWorkTime"></span></div>
-            <div class="border_wave_bot"></div>
+<div class="shop_page" id="shop_stock_page">
+    <input type="hidden" hidden="hidden" value="<%= shopId %>" id="shopId" />
+    <div class="shop_info page_title_block">
+        <div class="shop_desc">
+            <span data-bind="text: ShopDescription"></span>
         </div>
-        <div class="naobed_shop_stock" id="tab-container">
+
+        <div class="shop_name"><span data-bind="text: ShopName"></span></div>
+
+        <div class="shop_address"><a href="#"><span data-bind="text: ShopAddress"></span></a></div>
+        <div class="shop_tel"><span data-bind="text: ShopPhone"></span></div>
+        <div class="shop_time"><span data-bind="text: ShopWorkTime"></span></div>
+        <div class="border_wave_bot"></div>
+    </div>
+    <div class="naobed_shop_stock">
+        <div class="naobed_cafe_menu" id="tab-container">
+            <div class="naobed_basket">
+                <i class="naobed_basket_icon"></i>
+						Вы выбрали:
+                <a href="#" class="naobed_basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
+                <a href="#" class="naobed_order button cursiv" data-bind="click: $root.order">Оформить</a>
+            </div>
             <ul class="naobed_catalog_nav etabs" data-bind="foreach: Categories">
                 <li data-bind="attr: { class: activeText() }">
                     <a data-bind="click: $root.setActiveCategory  ">
@@ -26,7 +33,7 @@
                     <div data-bind="foreach: Items">
                         <div class="naobed_catalog_item">
                             <div class="naobed_img"><img data-bind="attr: { src: Image(), alt: Name(), title: Description() }" width="186" height="131"></div>
-                            <h3><span data-bind="text: Name"></span></h3>
+                            <div class="naobed_title"><span data-bind="text: Name"></span></div>
                             <div class="naobed_price"><span data-bind="text: Price"></span> р.</div>
                             <div class="naobed_buy">
                                 <a href="#" data-bind="click: $root.buyItem">заказать</a>
@@ -36,39 +43,40 @@
                 </div>
             </div>
         </div>
-        <footer>
-            <div class="wrap">
-                <div class="basket">
+    </div>
+    <footer>
+        <div class="wrap">
+            <div class="basket">
 			Вы выбрали:
-                    <a href="#" class="basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
-                    <a href="#" class="order button big cursiv second" data-bind="click: $root.order">Оформить</a>
-                </div>
-                <div class="basket_block" data-bind="foreach: OrderedItems">
-                    <div class="item">
-                        <div class="img">
-                            <img data-bind="attr: { src: Image(), alt: Name() }"></img>
-                        </div>
-                        <h3><span data-bind="text: Name"></span></h3>
-                        <div class="price"><span data-bind="text: Price"></span></div>
+                <a href="#" class="basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
+                <a href="#" class="order button big cursiv second" data-bind="click: $root.order">Оформить</a>
+            </div>
+            <div class="basket_block" data-bind="foreach: OrderedItems">
+                <div class="item">
+                    <div class="img">
+                        <img data-bind="attr: { src: Image(), alt: Name() }"></img>
                     </div>
-                </div>
-                <div class="admin_block">
-                    <a href="/users/login" id="link1">Вы владелец кафе или ресторана?</a>
-                    <a href="#" style="display: none" id="link2">Страница заведения</a>
-                    <a href="#" style="display: none" id="link3">Администрирование</a>
+                    <h3><span data-bind="text: Name"></span></h3>
+                    <div class="price"><span data-bind="text: Price"></span></div>
                 </div>
             </div>
-        </footer>
-    </div>
+            <div class="admin_block">
+                <a href="/users/login" id="link1">Вы владелец кафе или ресторана?</a>
+                <a href="#" style="display: none" id="link2">Страница заведения</a>
+                <a href="#" style="display: none" id="link3">Администрирование</a>
+            </div>
+        </div>
+    </footer>
+</div>
 
-    <script type="text/javascript">
-        $('.basket_link').mouseover(function () {
-            $('.basket_block').show().removeClass('fadeOutDown').addClass('animated fadeInUp')
-        }).mouseout(function () {
-            $('.basket_block').removeClass('fadeInUp').addClass('fadeOutDown');
-            setTimeout(function () {
-                $('.basket_block').hide();
-            }, 500)
-        });
-    </script>
+<script type="text/javascript">
+    $('.basket_link').mouseover(function () {
+        $('.basket_block').show().removeClass('fadeOutDown').addClass('animated fadeInUp')
+    }).mouseout(function () {
+        $('.basket_block').removeClass('fadeInUp').addClass('fadeOutDown');
+        setTimeout(function () {
+            $('.basket_block').hide();
+        }, 500)
+    });
+</script>
 
