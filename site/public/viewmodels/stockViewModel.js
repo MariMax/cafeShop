@@ -3,7 +3,7 @@ function StockViewModel(shopId) {
     var self = this;
     self.ShopId = shopId;
     self.ShopName = ko.observable();
-	self.ShopDescription = ko.observable();
+    self.ShopDescription = ko.observable();
     self.ShopAddress = ko.observable('Адрес не задан');
     self.ShopPhone = ko.observable('Телефон не задан');
     self.ShopWorkTime = ko.observable('Время работы не задано');
@@ -30,7 +30,7 @@ function StockViewModel(shopId) {
                     async: false,
                     cache: false
                 }).done(function (order) {
-                    
+
                     orderId = order._id;
                     first = false;
                 })
@@ -43,7 +43,7 @@ function StockViewModel(shopId) {
                 }).done(function (order) { orderId = order._id; }
                 )
             }
-            
+
             document.location.href = '/order/buy/' + orderId;
             //$.ajax({
             //    url: '/api/order/calcPrice/' + orderId,
@@ -68,8 +68,48 @@ function StockViewModel(shopId) {
             self.ShopPhone(shop.ClientPhone);
         if (shop.Description)
             self.ShopDescription(shop.Description);
-			
+
     });
+
+    self.FillCategory = function (category, doneFunction) {
+        $.ajax({
+            url: "/api/shop/" + self.ShopId + "/category/" + category.id() + "/items",
+            type: "GET",
+            async: true
+        }).done(function (allData) {
+            var mappedItems = $.map(allData, function (item) {
+                var d = new Date();
+                var n = d.getDay();
+                var nStr = "";
+                if (n === 1)
+                    nStr = "Mon";
+                if (n === 2)
+                    nStr = "Tue";
+                if (n === 3)
+                    nStr = "Wed";
+                if (n === 4)
+                    nStr = "Thu";
+                if (n === 5)
+                    nStr = "Fri";
+                if (n === 6)
+                    nStr = "Sat";
+                if (n === 0)
+                    nStr = "Sun";
+
+                //if ($.inArray("AllWeek", item.Days) >= 0) {
+                if (item.Days.length == 0) {
+                    return new Item(item);
+                }
+                else if ($.inArray(nStr, item.Days) >= 0) {
+                    return new Item(item);
+                }
+
+
+            });
+            category.Items(mappedItems);
+            doneFunction(category);
+        });
+    }
 
     $.ajax(
     {
@@ -79,49 +119,15 @@ function StockViewModel(shopId) {
     }).done(function (allData) {
         var first = true;
         $.each(allData, function (index, value) {
-            $.ajax({
-                url: "/api/shop/" + shopId + "/category/" + value._id + "/items",
-                type: "GET",
-                async: false
-            }).done(function (allData) {
-                var mappedItems = $.map(allData, function (item) {
-                    var d = new Date();
-                    var n = d.getDay();
-                    var nStr = "";
-                    if (n === 1)
-                        nStr = "Mon";
-                    if (n === 2)
-                        nStr = "Tue";
-                    if (n === 3)
-                        nStr = "Wed";
-                    if (n === 4)
-                        nStr = "Thu";
-                    if (n === 5)
-                        nStr = "Fri";
-                    if (n === 6)
-                        nStr = "Sat";
-                    if (n === 0)
-                        nStr = "Sun";
-
-                    //if ($.inArray("AllWeek", item.Days) >= 0) {
-                    if (item.Days.length == 0) {
-                        return new Item(item);
-                    }
-                    else if ($.inArray(nStr, item.Days) >= 0) {
-                        return new Item(item);
-                    }
-
-
-                });
-                var category = new Category(value);
-                category.Items(mappedItems);
-                category.active(first);
-                if (first)
-                    first = false;
-                self.Categories.push(category);
-            });
+            var category = new Category(value);
+            self.FillCategory(category, function () { });
+            category.active(first);
+            if (first)
+                first = false;
+            self.Categories.push(category);
         });
     });
+
 
     //$.getJSON("/api/shops/" + shopId + "/category", function (allData) {
     //    $.each(allData, function (index, value) {
@@ -137,8 +143,11 @@ function StockViewModel(shopId) {
     self.setActiveCategory = function (category) {
         self.active = true;
         $.each(self.Categories(), function (index, value) {
-            if (value.id() == category.id())
-                value.active(true);
+            if (value.id() == category.id()) {
+                self.FillCategory(value, function (filledCategory) {
+                    filledCategory.active(true);
+                })
+            }
             else
                 value.active(false);
         });
