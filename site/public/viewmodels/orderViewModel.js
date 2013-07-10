@@ -179,7 +179,8 @@ function orderCommon(self, orderParameters) {
                     //RBK
 
                     var PARAMS = {
-                        eshopid: 2020011,
+                        //eshopid: 2020011,
+						eshopid: 2019924,
                         orderId: data._id,
                         serviceName: data._id,
                         recipientAmount: data.Price.toString() + '.00',
@@ -211,9 +212,11 @@ var Cart = function (url, orderId) {
     self.lines = ko.observableArray();
     self.total = function () {
         var sum = 0;
-        for (var key in self.lines()) {
-            sum += self.lines()[key].subtotal()
-        }
+        //for (var key in self.lines()) {
+			//if (self.lines()[key])
+            //sum += self.lines()[key].subtotal()
+       // }
+		 $.each(self.lines(), function() { sum += this.subtotal() })
         return sum;
     };
     self.shopId = ko.observable();
