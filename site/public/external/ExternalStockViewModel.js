@@ -74,6 +74,46 @@ function StockViewModel(shopId,orderTemplate) {
 			self.approved(true);
 			
     });
+	
+	self.FillCategory = function (category, doneFunction) {
+        $.ajax({
+            url: "http://idiesh.ru/api/shop/" + self.ShopId + "/category/" + category.id() + "/items",
+            type: "GET",
+            async: true
+        }).done(function (allData) {
+            var mappedItems = $.map(allData, function (item) {
+                var d = new Date();
+                var n = d.getDay();
+                var nStr = "";
+                if (n === 1)
+                    nStr = "Mon";
+                if (n === 2)
+                    nStr = "Tue";
+                if (n === 3)
+                    nStr = "Wed";
+                if (n === 4)
+                    nStr = "Thu";
+                if (n === 5)
+                    nStr = "Fri";
+                if (n === 6)
+                    nStr = "Sat";
+                if (n === 0)
+                    nStr = "Sun";
+
+                //if ($.inArray("AllWeek", item.Days) >= 0) {
+                if (item.Days.length == 0) {
+                    return new Item(item);
+                }
+                else if ($.inArray(nStr, item.Days) >= 0) {
+                    return new Item(item);
+                }
+
+
+            });
+            category.Items(mappedItems);
+            doneFunction(category);
+        });
+    }
 
     $.ajax(
     {
@@ -83,55 +123,23 @@ function StockViewModel(shopId,orderTemplate) {
     }).done(function (allData) {
         var first = true;
         $.each(allData, function (index, value) {
-            $.ajax({
-                url: "http://idiesh.ru/api/shop/" + shopId + "/category/" + value._id + "/items",
-                type: "GET",
-                async: false
-            }).done(function (allData) {
-                var mappedItems = $.map(allData, function (item) {
-                    var d = new Date();
-                    var n = d.getDay();
-                    var nStr = "";
-                    if (n === 1)
-                        nStr = "Mon";
-                    if (n === 2)
-                        nStr = "Tue";
-                    if (n === 3)
-                        nStr = "Wed";
-                    if (n === 4)
-                        nStr = "Thu";
-                    if (n === 5)
-                        nStr = "Fri";
-                    if (n === 6)
-                        nStr = "Sat";
-                    if (n === 0)
-                        nStr = "Sun";
-
-                    //if ($.inArray("AllWeek", item.Days) >= 0) {
-                    if (item.Days.length == 0) {
-                        return new Item(item);
-                    }
-                    else if ($.inArray(nStr, item.Days) >= 0) {
-                        return new Item(item);
-                    }
-
-
-                });
-                var category = new Category(value);
-                category.Items(mappedItems);
-                category.active(first);
-                if (first)
-                    first = false;
-                self.Categories.push(category);
-            });
+            var category = new Category(value);
+            self.FillCategory(category, function () { });
+            category.active(first);
+            if (first)
+                first = false;
+            self.Categories.push(category);
         });
     });
-
+	
     self.setActiveCategory = function (category) {
         self.active = true;
         $.each(self.Categories(), function (index, value) {
-            if (value.id() == category.id())
-                value.active(true);
+            if (value.id() == category.id()) {
+                self.FillCategory(value, function (filledCategory) {
+                    filledCategory.active(true);
+                })
+            }
             else
                 value.active(false);
         });
