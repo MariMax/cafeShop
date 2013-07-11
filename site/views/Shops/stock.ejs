@@ -13,14 +13,7 @@
         <div class="shop_time"><span data-bind="text: ShopWorkTime"></span></div>
         <div class="border_wave_bot"></div>
     </div>
-    <div class="naobed_shop_stock">
-        <div class="naobed_cafe_menu" id="tab-container">
-            <div class="naobed_basket">
-                <i class="naobed_basket_icon"></i>
-						Вы выбрали:
-                <a href="#" class="naobed_basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
-                <a href="#" class="naobed_order button cursiv" data-bind="click: $root.order">Оформить</a>
-            </div>
+        <div class="naobed_shop_stock" id="tab-container">
             <ul class="naobed_catalog_nav etabs" data-bind="foreach: Categories">
                 <li data-bind="attr: { class: activeText() }">
                     <a data-bind="click: $root.setActiveCategory  ">
@@ -43,7 +36,6 @@
                 </div>
             </div>
         </div>
-    </div>
     <footer>
         <div class="wrap">
             <div class="basket">
