@@ -7,15 +7,17 @@ var categorySchema = new Schema({
     Name: String,
     IdName: String,
     _shop: ObjectId,
-    id: Number
+    id: Number,
+    ParentCategory: Number
 });
 
-categorySchema.statics.newCategory = function (shopId, id, idName, name, cb, err) {
+categorySchema.statics.newCategory = function (shopId, id, idName, name, parentCategoryId, cb, err) {
     var instance = new Category();
     instance._shop = shopId;
     instance.Name = name;
     instance.IdName = idName;
     instance.id = id;
+    instance.ParentCategory = parentCategoryId;
     instance.save(function (error, data) {
         if (error) {
             err(error);
