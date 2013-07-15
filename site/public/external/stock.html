@@ -24,7 +24,7 @@
                     <div data-bind="foreach: Items">
                         <div class="naobed_catalog_item">
                             <div class="naobed_img"><img data-bind="attr: { src: Image(), alt: Name(), title: Description() }" width="186" height="131"></div>
-                            <h3><span data-bind="text: Name"></span></h3>
+                            <div class="naobed_title"><span data-bind="text: Name"></span></div>
                             <div class="naobed_price"><span data-bind="text: Price"></span> р.</div>
                             <div class="naobed_buy">
                                 <a href="#" data-bind="click: $root.buyItem">заказать</a>
