@@ -2,16 +2,20 @@
 <div class="admin_page">
     <div class="admin_content">
         <div class="admin_info">
-            <h3>Регистрация нового кафе</h3>
+            <h3 data-i18n="newShop.Header">Регистрация нового кафе</h3>
             <form method="post" class="horizontal">
-                <div id="messenger">
-                </div>
+                <div id="messenger" class="notice succes" style="display: none" data-i18n="newShop.registerSuccess">Кафе успешно зарегистрировано, на Ваш телефон выслан код подтверждения введите его</div>
+                <div id="messenger1" class="notice succes" style="display: none" data-i18n="newShop.PhoneRegisterSuccess">Телефон успешно подтвержден</div>
+                <div id="messenger2" class="notice error" style="display: none" data-i18n="newShop.registerError">Не удалось зарегистрировать кафе, пожалуйста обратитесь в службу поддержки, или попробуйте позже</div>
+                <div id="messenger3" class="notice error" style="display: none" data-i18n="newShop.PhoneError">Не удалось подтвердить телефон, пожалуйста обратитесь в службу поддержки</div>
+                <div id="messenger4" class="notice error" style="display: none" data-i18n="newShop.PhoneFormatError">Введите валидный(международный) формат телефона например +79177640209</div>
+                <div id="messenger5" class="notice error" style="display: none" data-i18n="newShop.ConfirmationCodeError">Введите код подтверждения</div>
                 <div id="name" class="form_item">
-                    <div class="label">Название</div>
+                    <div class="label" data-i18n="newShop.Name">Название</div>
                     <div class="input"><input type="text" size="60" name="Name" required></div>
                 </div>
                 <div id="phone" class="form_item">
-                    <div class="label">Сотовый телефон, для получения заказов</div>
+                    <div class="label" data-i18n="newShop.Phone">Сотовый телефон, для получения заказов</div>
                     <div class="input"><input id="cellPhone" type="text" size="60" name="cellPhone" required></div>
                 </div>
                 <div class="form_item">
@@ -19,17 +23,30 @@
                     <div class="input"><input id="shopId" type="hidden" size="60" name="shopId" hidden></div>
                 </div>
                 <div id="verify" class="form_item" style="display: none;">
-                    <div class="label">Введите код подтверждения</div>
+                    <div class="label" data-i18n="newShop.Confirmation">Введите код подтверждения</div>
                     <div class="input"><input id="cellPhoneConfirmation" type="text" size="60" name="token"></div>
                     <div class="form_but">
-                        <input type="button" id="confirm" value="Подтвердить" class="button succes">
+                        <input type="button" id="confirm" value="Подтвердить" class="button succes" data-i18n="[value]newShop.confirmButton">
                     </div>
                 </div>
                 <div id="submit" class="form_but">
-                    <input type="submit" value="Зарегистрировать" class="button succes" id="submitBtn">
+                    <input type="submit" value="Зарегистрировать" class="button succes" id="submitBtn" data-i18n="[value]newShop.RegisterButton">
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script src="/script/newShop.js" type="text/javascript"></script>
+<script type="text/javascript">
+   $(function () {
+        i18n.init({ lng: "en-Us", debug: false, resGetPath: '/locales/__lng__/__ns__.json' }, function () {
+            $(".logo").i18n();
+            $("title").i18n();
+            $(".slogan").i18n();
+            $(".admin_block").i18n();
+          
+            $(".admin_content").i18n();
+           
+        });
+    });
+</script>

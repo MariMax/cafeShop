@@ -2,31 +2,47 @@
 <div class="admin_page">
     <div class="admin_content">
         <div class="admin_info">
-            <h3>Регистрация</h3>
+            <h3 data-i18n="RegisterUser.Header">Регистрация</h3>
             <form method="post" action="" class="horizontal">
-                <div id ="messenger"> </div>
+                <div id ="messenger" class="notice succes" style="display: none" data-i18n="RegisterUser.Success">Вам отправлено email ссобщение с подтверждением регистрации</div>
+                <div id ="messenger1" class="notice error"style="display: none" data-i18n="RegisterUser.AlreadyRegistred">Данный email уже заегистрирован</div>
+                <div id ="messenger2" class="notice error"style="display: none" data-i18n="RegisterUser.PasswordTooSimple">Слишком простой пароль</div>
+                <div id ="messenger3" class="notice error"style="display: none" data-i18n="RegisterUser.ConfirmationError">Пароли не совпадают</div>
                 <div class="form_item">
-                    <div class="label">Имя пользователя</div>
+                    <div class="label" data-i18n="RegisterUser.Name">Имя пользователя</div>
                     <div class="input"><input type="text" size="60" name="UserName" required></div>
                 </div>
                 <div class="form_item">
-                    <div class="label">email</div>
+                    <div class="label" data-i18n="RegisterUser.Email">email</div>
                     <div class="input"><input id ="email" type="email" size="60" name="email" required></div>
                 </div>
                 <div class="form_item">
-                    <div class="label">Пароль</div>
+                    <div class="label" data-i18n="RegisterUser.Password">Пароль</div>
                     <div class="input"><input id="password" type="password" size="60" name="password" required></div>
                 </div>
                 <div class="form_item">
-                    <div class="label">Подтверждение пароля</div>
+                    <div class="label" data-i18n="RegisterUser.PasswordConfirm">Подтверждение пароля</div>
                     <div class="input"><input id="passwordConfirmation" type="password" size="60" name="passwordConfirm" required></div>
                 </div>
                 <div class="form_but">
-                    <input type="submit" value="Зарегистрироваться" class="button succes" >
-                    <a href="/" class="button simple">Отмена</a>
+                    <input type="submit" value="Зарегистрироваться" class="button succes" data-i18n="[value]RegisterUser.SignUp" >
+                    <a href="/" class="button simple" data-i18n="Cancel">Отмена</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
 <script src="/script/RegisterUser.js" type="text/javascript"></script>
+<script type="text/javascript">
+   $(function () {
+        i18n.init({ lng: "en-Us", debug: false, resGetPath: '/locales/__lng__/__ns__.json' }, function () {
+            $(".logo").i18n();
+            $("title").i18n();
+            $(".slogan").i18n();
+            $(".admin_block").i18n();
+          
+            $(".admin_content").i18n();
+           
+        });
+    });
+</script>

@@ -25,7 +25,7 @@
     </div><div class="order_total">Итого: <b><span data-bind="text: $root.total()"></span> р.</b></div>
 
 
-    <div id="messenger" class="notice error" data-bind="{text: hasErrorMessage(), visible: hasError()}"></div>
+    <div id="messenger" class="notice error" data-bind="{visible: hasError()}">email и Имя обязательные поля, если вы заполните телефон, то Вам придет SMS подтверждение заказа</div>
     <div class="notice succes" data-bind="{visible: $root.delivery()!='delivery'}">Вы должны забрать заказ самостоятельно</div>
     <div class="order_info">
         <h3>Информация</h3>

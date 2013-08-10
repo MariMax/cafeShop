@@ -1,6 +1,6 @@
 ﻿<% layout('../layout') -%>
 <div class="page_title_block">
-    <h1>Оплаченный заказ</h1>
+    <h1 data-i18n="orderPayed">Оплаченный заказ</h1>
     <div class="border_wave_bot"></div>
 </div>
 
@@ -27,25 +27,25 @@
 			=
                 </div>
             </div>
-        </div><div class="order_total">Итого: <b><span data-bind="text: $root.total()"></span> р.</b></div>
+        </div><div class="order_total" ><span data-i18n="orderTotal">Итого:</span> <b><span data-bind="text: $root.total()"></span> р.</b></div>
         
-    <div class="notice succes" data-bind="{visible: $root.approved()}">Заказ оплачен</div>
-    <div class="notice error" data-bind="{visible: !$root.approved()}">Заказ еще не оплачен</div>
+    <div class="notice succes" data-bind="{visible: $root.approved()}" data-i18n="Paid">Заказ оплачен</div>
+    <div class="notice error" data-bind="{visible: !$root.approved()}" data-i18n="notPaid">Заказ еще не оплачен</div>
         <div class="order_info">
 
-            <h3>Информация</h3>
+            <h3  data-i18n="info">Информация</h3>
         <form action="" class="horizontal">
         			<div class="form_item">
-						<div class="label">Имя клиента</div>
+						<div class="label" data-i18n="orderInfo.yourName">Имя клиента</div>
 						<div class="input"><input type="text" name="" id="" size="60" data-bind="value: userName" disabled></div>
 					</div>					
 
 					<div class="form_item">
-						<div class="label">Описание заказа</div>
+						<div class="label" data-i18n="orderInfo.Description">Описание заказа</div>
 						<div class="input"><textarea name="" id="" cols="30" rows="10" data-bind="value: $root.description()" disabled></textarea></div>
 					</div>
 					<div class="form_item" data-bind="visible:  $root.deliveryAddress()">
-						<div class="label">Адрес доставки</div>
+						<div class="label" data-i18n="orderInfo.DeliveryAddress">Адрес доставки</div>
 						<div class="input"><textarea name="" id="" cols="30" rows="10" data-bind="value: $root.deliveryAddress()" disabled></textarea></div>
 					</div>
         </form>
@@ -59,6 +59,20 @@
 </div>
 <script type="text/javascript">
     $(function () {
+         i18n.init({ lng: "en-Us", debug: false, resGetPath: '/locales/__lng__/__ns__.json' }, function () {
+            $(".logo").i18n();
+            $("title").i18n();
+            $(".slogan").i18n();
+            $(".admin_block").i18n();
+            $("h1").i18n();
+            $(".order_total").i18n();
+            $("h3").i18n();
+            $("form").i18n();
+            $(".notice").i18n();
+            
+
+        });
+
         var orderId = $('#orderId').val();
         bindOrder('',orderId);
     })

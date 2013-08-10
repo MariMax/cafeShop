@@ -238,14 +238,6 @@ var Cart = function (url, orderId) {
     self.deliveryAddress = ko.observable('');
 
 
-    self.hasErrorMessage = ko.computed(function () {
-        var text = "";
-        if (self.userName.hasError() || self.email.hasError())
-        { text += "email и Имя обязательные поля, если вы заполните телефон, то Вам придет SMS подтверждение заказа"; }
-
-        return text;
-    });
-
     self.hasError = ko.computed(function () {
 
         if (self.userName.hasError() || self.email.hasError())

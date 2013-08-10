@@ -2,29 +2,42 @@
 <div class="page_content">
 			<div class="login">
 				<div class="login_content">
-					<h3>Вход для администратора</h3>
+					<h3 data-i18n="Login.Enter">Вход для администратора</h3>
 					<form action="" class="vertical">
-                        <div id="messenger"></div>
+                        <div id="messenger" class="notice error" style="display: none" data-i18n="Login.Error">Неверный пароль</div>
 						<div class="form_item">
-							<div class="label">E-mail администратора</div>
+							<div class="label" data-i18n="Login.Email">E-mail администратора</div>
 							<div class="input"><input id="email" type="email" size="35" name="email" required></div>
 						</div>
 						<div class="form_item">
-							<div class="label">Пароль</div>
+							<div class="label" data-i18n="Login.Password">Пароль</div>
 							<div class="input"><input type="password" size="35" name="password" required></div>
 						</div>
 						<div class="form_item">
 							<div class="label"></div>
 							<div class="input">
-                                 <a href="/users/newuser">Регистрация</a> <a href="/users/forgot-password">Забыли пароль?</a>
+                                 <a href="/users/newuser" data-i18n="Login.Register">Регистрация</a> <a href="/users/forgot-password" data-i18n="Login.Forgot">Забыли пароль?</a>
                                 </div>
 						</div>
 						<div class="form_but">
-							<input type="submit" value="Войти" class="button succes">
-							<a href="/" class="button simple">Отмена</a>
+							<input type="submit" value="Войти" class="button succes" data-i18n="[value]Login.Enter">
+							<a href="/" class="button simple" data-i18n="Cancel">Отмена</a>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
 <script src="/script/login.js" type="text/javascript"></script>
+<script type="text/javascript">
+   $(function () {
+        i18n.init({ lng: "en-Us", debug: false, resGetPath: '/locales/__lng__/__ns__.json' }, function () {
+            $(".logo").i18n();
+            $("title").i18n();
+            $(".slogan").i18n();
+            $(".admin_block").i18n();
+          
+            $(".page_content").i18n();
+           
+        });
+    });
+</script>

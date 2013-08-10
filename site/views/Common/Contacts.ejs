@@ -1,13 +1,13 @@
 <% layout('../layout') -%>
 <div class="page_title_block">
-    <h1>Контакты</h1>
+    <h1 data-i18n="contacts">Контакты</h1>
     <div class="border_wave_bot"></div>
 </div>
 <div class="page_content">
-    <h3>Служба поддержки</h3>
+    <h3 data-i18n="serviceDesk">Служба поддержки</h3>
     <div class="contacts_info">
         <div class="info_item phone">+7 (917) 36 13 512</div>
-        <div class="info_item time">пн-пт 9:00 - 20:00</div>
+        <div class="info_item time">9:00 - 20:00</div>
 		</br>
 		</br>
 		<div>ИП Дюстер Юрий Федорович</div>
@@ -20,26 +20,39 @@
 		<div>Корр.счет банка :30101810000000000891</div>
 		
     </div>
-    <h3>Обратная связь</h3>
+    <h3 data-i18n="callback">Обратная связь</h3>
     <form action="" class="horizontal">
-        <div id="messenger">
-        </div>
+        <div class="notice succes" id="messenger" style="display: none" data-i18n="sent">Ваше сообщение отправлено</div>
         <div class="form_item">
-            <div class="label">Представьтесь пожалуйста</div>
+            <div class="label" data-i18n="contactInfo.yourName">Представьтесь пожалуйста</div>
             <div class="input"><input type="text" size="60" name="UserName" required></div>
         </div>
         <div class="form_item">
-            <div class="label">Ваш e-mail</div>
+            <div class="label" data-i18n="contactInfo.yourEmail">Ваш e-mail</div>
             <div class="input"><input id="email" type="email" size="60" name="email" required></div>
         </div>
         <div class="form_item">
-            <div class="label">Текст сообщения</div>
+            <div class="label" data-i18n="contactInfo.text">Текст сообщения</div>
             <div class="input"><textarea id="text" name="text" style="width: 520px; height: 200px" required></textarea></div>
         </div>
         <div class="form_but">
-            <input type="submit" value="Отправить" class="button succes">
-            <input type="reset" value="Очистить" class="button simple">
+            <input id="submit" type="submit" value="Отправить" class="button succes" data-i18n="[value]send">
+            <input id ="clear" type="reset" value="Очистить" class="button simple" data-i18n="[value]clear">
         </div>
     </form>
 </div>
 <script src="/script/Contacts.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(function () {
+        i18n.init({ lng: "en-Us", debug: false, resGetPath: '/locales/__lng__/__ns__.json' }, function () {
+            $(".logo").i18n();
+            $("title").i18n();
+            $(".slogan").i18n();
+            $(".admin_block").i18n();
+            $("h1").i18n();
+            $("h3").i18n();
+            $("form").i18n();
+            $("#messenger").i18n();
+        });
+        })
+        </script>

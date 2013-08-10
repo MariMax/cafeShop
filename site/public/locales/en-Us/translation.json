@@ -1,0 +1,93 @@
+{
+"header":"At Lunch",
+"slogan":{
+"sloganCommon":"It is easy:",
+"slogan1":"Choose cafe",
+"slogan2":"Order dishes",
+"slogan3":"Pay"
+},
+"owner":"Are you cafe's owner?",
+"contacts":"Contacts",
+"myPage":"Cafe's page",
+"adminPage":"Admin page",
+"sms":"SMS centr",
+"menuOpen":"Open menu",
+"order":"order",
+"basket":{
+"yourChoose":"Your choose:",
+"dishesOn":"dishes on",
+"checkOut":"Check out"
+},
+"orderCheckout":"Invoice",
+"orderTotal":"Total:",
+"getOrderSelf":"You have to get your order self",
+"needPhoneandEmail":"Name and email are require. If you will enter phone we will send SMS with order approve",
+"info":"Information",
+"orderInfo":{
+"yourName":"Enter your name",
+"yourEmail":"Enter your email",
+"yourPhone":"Enter yur phone",
+"Description":"Enter order description",
+"getSelf":"I'll get by myself",
+"Delivery":"Cafe should get it to me",
+"getOrderOn":"Get it to ",
+"DeliveryAddress":"Delivery address"
+},
+"Pay":"Pay",
+"orderPayed":"Order",
+"Paid":"Paid",
+"notPaid":"Not Paid",
+"serviceDesk":"Service desk",
+"callback":"Write us",
+"contactInfo":{
+"yourName":"Enter your name",
+"yourEmail":"Enter your email",
+"text":"Enter problem description"
+},
+"send":"Send",
+"clear":"Clear",
+"sent":"Your message sent",
+"Login":{
+"Enter":"Login",
+"Error":"Wrong password",
+"Email":"Email",
+"Password":"Password",
+"Forgot":"Forgot password?",
+"Register":"Register",
+"Enter":"Login"
+},
+"Cancel":"Cancel",
+"RegisterUser":{
+"Header":"Registration",
+"Name":"User Name",
+"Email":"User Email",
+"Password":"Password",
+"PasswordConfirm":"Password Confirmation",
+"SignUp":"SignUp",
+"Success":"We sent you email confirmation",
+"AlreadyRegistred":"User with this email already registred",
+"PasswordTooSimple":"Password too simple",
+"ConfirmationError":"Wrong password confirmation"
+},
+"ApproveEmail":{
+"Header":"Approving email",
+"Approved":"Email approved",
+"Error":"Approve Email error, try again",
+"Continue":"Continue",
+"Exit":"Exit"
+},
+"newShop":{
+"Header":"New cafe registration",
+"registerSuccess":"Cafe registred, you will get SMS confirmation of phone number",
+"PhoneRegisterSuccess":"Your phone number confirmed",
+"registerError":"Unfortunatly we can't register cafe, please write to service desc we will help you",
+"PhoneError":"Phone confirmation failed, please write to service desc, we will help you",
+"PhoneFormatError":"Please enter valid phone number format for example +79177640209",
+"ConfirmationCodeError":"You should enter confirmation code",
+"Name":"Name",
+"Phone":"Cell phone for orders",
+"Confirmation":"Enter confirmation code",
+"confirmButton":"Confirm",
+"RegisterButton":"Register"
+}
+}

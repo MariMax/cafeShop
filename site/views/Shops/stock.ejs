@@ -29,7 +29,7 @@
                             <div class="naobed_title"><span data-bind="text: Name"></span></div>
                             <div class="naobed_price"><span data-bind="text: Price"></span> р.</div>
                             <div class="naobed_buy">
-                                <a href="#" data-bind="click: $root.buyItem">заказать</a>
+                                <a href="#" data-bind="click: $root.buyItem" id="order" data-i18n="order">заказать</a>
                             </div>
                         </div>
                     </div>
@@ -38,10 +38,10 @@
         </div>
     <footer>
         <div class="wrap">
-            <div class="basket">
-			Вы выбрали:
-                <a href="#" class="basket_link"><span data-bind="text: OrderedItems().length"></span> блюда на <span data-bind="text: OrderedItemsPrices()"></span> руб.</a>
-                <a href="#" class="order button big cursiv second" data-bind="click: $root.order">Оформить</a>
+            <div class="basket" >
+			<span data-i18n="basket.yourChoose">Вы выбрали:</span>
+                <a href="#" class="basket_link"><span data-bind="text: OrderedItems().length"></span> <span data-i18n="basket.dishesOn">блюда на</span> <span data-bind="text: OrderedItemsPrices()"></span> р.</a>
+                <a href="#" class="order button big cursiv second" data-bind="click: $root.order" data-i18n="basket.checkOut">Оформить</a>
             </div>
             <div class="basket_block" data-bind="foreach: OrderedItems">
                 <div class="item">
@@ -53,9 +53,9 @@
                 </div>
             </div>
             <div class="admin_block">
-                <a href="/users/login" id="link1">Вы владелец кафе или ресторана?</a>
-                <a href="#" style="display: none" id="link2">Страница заведения</a>
-                <a href="#" style="display: none" id="link3">Администрирование</a>
+                <a href="/users/login" id="link1" data-i18n="owner">Вы владелец кафе или ресторана?</a>
+                <a href="#" style="display: none" id="link2"  data-i18n="myPage">Страница заведения</a>
+                <a href="#" style="display: none" id="link3" data-i18n="adminPage">Администрирование</a>
             </div>
         </div>
     </footer>
@@ -69,6 +69,19 @@
         setTimeout(function () {
             $('.basket_block').hide();
         }, 500)
+    });
+
+
+    $(function () {
+        i18n.init({ lng: "en-Us", debug: false, resGetPath: '/locales/__lng__/__ns__.json' }, function () {
+            $(".logo").i18n();
+            $("title").i18n();
+            $(".slogan").i18n();
+            $(".admin_block").i18n();
+          
+            $(".basket").i18n();
+            $("#order").i18n();
+        });
     });
 </script>
 

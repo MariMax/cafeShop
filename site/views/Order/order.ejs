@@ -1,5 +1,5 @@
 ﻿<% layout('../layout') -%>
-<div class="page_title_block"><h1>Оформление заказа</h1>
+<div class="page_title_block"><h1 data-i18n="orderCheckout">Оформление заказа</h1>
     <div class="border_wave_bot"></div>
 </div>
 <div id="order_page" class="order_page">
@@ -24,41 +24,41 @@
             </div>
         </div>
 
-    </div><div class="order_total">Итого: <b><span data-bind="text: $root.total()"></span> р.</b></div>
+    </div><div class="order_total" ><span data-i18n="orderTotal">Итого:</span> <b><span data-bind="text: $root.total()"></span> р.</b></div>
 
 
-    <div id="messenger" class="notice error" data-bind="{text: hasErrorMessage(), visible: hasError()}"></div>
-    <div class="notice succes" data-bind="{visible: $root.delivery()!='delivery'}">Вы должны забрать заказ самостоятельно</div>
+    <div id="messenger" class="notice error" data-bind="{visible: hasError()}" data-i18n="needPhoneandEmail">email и Имя обязательные поля, если вы заполните телефон, то Вам придет SMS подтверждение заказа</div>
+    <div class="notice succes" id="notice" data-bind="{visible: $root.delivery()!='delivery'}" data-i18n="getOrderSelf">Вы должны забрать заказ самостоятельно</div>
     <div class="order_info">
-        <h3>Информация</h3>
+        <h3 data-i18n="info">Информация</h3>
         <form action="" class="horizontal">
         			<div class="form_item">
-						<div class="label">Ваше имя</div>
+						<div class="label" data-i18n="orderInfo.yourName">Ваше имя</div>
 						<div class="input"><input type="text" name="" id="" size="60" required data-bind="value: userName, valueUpdate: 'afterkeydown'"></div>
 					</div>					
                     <div class="form_item">
-						<div class="label">Ваш e-mail для связи</div>
+						<div class="label" data-i18n="orderInfo.yourEmail">Ваш e-mail для связи</div>
 						<div class="input"><input type="text" type="email" name="spUserEmail" id="email" required data-bind="value: email,valueUpdate: 'afterkeydown'" size="60" placeholder="name@domain.com"></div>
 					</div>
 					<div class="form_item">
-						<div class="label">Ваш номер телефона</div>
+						<div class="label" data-i18n="orderInfo.yourPhone">Ваш номер телефона</div>
 						<div class="input"><input type="text" size="60" name="cellPhone" id="cellPhone" data-bind="value: cellPhone,valueUpdate: 'afterkeydown'" placeholder="+79xxxxxxxxx"></div>
 					</div>
 
 					<div class="form_item">
-						<div class="label">Описание заказа</div>
+						<div class="label" data-i18n="orderInfo.Description">Описание заказа</div>
 						<div class="input"><input type="text" name="" id="" size="60" data-bind="value: description,valueUpdate: 'afterkeydown'"></div>
 					</div>
 					<div class="form_item radio_group" data-bind="visible:showDelivery" title="Пожалуйста внимательно ознакомьтесь с условиями доставки, стоимость доставки не включена в стоимость заказа">
-						<label for="1"><input type="radio" name="1" id="1" value="self" data-bind="checked: delivery">Самовывоз</label>
-						<label for="2"><input type="radio" name="1" id="2" value="delivery" data-bind="checked: delivery">Доставка</label>
+						<label ><input type="radio" name="1"  value="self" data-bind="checked: delivery" ><span data-i18n="orderInfo.getSelf">Самовывоз</span></label>
+						<label><input type="radio" name="1"  value="delivery" data-bind="checked: delivery" ><span data-i18n="orderInfo.Delivery">Доставка</span></label>
 					</div>
 					<div class="form_item time">
-						<div class="label">Приготовить заказ к</div>
-						<div class="input"><input type="text" name="" id="" value="13" size="1" data-bind="value: hour"> : <input type="text" name="" id="" value="10" size="1" data-bind="value: minute"> ч</div>
+						<div class="label" data-i18n="orderInfo.getOrderOn">Приготовить заказ к</div>
+						<div class="input"><input type="text" name="" id="" value="13" size="1" data-bind="value: hour"> : <input type="text" name="" id="" value="10" size="1" data-bind="value: minute"> </div>
 					</div>
 					<div class="form_item" data-bind="visible:  $root.delivery()=='delivery'">
-						<div class="label">Адрес доставки</div>
+						<div class="label" data-i18n="orderInfo.DeliveryAddress">Адрес доставки</div>
 						<div class="input"><input type="text" name="" id="" size="60" placeholder="Введите адрес" data-bind="value: deliveryAddress"></div>
 					</div>
         </form>
@@ -67,7 +67,7 @@
         <div class="form_but">
             <!--<a href="#" class="button big succes" data-bind="click: $root.orderSpryPay" title="Оплата возможна с помощью VISA/Mastercard&#10;Платежные терминалы Qiwi,Quickpay&#10;Qiwi кошелек&#10;кошелек в системе SpryPay&#10;Mail Деньги или Yandex деньги">Visa/MasterCard, Qiwi</a>-->
             <!--<a href="#" class="button big succes" data-bind="click: $root.orderW1" title="Оплата возможна в платежных терминалах или салонах сотовой связи&#10;Online банки Альфа-Клик, Сбербанк ОнЛ@йн, ПромСвязьБанк(«PSB-Retail»), Связной Банк&#10;Через систему Единый кошелек&#10;Со счета операторов мобильной связи МТС, Мегафон">Online банк, наличные, оперторы связи</a>-->
-            <a href="#" class="button big succes" data-bind="click: $root.orderRBK" title="Оплата возможна с помощью VISA/Mastercard&#10;в платежных терминалах или салонах сотовой связи&#10;Online банки&#10;Через систему RBK Money">Оплатить</a>
+            <a id ="pay" href="#" class="button big succes" data-bind="click: $root.orderRBK" title="Оплата возможна с помощью VISA/Mastercard&#10;в платежных терминалах или салонах сотовой связи&#10;Online банки&#10;Через систему RBK Money" data-i18n="Pay">Оплатить</a>
         </div>
     </div>
 
@@ -75,7 +75,22 @@
 
 <script type="text/javascript">
     $(function () {
+        i18n.init({ lng: "en-Us", debug: false, resGetPath: '/locales/__lng__/__ns__.json' }, function () {
+            $(".logo").i18n();
+            $("title").i18n();
+            $(".slogan").i18n();
+            $(".admin_block").i18n();
+            $("h1").i18n();
+            $(".order_total").i18n();
+            $("h3").i18n();
+            $("form").i18n();
+            $("#pay").i18n();
+            $("#notice").i18n();
+            $("#messenger").i18n();
+
+        });
+
         var orderId = $('#orderId').val();
-        bindOrder('',orderId);
+        bindOrder('', orderId);
     })
 </script>

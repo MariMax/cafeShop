@@ -3,13 +3,15 @@
     <head>
         <meta charset="UTF-8">
         <meta name="w1-verification" content="174743083272" />
-        <title>На обед</title>
+        <title data-i18n="header">На обед</title>
         <link rel="stylesheet" href="/css/style.css" media="all">
         <link rel="stylesheet" href="/css/animate.css" media="all">
         <link href="http://fonts.googleapis.com/css?family=Lobster&subset=latin,cyrillic" rel="stylesheet" type="text/css">
         <link href="http://fonts.googleapis.com/css?family=PT+Sans:400,700,400italic,700italic&subset=cyrillic,latin" rel="stylesheet" type="text/css">
         
         <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/i18next/1.6.3/i18next-1.6.3.min.js"></script>
+        
         
         <script src="/script/yamaps.js" type="text/javascript"></script>
         <script src="/script/jquery.ui.widget.js"></script>
@@ -45,24 +47,24 @@
         </script>
         <header>
             <div class="wrap">
-                <a href="/" class="logo">На обед</a>
+                <a href="/" class="logo" data-i18n="header">На обед</a>
                 <div class="slogan">
-                    <p>Заказать обед легко:</p>
-                    <span><b>1 -</b> Выбрать заведение</span>
-                    <span><b>2 -</b> Заказать блюда</span>
-                    <span><b>3 -</b> Оплатить заказ</span>
+                    <p data-i18n="slogan.sloganCommon">Заказать обед легко:</p>
+                    <span><b>1 -</b></span><span data-i18n="slogan.slogan1">Выбрать заведение</span>
+                    <span><b>2 -</b></span><span data-i18n="slogan.slogan2">Заказать блюда</span>
+                    <span><b>3 -</b></span><span data-i18n="slogan.slogan3">Оплатить заказ</span>
                 </div>
             </div>
         </header>
         <footer>
             <div class="wrap">
                 <div class="admin_block">
-                    <a href="/users/login" id="link1">Вы владелец кафе или ресторана?</a>
-                    <a href="#" style="display: none" id="link2">Страница заведения</a>
-                    <a href="#" style="display: none" id="link3">Администрирование</a>
-                    <a href="/contacts" id="link1">Контакты</a>
-                    <a href="http://smsc.ru/?pp321010" id="link1">SMS Центр</a>
-                    <a href="http://www.rbkmoney.ru" id="link1" class="rbk"><img src="/images/rbk_logo.png" width="80" style="position:absolute;top:-6px"></a>
+                    <a href="/users/login" id="link1" data-i18n="owner">Вы владелец кафе или ресторана?</a>
+                    <a href="#" style="display: none" id="link2" data-i18n="myPage">Страница заведения</a>
+                    <a href="#" style="display: none" id="link3" data-i18n="adminPage">Администрирование</a>
+                    <a href="/contacts" id="link4" data-i18n="contacts">Контакты</a>
+                    <a href="http://smsc.ru/?pp321010" id="link5" data-i18n="sms">SMS Центр</a>
+                    <a href="http://www.rbkmoney.ru" id="link6" class="rbk"><img src="/images/rbk_logo.png" width="80" style="position:absolute;top:-6px"></a>
                 </div>
             </div>
         </footer>
