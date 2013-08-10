@@ -22,8 +22,8 @@ exports.add_routes = function (app) {
             User.findOne({ _id: req.form.userId }, function (error, user) {
                 if (error) ShowMessage(res, "Не удалось найти пользователя, под которым вы зашли", 500);
                 else {
-                    if (user._shop!=null) ShowMessage(res, "Данный пользователь уже зарегистрирован в кафе", 500);
-                    else{
+                 //   if (user._shop!=null) ShowMessage(res, "Данный пользователь уже зарегистрирован в кафе", 500);
+                 //   else{
                     Shop.findOne({ CellPhone: req.form.cellPhone }, function (error, shopWithApprovedCellPhone) {
                         if (!shopWithApprovedCellPhone) {
                             Shop.newShop(req.form, function (error, shop) {
@@ -73,7 +73,7 @@ exports.add_routes = function (app) {
                             ShowMessage(res, "Этот номер телефона уже зарегистрирован за другим кафе, пожалуйста введите новый номер", 500)
                         }
                     });
-                }
+                //}
             }});
         } else { ShowMessage(res, 'Неверно заполнена форма регистрации нового кафе', 500); }
 
