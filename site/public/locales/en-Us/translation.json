@@ -89,5 +89,8 @@
 "Confirmation":"Enter confirmation code",
 "confirmButton":"Confirm",
 "RegisterButton":"Register"
+},
+"admin_page":{
+ "Header": "Control panel"
 }
 }

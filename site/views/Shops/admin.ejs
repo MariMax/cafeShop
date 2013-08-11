@@ -2,7 +2,7 @@
 
 <div class="admin_page" id="admin_page">
     <div class="admin_title page_title_block">
-        <h1>Администрирование</h1>
+        <h1 data-i18n="admin_page.Header">Администрирование</h1>
         <a class="shop_link" href="/shop/<%= shopId %>/stock">Страница заведения</a>
         <div class="border_wave_bot"></div>
     </div>
@@ -67,9 +67,9 @@
 
         <div class="admin_stock" id="admin_stock">
             <h3>Меню заведения
-                <!--<a href="#" class="add_category button small grey f-right" data-bind="click: $root.addCategory">+ Добавить категорию</a>
-                <a href="#" class="add_category button small grey f-right" data-bind="click: $root.renameCategory">+ Переименовать категорию</a>
-                -->
+                                    <!--<a href="#" class="add_category button small grey f-right" data-bind="click: $root.addCategory">+ Добавить категорию</a>
+                                    <a href="#" class="add_category button small grey f-right" data-bind="click: $root.renameCategory">+ Переименовать категорию</a>
+                                    -->
             </h3>
             <div id="tab-container">
                 <ul class="naobed_catalog_nav etabs" data-bind="foreach: Categories">
@@ -88,14 +88,13 @@
                 <input type="hidden" id="newPhotoTmpUrl" />
                 <div data-bind="foreach: Categories">
                     <div data-bind="attr: { id: IdName, class: active() ? 'catalog_admin clearfix active':'catalog_admin clearfix', style: active() ? 'display: block' : 'display: none' }">
-                            <div class="catalog_admin_buts">
-
-								<div class="button_group">
-									<a href="#" class="button xsmall" data-bind="click: $root.addCategory">Добавить категорию</a>
-									<a href="#" class="button grey xsmall" data-bind="click: $root.removeCategory">Удалить</a>
-									<a href="#" class="button grey xsmall" data-bind="click: $root.renameCategory">Переименовать</a>
-								</div>
-							</div>
+                        <div class="catalog_admin_buts">
+                            <div class="button_group">
+                                <a href="#" class="button xsmall" data-bind="click: $root.addCategory">Добавить категорию</a>
+                                <a href="#" class="button grey xsmall" data-bind="click: $root.removeCategory">Удалить</a>
+                                <a href="#" class="button grey xsmall" data-bind="click: $root.renameCategory">Переименовать</a>
+                            </div>
+                        </div>
 
                         <div class="catalog_admin" data-bind="foreach: Items">
                             <div class="catalog_item">
@@ -129,13 +128,13 @@
                     </div>
                 </div>
 
-                <div class="notification" style="display: none" data-bind="visible: showOkMessage" >
+                <div class="notification" style="display: none" data-bind="visible: showOkMessage">
                     <span data-bind="text: Message"></span>
                 </div>
-                <div class="notification error"  style="display: none" data-bind="visible: showErrorMessage" >
+                <div class="notification error" style="display: none" data-bind="visible: showErrorMessage">
                     <span data-bind="text: Message"></span>
                 </div>
-                
+
             </div>
 
         </div>
@@ -151,5 +150,19 @@
 <div id="dialog-delete-confirm" title="Удалить категорию?" style="display: none">
     <p><span class="ui-icon ui-icon-alert" style="float: left; margin: 0 7px 20px 0;"></span>Вы уверены что хотите удалить категорию?</p>
 </div>
+
+<script type="text/javascript">
+    $(function () {
+         i18n.init({ lng: "en-Us", debug: false, resGetPath: '/locales/__lng__/__ns__.json' }, function () {
+             $(".logo").i18n();
+             $("title").i18n();
+             $(".slogan").i18n();
+             $(".admin_block").i18n();
+             $(".admin_page").i18n();
+             $(".admin_content").i18n();
+    
+         });
+     });
+</script>
 
 
