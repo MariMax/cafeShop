@@ -26,6 +26,9 @@ function Category(data, shopId, messageFunc, errorFunc) {
     self.addItem = function (data) {
         var item = new Item({ Name: this.newItemName(), Description: this.newItemDescription(), Price: this.newItemPrice(), Days: this.newItemDays(), Image: $('#newPhotoTmpUrl').val() });
         self.Items.push(item);
+        
+            $(".catalog_admin").i18n();
+         
     };
     self.addItemToDb = function (itemData) {
         debugger;
