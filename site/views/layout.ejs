@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8">
         <meta name="w1-verification" content="174743083272" />
@@ -25,6 +25,7 @@
     <body>
         <!--/sprypay.tag.check:51691f6d1fecb/-->
         <script type="text/javascript">
+			var lang = "";
             $(function () {
                 var shopId = $.cookie("shopId");
                 if (shopId != undefined) {
@@ -39,7 +40,24 @@
                     $("#link2").attr("style", "display: none");
                     $("#link3").attr("style", "display: none");
                 }
-            
+				
+				function LanguageInfo(){
+					var n = navigator;
+					this.UALanguage = n.language ? n.language : n.browserLanguage ? n.browserLanguage : null;
+					this.userLanguage = n.userLanguage ? n.userLanguage : n.systemLanguage ? systemLanguage : null;
+				}
+				
+				
+						//var jqXHR = $.get('/api/common/getLang')
+						//.done(function (data) {
+						//	debugger;
+						//	lang = data;
+						//});
+						
+						var oLanguage = new LanguageInfo();
+				
+						lang = (oLanguage.userLanguage == "ru" || oLanguage.UALanguage == "ru")||lang=="ru"?"ru-Ru":"en-Us";
+	
             });
             
             

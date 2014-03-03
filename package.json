@@ -17,7 +17,8 @@
     "connect": "latest",
     "connect-mongo": "latest",
     "restler": "latest",
-    "jquery-file-upload-middleware": "latest"
+    "jquery-file-upload-middleware": "latest",
+	"locale":"latest"
   },
   "noAnalyze": true,
   "engines": {

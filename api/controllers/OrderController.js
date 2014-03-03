@@ -46,7 +46,6 @@ exports.add_routes = function (app) {
         var orderId = req.params.orderId;
         var shopId = req.params.shopId;
         var itemId = req.params.itemId;
-        var deliveryAddress = req.params.deliveryAddress;
         var count = req.params.count;
         Order.getOrder(orderId, function (error, order) {
             if (error) res.send(error, 404);
@@ -59,7 +58,7 @@ exports.add_routes = function (app) {
                             if (error || item._shop != shopId) res.send("Наверное блюдо не из этого кафе", 404);
                             else {
                                 console.log("set order " + orderId + " " + itemId + " " + count)
-                                Order.setOrderItems(orderId, itemId, count, item.Price, deliveryAddress, function (error, order) {
+                                Order.setOrderItems(orderId, itemId, count, item.Price, function (error, order) {
                                     if (error)
                                         res.send(error, 404);
                                     else {
@@ -294,7 +293,7 @@ exports.add_routes = function (app) {
     })
 
     app.post("/api/order/RBKhash", forms.OrderRBKHashForm, function (req, res) {
-        //Оплата Ответ платежной системы
+        //Расчет хеша для RBK
         Order.getOrder(req.form.orderId, function (error, order) {
             if (error) { res.send("error"); return }
             var hashstr = req.form.eshopid + '::' + order.Price + ',00' + '::' + req.form.recipientCurrency + '::' + order.Email + '::' + req.form.serviceName + '::' + req.form.orderId + '::::' + conf.rbkSecret;

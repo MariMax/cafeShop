@@ -23,8 +23,8 @@ $(function () {
     //if (!$.cookie('longitude') || !$.cookie('latitude')) {
     //    $("#where_iam_popup").attr("style", "display: normal");
     //}
-
-    i18n.init({ lng: "en-Us", debug: false }, function () {
+	
+    i18n.init({ lng: lang, debug: false }, function () {
         // save to use translation function as resources are fetched
         $(".logo").i18n();
         $("title").i18n();

@@ -2,7 +2,9 @@ var express = require('express')
   , app = express()
   , ejsLocals = require('ejs-locals')
   , nodemailer = require("nodemailer")
-, upload = require('jquery-file-upload-middleware')
+  , upload = require('jquery-file-upload-middleware')
+  , locale = require("locale")
+  , supported = ["en", "ru"]
 //, im = require('imagemagick')
 
 
@@ -116,6 +118,7 @@ app.use('/upload', upload.fileHandler());
 //    //    console.log('resized kittens.jpg to fit within 256x256px');
 //    //});
 //});
+app.use(locale(supported));
 app.use(express.cookieParser());
 app.use(express.bodyParser());
 app.use(express.session({
@@ -146,5 +149,5 @@ app.use(function (req, res, next) {
 
 var routes = require('./routes.js');
 routes(app);
-
-app.listen(process.env.PORT);
+console.log('listen on '+process.env.PORT);
+app.listen(process.env.PORT||3000);
