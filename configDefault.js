@@ -1,6 +1,6 @@
 exports.getSiteConfig = function () {
   configValues =  {
-    site_url: 'http://idiesh.ru',
+    site_url: 'http://secret.pm-pm.ru:2000',
     site_name: 'idiEsh',
     site_email: 'idiEsh support <noreply@idiesh.ru>',
     db: {    	
@@ -13,7 +13,18 @@ exports.getSiteConfig = function () {
     w1Secret:'WUVDVXNRQ21nMWxheUg0UmJoQzdjbG1iRHNY',
     mongoConnection: 'mongodb://localhost/cafeShop',
     myPhone:'+79177640209',
-    infoEmail:'info@idiesh.ru'
+    infoEmail:'info@idiesh.ru',
+    cancelUrl:'http://secret.pm-pm.ru:2000/order/fail/1',
+    returnUrl:'http://secret.pm-pm.ru:2000/order/success/1',
+    ipnUrl:'http://secret.pm-pm.ru:2000/api/order/b0cf25f4e9d41a5f3adad56386ce14df',
+    paypalPrepareUrl:'https://svcs.sandbox.paypal.com/AdaptivePayments/Pay',
+    paypalAppId:"APP-80W284485P519543T",
+    paypalFees:"EACHRECEIVER",
+    paypalPrimaryReceiver:"conecticut-facilitator@rambler.ru",
+    paypalUserId:"conecticut-facilitator_api1.rambler.ru",
+    paypalUserPass:"1373806966",
+    paypalUserSign:"AiPC9BjkCyDFQXbSkoZcgqH3hpacANptVoBKVehiw8crADmweLKi1pk0",
+    paypalCmdUrl:"https://www.sandbox.paypal.com/cgi-bin/webscr?cmd=_ap-payment&paykey="
   }
 
   return configValues;

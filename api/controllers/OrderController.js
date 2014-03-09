@@ -8,6 +8,7 @@ var ru2en = require('../models/CommonFunctions.js').ru2en;
 var User = require('../models/User.js').User;
 var md5 = require('../models/CommonFunctions.js').md5;
 var hashCalc = require('../models/CommonFunctions.js').hash;
+var rest = require('restler');
 
 exports.add_routes = function (app) {
 
@@ -227,6 +228,74 @@ exports.add_routes = function (app) {
         })
     }
 
+    function PayPalApprove(order, callback) {
+        var orderId = order._id//req.form.spUserDataOrderId;
+        var messageText = '';
+        var shopMessage = '';
+        var shopSMSMessage = '';
+        var smsMessage = '';
+        var orderLink = conf.site_url + "/order/show/" + orderId;
+        var clientPhone = "";
+        var clientEmail = "";
+        var orderItems = { itemIds: [], itemCount: [] };
+        var myOrder = {};
+
+                    myOrder = order;
+                    //Рассылка sms продавцу, покупателю и 3 email
+                    clientPhone = order.UserPhone;
+                    clientEmail = order.Email;
+                    for (var key in order.Items) {
+                        if (order.Items[key].itemId) {
+                            orderItems.itemIds.push(order.Items[key].itemId);
+                            orderItems.itemCount.push(order.Items[key].count);
+                        }
+                    }
+                    console.log(orderItems);
+                    Item.getItems(orderItems.itemIds, function (error, items) {
+                        if (error) callback(error); else {
+                            console.log(items);
+                            for (var key in items) {
+                                var count = 0;
+                                for (var key2 in orderItems.itemIds)
+                                    if (orderItems.itemIds[key2].toString() == items[key]._id.toString()) {
+                                        count = orderItems.itemCount[key2]; break;
+                                    }
+                                messageText += items[key].Name + ' ' + count + '; ';
+                                shopMessage += items[key].Name + ' ' + count + '; ';
+                            }
+                            messageText += orderLink + ' ' + myOrder.Description;
+                            shopMessage += orderLink + ' ' + myOrder.Description + ' оплачено: ' + myOrder.Price + ' клиент: ' + myOrder.UserName;
+                            if (order.DeliveryAddress && order.DeliveryAddress.length > 0)
+                                shopMessage += ' доставка: ' + order.DeliveryAddress;
+
+                            //                        if (clientPhone) shopMessage += ' тел.: ' + clientPhone;
+                            shopSMSMessage = ru2en.translite(shopMessage);
+
+                            Shop.getShop(order._shop, function (error, shop) {
+                                if (error) callback(error);
+                                else {
+                                    messageText += ' кафе: ' + shop.Name + ' ' + shop.WorkTime + ' ' + shop.Address + ' Приятного аппетита!'
+                                    smsMessage = ru2en.translite(messageText);
+                                    console.log(messageText);
+                                    sendSMS(SMSconf, shop.CellPhone, shopSMSMessage, function (data, response) { console.log(data + " " + response) });
+                                    if (clientPhone) {
+                                        sendSMS(SMSconf, clientPhone, smsMessage, function (data, response) { console.log(data + " " + response) });
+                                    }
+                                    sendMail(clientEmail, conf.site_email, conf.site_name + ': Подтверждение платежа', messageText);
+                                    sendMail("order@idiesh.ru", conf.site_email, conf.site_name + ': Заказ оплачен', shopMessage);
+                                    User.getFirstApprovedUserInShop(shop._id, function (error, user) {
+                                        if (user) {
+                                            sendMail(user.email, conf.site_email, conf.site_name + ': Заказ оплачен', shopMessage);
+                                            callback(null, "ok");
+                                        } else callback(error);
+                                    })
+
+                                }
+                            })
+                        }
+                    });
+}
+
     app.post("/api/order/paySystemAnswer", forms.OrderAnswerForm, function (req, res) {
         //Оплата Ответ платежной системы spryPay
         var hash = '';
@@ -303,5 +372,64 @@ exports.add_routes = function (app) {
         })
     })
 
+    app.post("/api/order/PayPalPayment", function (req, res) {
+        Order.getOrder(req.body.orderId, function (error, order) {
+
+            if (error) { res.send("error"); return }
+            rest.post(conf.paypalPrepareUrl,{
+                 data:{
+                        "actionType":"PAY",
+                        "clientDetails.applicationId":conf.paypalAppId,
+                        "clientDetails.ipAddress":"127.0.0.1",
+                        "currencyCode":"USD",
+                        "feesPayer":conf.paypalFees,
+                        "memo":"Some Food",
+                        "receiverList.receiver(0).amount":order.Price,
+                        "receiverList.receiver(0).email":conf.paypalPrimaryReceiver,
+                        "receiverList.receiver(0).primary":"true",
+                        "receiverList.receiver(1).amount":order.Price*0.9,
+                        "receiverList.receiver(1).email":"mma29121983@ya.ru",
+                        "receiverList.receiver(1).primary":"false",    
+                        "requestEnvelope.errorLanguage":"en_US",
+                        "returnUrl":conf.returnUrl,
+                        "cancelUrl":conf.cancelUrl,
+                        "ipnNotificationUrl":conf.ipnUrl
+                },
+                headers:{"X-PAYPAL-SECURITY-USERID": conf.paypalUserId,
+                        "X-PAYPAL-SECURITY-PASSWORD":conf.paypalUserPass,
+                        "X-PAYPAL-SECURITY-SIGNATURE":conf.paypalUserSign,
+                        "X-PAYPAL-REQUEST-DATA-FORMAT":"NV",
+                        "X-PAYPAL-RESPONSE-DATA-FORMAT":"JSON",
+                        "X-PAYPAL-APPLICATION-ID":conf.paypalAppId
+                }
+            }).on('complete', function(data) {
+                    
+                    if (data.payKey && data.paymentExecStatus==='CREATED'){
+                        console.log(data.payKey);
+                        Order.setPayKey(req.body.orderId,data.payKey, function(err,order){
+                            if (err){console.dir(err);}
+                            console.dir(order);
+                            res.send(200,conf.paypalCmdUrl+order.payKey);
+                        });
+                    }
+                    else {res.send("error"); return;}
+            });
+        });
+    })
+
+    app.post('/api/order/b0cf25f4e9d41a5f3adad56386ce14df', function(req, res){
+        console.dir(req.body);
+        console.log(req.body.pay_key);
+        console.log(req.body.status);
+        if (req.body.status==='COMPLETED'){
+            Order.approveBypayKey(req.body.pay_key, function(err,order){
+                PayPalApprove(order, function(err,result){
+                    if (err==null){
+                        res.send(200,"Ok");
+                    }
+                });
+            });
+        }
+    });
 
 }

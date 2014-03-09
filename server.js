@@ -120,7 +120,10 @@ app.use('/upload', upload.fileHandler());
 //});
 app.use(locale(supported));
 app.use(express.cookieParser());
-app.use(express.bodyParser());
+//app.use(express.bodyParser());
+app.use(express.json());
+app.use(express.urlencoded());
+
 app.use(express.session({
     secret: conf.secret,
     store: new MongoStore(conf.db),

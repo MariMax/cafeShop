@@ -93,7 +93,7 @@ function post(URL, PARAMS, enabledW1) {
     temp.action = URL;
     temp.method = "POST";
     temp.style.display = "none";
-    for (var x in PARAMS) {
+/*    for (var x in PARAMS) {
         var opt = document.createElement("input");
         opt.name = x;
         opt.value = PARAMS[x];
@@ -105,7 +105,7 @@ function post(URL, PARAMS, enabledW1) {
         opt.value = enabledW1[x];
         temp.appendChild(opt);
     }
-    temp.appendChild(opt);
+    temp.appendChild(opt);*/
     temp.submit();
     return temp;
 }
@@ -142,7 +142,7 @@ function orderCommon(self, orderParameters) {
         $.post(self.url + '/api/order/pay', data)
             .done(function (data) {
                 //sprypay.ru
-                if (orderParameters === 'sprypay') {
+                /*if (orderParameters === 'sprypay') {
                     post("http://sprypay.ru/sppi/", {
                         spShopId: 213001,
                         spShopPaymentId: data.PaymentId,
@@ -197,6 +197,18 @@ function orderCommon(self, orderParameters) {
                         PARAMS.hash = hashResult;
                         post("https://rbkmoney.ru/acceptpurchase.aspx", PARAMS);
                     });
+                }*/
+                if (orderParameters==='PayPal'){
+                    var PARAMS = {
+                        orderId: data._id,
+                    };
+
+                    $.post(self.url + '/api/order/PayPalPayment', PARAMS)
+                        .done(function (result) {
+                            if (result!=='error'){
+                                post(result);
+                            }
+                        });
                 }
 
             });
@@ -252,6 +264,8 @@ var Cart = function (url, orderId) {
     self.orderW1 = function (cart) { orderCommon(cart, 'w1'); }
 
     self.orderRBK = function (cart) { orderCommon(cart, 'RBK'); }
+
+    self.orderPayPal = function (cart) { orderCommon(cart, 'PayPal'); }
 
     $.ajax({ url: self.url+'/api/order/' + orderId, cache: false, type: "GET" }).done(function (order) {
 

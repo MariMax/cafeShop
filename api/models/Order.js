@@ -33,7 +33,9 @@ var orderSchema = new Schema({
     myHash: String,
     paySystemHash: String,
     hash: String,
-    DeliveryAddress: String
+    DeliveryAddress: String,
+    payKey:{type:String, index:true}
+
     //OrderGetTime:{type:Date,'default' : Date.now()}/*Дата когда заказ должен быть выполнен*/
 
 });
@@ -255,6 +257,29 @@ orderSchema.statics.approveOrder = function (orderId, BalanceAmount, Amount, pay
 
 
 };
+
+orderSchema.statics.setPayKey = function (orderId, _payKey, callback) {
+    this.findByIdAndUpdate(orderId, { payKey:_payKey }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            callback(error);
+        }
+        else {
+            Order.findOne({ _id: orderId }, callback)
+        }
+    })
+};
+
+orderSchema.statics.approveBypayKey = function (_payKey, callback) {
+    this.update({payKey:_payKey}, { Approved:true }, { multi: false, safe: true }, function (error, docs) {
+        if (error) {
+            callback(error);
+        }
+        else {
+            Order.findOne({ payKey: _payKey }, callback)
+        }
+    })
+};
+
 
 OrderItem = mongoose.model('orderItem', itemSchema);
 Order = mongoose.model('Order', orderSchema);
